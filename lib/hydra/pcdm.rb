@@ -6,17 +6,12 @@ module Hydra
   module PCDM
 
     # vocabularies
-    autoload :PCDMTerms,                   'hydra/pcdm/vocab/pcdm_terms'
-
-    # interfaces
-    autoload :CollectionInterface,    'hydra/pcdm/interfaces/collection_interface'
-    # autoload :ObjectInterface,        'hydra/pcdm/interfaces/object_interface'
-    # autoload :FileInterface,          'hydra/pcdm/interfaces/file_interface'
+    autoload :PCDMTerms,              'hydra/pcdm/vocab/pcdm_terms'
 
     # models
     autoload :Collection,             'hydra/pcdm/models/collection'
-    # autoload :Object,                 'hydra/pcdm/models/object'
-    # autoload :File,                   'hydra/pcdm/models/file'
+    autoload :Object,                 'hydra/pcdm/models/object'
+    autoload :File,                   'hydra/pcdm/models/file'
 
 
     def self.class_from_string(class_name, container_class=Kernel)
