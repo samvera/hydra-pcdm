@@ -42,6 +42,7 @@ describe 'Hydra::PCDM::Collection' do
     end
   end
 
+
   describe '#contains' do
     xit 'should NOT contain files' do
       #   4) PCDM::Collection can NOT contain PCDM::File
@@ -51,13 +52,21 @@ describe 'Hydra::PCDM::Collection' do
     end
   end
 
-  describe '#METHOD_NAME' do
+
+  describe '#METHOD_TO_SET_METADATA' do
     xit 'should be able to set descriptive metadata' do
+      #   5) PCDM::Collection can have descriptive metadata
 
       # TODO Write test
 
     end
 
+    xit 'should be able to set access metadata' do
+      #   6) PCDM::Collection can have access metadata
+
+      # TODO Write test
+
+    end
   end
 
 end
