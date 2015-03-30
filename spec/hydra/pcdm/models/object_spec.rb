@@ -8,21 +8,21 @@ describe 'Hydra::PCDM::Object' do
   describe '#members' do
 
     xit 'should NOT aggregate collections' do
-      #   1) PCDM::Object can NOT aggregate PCDM::Collection
+      #   1) Hydra::PCDM::Object can NOT aggregate Hydra::PCDM::Collection
 
       # TODO Write test
 
     end
 
     xit 'should aggregate objects' do
-      #   2) PCDM::Object can aggregate PCDM::Object
+      #   2) Hydra::PCDM::Object can aggregate Hydra::PCDM::Object
 
       # TODO Write test
 
     end
 
     xit 'should NOT aggregate non-PCDM objects' do
-      #   3) PCDM::Object can NOT aggregate non-PCDM objects
+      #   3) Hydra::PCDM::Object can NOT aggregate non-PCDM objects
 
       # TODO Write test
 
@@ -32,7 +32,7 @@ describe 'Hydra::PCDM::Object' do
 
   describe '#contains' do
     xit 'should NOT contain files' do
-      #   4) PCDM::Object can contain PCDM::File
+      #   4) Hydra::PCDM::Object can contain Hydra::PCDM::File
 
       # TODO Write test
 
@@ -42,14 +42,14 @@ describe 'Hydra::PCDM::Object' do
 
   describe '#METHOD_TO_SET_METADATA' do
     xit 'should be able to set descriptive metadata' do
-      #   5) PCDM::Collection can have descriptive metadata
+      #   5) Hydra::PCDM::Collection can have descriptive metadata
 
       # TODO Write test
 
     end
 
     xit 'should be able to set access metadata' do
-      #   6) PCDM::Collection can have access metadata
+      #   6) Hydra::PCDM::Collection can have access metadata
 
       # TODO Write test
 
