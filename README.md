@@ -6,16 +6,21 @@ Hydra implementation of Portland Common Data Models (PCDM)
 
 Add this line to your application's Gemfile:
 
-    gem 'hydra-pcdm'
+    gem 'hydra-pcdm', :git => 'git@github.com:projecthydra-labs/hydra-pcdm.git', :branch => 'master'
+    
+Substitute another branch name for 'master' to test out a branch under development.    
+<!-- Temporarily comment out until gem is published.
+    gem 'hydra-pcdm' 
+-->
 
 And then execute:
 
     $ bundle
-
+<!-- Temporarily comment out until gem is published.
 Or install it yourself as:
 
     $ gem install hydra-pcdm
-
+-->
 
 ## Access Controls
 We are using [Web ACL](http://www.w3.org/wiki/WebAccessControl) as implemented by [hydra-access](https://github.com/projecthydra/hydra-head/tree/master/hydra-access-controls) controls
