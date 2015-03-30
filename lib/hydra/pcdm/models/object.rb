@@ -17,7 +17,7 @@ module Hydra::PCDM
 
     def << arg
       # check that arg is an instance of Hydra::PCDM::Object or Hydra::PCDM::File
-      raise ArgumentError, "argument must be a Hydra::PCDM::Object" unless
+      raise ArgumentError, "argument must be either a Hydra::PCDM::Object or Hydra::PCDM::File" unless
           arg.is_a?( Hydra::PCDM::Object ) || arg.is_a?( Hydra::PCDM::File )
       members << arg  if arg.is_a? Hydra::PCDM::Object
       files   << arg  if arg.is_a? Hydra::PCDM::File
