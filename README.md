@@ -25,7 +25,18 @@ Or install it yourself as:
 ## Access Controls
 We are using [Web ACL](http://www.w3.org/wiki/WebAccessControl) as implemented by [hydra-access](https://github.com/projecthydra/hydra-head/tree/master/hydra-access-controls) controls
 
-## Example Model
+## PCDM Model
+
+Reference:  [Portland Common Data Model](https://wiki.duraspace.org/x/9IoOB)
+
+
+### Model Definition
+
+![PCDM Model Definition](https://wiki.duraspace.org/download/attachments/68061940/coll-object-file.png?version=1&modificationDate=1425932362178&api=v2)
+
+
+### Example
+
 To test the model and provide clarity we have included a sample mode that exercises the interfaces provided by the gem.
 The sample model may change over time to reflect the state of the gam and what it supports.  
 (TODO: Currently there is no code in the gem so it does not support any model including the example.)
