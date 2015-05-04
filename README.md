@@ -1,4 +1,5 @@
 # Hydra::PCDM
+[![Build Status](https://travis-ci.org/projecthydra-labs/hydra-pcdm.svg?branch=re-work_with_model_concerns)](https://travis-ci.org/projecthydra-labs/hydra-pcdm)
 
 Hydra implementation of Portland Common Data Models (PCDM)
 
