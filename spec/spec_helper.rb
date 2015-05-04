@@ -1,3 +1,4 @@
+ENV['environment'] ||= 'test'
 require 'coveralls'
 Coveralls.wear!
 
