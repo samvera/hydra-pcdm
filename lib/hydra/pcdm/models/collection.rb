@@ -1,3 +1,5 @@
+require 'active_fedora/aggregation'
+
 module Hydra::PCDM
   class Collection < ActiveFedora::Base
     type RDFVocabularies::PCDMTerms.Collection  # TODO switch to using generated vocabulary when ready
