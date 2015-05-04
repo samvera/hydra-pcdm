@@ -1,7 +1,9 @@
 module Hydra::PCDM
   class Object < ActiveFedora::Base
-    configure :type => RDFVocabularies::PCDMTerms.Object  # FIX: This is how ActiveTriples sets type, but doesn't work in ActiveFedora
-    aggregates :members  # FIX: This causes error "Unknown constant Member" in object_spec test.
+    type RDFVocabularies::PCDMTerms.Object  # TODO switch to using generated vocabulary when ready
+    aggregates :members, :predicate => RDFVocabularies::PCDMTerms.hasMember, :class_name => "ActiveFedora::Base"
+
+    # TODO How to specify contains relationship for Hydra::PCDM::Object contains Hydra::PCDM::File
 
     # behavior:
     #   1) Hydra::PCDM::Object can NOT aggregate Hydra::PCDM::Collection

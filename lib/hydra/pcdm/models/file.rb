@@ -1,6 +1,6 @@
 module Hydra::PCDM
   class File < ActiveFedora::File
-    configure :type => RDFVocabularies::PCDMTerms.File  # FIX: This is how ActiveTriples sets type, but doesn't work in ActiveFedora
+    type RDFVocabularies::PCDMTerms.File  # TODO switch to using generated vocabulary when ready
 
     # behavior:
     #   1) PCDM::File can NOT aggregate anything

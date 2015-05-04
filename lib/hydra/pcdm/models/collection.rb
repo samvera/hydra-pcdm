@@ -1,19 +1,27 @@
 module Hydra::PCDM
   class Collection < ActiveFedora::Base
-    # configure :type => RDFVocabularies::PCDMTerms.Collection  # FIX: This is how ActiveTriples sets type, but doesn't work in ActiveFedora
-    aggregates :members  # FIX: This causes error "Unknown constant Member" in collection_spec test.
+    type RDFVocabularies::PCDMTerms.Collection  # TODO switch to using generated vocabulary when ready
+    aggregates :members, :predicate => RDFVocabularies::PCDMTerms.hasMember, :class_name => "ActiveFedora::Base"
+
+
 
     # behavior:
-    #   1) Hydra::PCDM::Collection can aggregate Hydra::PCDM::Collection
-    #   2) Hydra::PCDM::Collection can aggregate Hydra::PCDM::Object
-    #   3) Hydra::PCDM::Collection can NOT aggregate non-PCDM object
-    #   4) Hydra::PCDM::Collection can NOT contain Hydra::PCDM::File
-    #   5) Hydra::PCDM::Collection can have descriptive metadata
-    #   6) Hydra::PCDM::Collection can have access metadata
+    #   1) Hydra::PCDM::Collection can aggregate (pcdm:hasMember)  Hydra::PCDM::Collection (no infinite loop, e.g., A -> B -> C -> A)
+    #   2) Hydra::PCDM::Collection can aggregate (pcdm:hasMember)  Hydra::PCDM::Object
+    #   3) Hydra::PCDM::Collection can aggregate (ore:aggregates) Hydra::PCDM::Object  (Object related to the Collection)
+
+    #   4) Hydra::PCDM::Collection can NOT aggregate non-PCDM object
+    #   5) Hydra::PCDM::Collection can NOT contain (pcdm:hasFile)  Hydra::PCDM::File
+
+    #   6) Hydra::PCDM::Collection can have descriptive metadata
+    #   7) Hydra::PCDM::Collection can have access metadata
     # TODO: add code to enforce behavior rules
 
     # TODO: Make members private adding to an aggregations has to go through the following methods.
     # TODO: FIX: All of the following methods for aggregations are effected by the error "uninitialized constant Member".
+
+
+
 
     def << arg
       # check that arg is an instance of Hydra::PCDM::Collection or Hydra::PCDM::Object
@@ -25,7 +33,7 @@ module Hydra::PCDM
     def collections= collections
       # check that each collection is an instance of Hydra::PCDM::Collection
       raise ArgumentError, "each collection must be a Hydra::PCDM::Collection" unless
-          collections.all? { |c| c is_a? Hydra::PCDM::Collection }
+          collections.all? { |c| c.is_a? Hydra::PCDM::Collection }
       members = collections
     end
 
@@ -39,7 +47,7 @@ module Hydra::PCDM
     def objects= objects
       # check that object is an instance of Hydra::PCDM::Object
       raise ArgumentError, "each object must be a Hydra::PCDM::Object" unless
-          objects.all? { |o| o is_a? Hydra::PCDM::Object }
+          objects.all? { |o| o.is_a? Hydra::PCDM::Object }
       members = objects
     end
 
