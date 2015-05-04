@@ -19,16 +19,14 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency('activefedora-aggregation', '~> 0.1.0')
+  spec.add_dependency 'activefedora-aggregation', '~> 0.2.0' 
 
-  spec.add_development_dependency "jettywrapper", ">= 2.0.0"
-
-  spec.add_development_dependency "bundler", "~> 1.6"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency('pry')
-  spec.add_development_dependency('pry-byebug')    # Works with ruby > 2
-  # spec.add_development_dependency('pry-debugger')  # Works with ruby < 2
-  spec.add_development_dependency('rspec')
-  spec.add_development_dependency('coveralls')
+  spec.add_development_dependency 'bundler', '~> 1.6'
+  spec.add_development_dependency 'jettywrapper', '>= 2.0.0'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'coveralls'
+  spec.add_development_dependency 'pry'
+  spec.add_development_dependency 'pry-byebug'
+  spec.add_development_dependency 'rspec'
 
 end
