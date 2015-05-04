@@ -1,11 +1,7 @@
-require 'hydra/pcdm/version'
-require 'hydra/pcdm/vocab/pcdm_terms'
-require 'active_fedora/aggregation'
-
 module Hydra::PCDM
 
   # vocabularies
-  autoload :PCDMTerms,              'hydra/pcdm/vocab/pcdm_terms'
+  autoload :RDFVocabularies,        'hydra/pcdm/vocab/pcdm_terms'
 
   # models
   autoload :Collection,             'hydra/pcdm/models/collection'
