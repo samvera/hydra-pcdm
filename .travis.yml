@@ -1,0 +1,9 @@
+language: ruby
+bundler_args: --without debug
+rvm:
+  - 2.1
+  - 2.2
+  - jruby-19mode
+matrix:
+  allow_failures:
+      - rvm: jruby-19mode
