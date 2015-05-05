@@ -1,28 +1,15 @@
-module Hydra
-  module PCDM
+module Hydra::PCDM
 
-    # vocabularies
-    autoload :RDFVocabularies,        'hydra/pcdm/vocab/pcdm_terms'
+  # vocabularies
+  autoload :RDFVocabularies,        'hydra/pcdm/vocab/pcdm_terms'
 
-    # models
-    autoload :Collection,             'hydra/pcdm/models/collection'
-    autoload :Object,                 'hydra/pcdm/models/object'
-    autoload :File,                   'hydra/pcdm/models/file'
+  # models
+  autoload :Collection,             'hydra/pcdm/models/collection'
+  autoload :Object,                 'hydra/pcdm/models/object'
+  autoload :File,                   'hydra/pcdm/models/file'
 
+  # behavior concerns
+  autoload :CollectionBehavior,     'hydra/pcdm/models/concerns/collection_behavior'
+  autoload :ObjectBehavior,         'hydra/pcdm/models/concerns/object_behavior'
 
-    def self.class_from_string(class_name, container_class=Kernel)
-      container_class = container_class.name if container_class.is_a? Module
-      container_parts = container_class.split('::')
-      (container_parts + class_name.split('::')).flatten.inject(Kernel) do |mod, class_name|
-        if mod == Kernel
-          Object.const_get(class_name)
-        elsif mod.const_defined? class_name.to_sym
-          mod.const_get(class_name)
-        else
-          container_parts.pop
-          class_from_string(class_name, container_parts.join('::'))
-        end
-      end
-    end
-  end
 end
