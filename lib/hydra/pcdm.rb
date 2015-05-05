@@ -9,5 +9,9 @@ module Hydra
     autoload :Object,                 'hydra/pcdm/models/object'
     autoload :File,                   'hydra/pcdm/models/file'
 
+    # behavior concerns
+    autoload :CollectionBehavior,     'hydra/pcdm/models/concerns/collection_behavior'
+    autoload :ObjectBehavior,         'hydra/pcdm/models/concerns/object_behavior'
+
   end
 end
