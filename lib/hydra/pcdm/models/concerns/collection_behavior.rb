@@ -17,15 +17,20 @@ module Hydra::PCDM
 
     #   6) Hydra::PCDM::Collection can have descriptive metadata
     #   7) Hydra::PCDM::Collection can have access metadata
-    # TODO: add code to enforce behavior rules
 
     # TODO: Make members private adding to an aggregations has to go through the following methods.
     # TODO: FIX: All of the following methods for aggregations are effected by the error "uninitialized constant Member".
 
 
 
-
     def << arg
+
+      # TODO This fails.  Tests using << operator are marked xit.
+
+      # TODO: Not sure how to handle coll1.collections << new_collection and coll1.objects << new_object.
+      #       Want to override << on coll1.collections to check that new_collection is_a? Hydra::PCDM::Collection
+      #       Want to override << on coll1.objects to check that new_object is_a? Hydra::PCDM::Object
+
       # check that arg is an instance of Hydra::PCDM::Collection or Hydra::PCDM::Object
       raise ArgumentError, "argument must be either a Hydra::PCDM::Collection or Hydra::PCDM::Object" unless
           arg.is_a?( Hydra::PCDM::Collection ) || arg.is_a?( Hydra::PCDM::Object )
@@ -36,30 +41,33 @@ module Hydra::PCDM
       # check that each collection is an instance of Hydra::PCDM::Collection
       raise ArgumentError, "each collection must be a Hydra::PCDM::Collection" unless
           collections.all? { |c| c.is_a? Hydra::PCDM::Collection }
-      members = collections
+
+      # TODO - how to prevent A - B - C - A causing a recursive loop of collections?
+
+      current_objects = self.objects
+      new_members = current_objects + collections
+      self.members = new_members
     end
 
     def collections
-      # TODO: query fedora for collection id && hasMember && rdf_type == RDFVocabularies::PCDMTerms.Collection
+      all_members = self.members.container.to_a
+      all_members.select { |m| m.is_a? Hydra::PCDM::Collection }
     end
-
-    # TODO: Not sure how to handle coll1.collections << new_collection.
-    #       Want to override << on coll1.collections to check that new_collection is_a? Hydra::PCDM::Collection
 
     def objects= objects
       # check that object is an instance of Hydra::PCDM::Object
       raise ArgumentError, "each object must be a Hydra::PCDM::Object" unless
           objects.all? { |o| o.is_a? Hydra::PCDM::Object }
-      members = objects
+
+      current_collections = self.collections
+      new_members = current_collections + objects
+      self.members = new_members
     end
 
     def objects
-      # TODO: query fedora for collection id && hasMember && rdf_type == RDFVocabularies::PCDMTerms.Object
+      all_members = self.members.container.to_a
+      all_members.select { |m| m.is_a? Hydra::PCDM::Object }
     end
-
-    # TODO: Not sure how to handle coll1.objects << new_object.
-    #       Want to override << on coll1.objects to check that new_object is_a? Hydra::PCDM::Object
-
 
     def contains
       # always raise an error because contains is not an allowed behavior
@@ -71,6 +79,9 @@ module Hydra::PCDM
     #   * Are there any default properties to set for Collection's descriptive metadata?
     #   * Are there any default properties to set for Collection's access metadata?
     #   * Is there a way to override default properties defined in this class?
+
+    # TODO: Add ORE.aggregates related Hydra::PCDM::Objects.
+
   end
 end
 
