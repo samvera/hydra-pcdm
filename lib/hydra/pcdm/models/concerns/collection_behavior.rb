@@ -22,48 +22,37 @@ module Hydra::PCDM
     # TODO: Make members private adding to an aggregations has to go through the following methods.
     # TODO: FIX: All of the following methods for aggregations are effected by the error "uninitialized constant Member".
 
-
-
-
-    def << arg
-      # check that arg is an instance of Hydra::PCDM::Collection or Hydra::PCDM::Object
-      raise ArgumentError, "argument must be either a Hydra::PCDM::Collection or Hydra::PCDM::Object" unless
-          arg.is_a?( Hydra::PCDM::Collection ) || arg.is_a?( Hydra::PCDM::Object )
-      members << arg
-    end
-
-    def collections= collections
-      # check that each collection is an instance of Hydra::PCDM::Collection
-      raise ArgumentError, "each collection must be a Hydra::PCDM::Collection" unless
-          collections.all? { |c| c.is_a? Hydra::PCDM::Collection }
-      members = collections
+    def collections= members
+      raise ArgumentError, "each collection must be a Hydra::PCDM::Collection" unless members.all? { |o| is_a_collection? o }
+      self.members = members
     end
 
     def collections
-      # TODO: query fedora for collection id && hasMember && rdf_type == RDFVocabularies::PCDMTerms.Collection
+      self.members
     end
 
-    # TODO: Not sure how to handle coll1.collections << new_collection.
-    #       Want to override << on coll1.collections to check that new_collection is_a? Hydra::PCDM::Collection
-
     def objects= objects
-      # check that object is an instance of Hydra::PCDM::Object
-      raise ArgumentError, "each object must be a Hydra::PCDM::Object" unless
-          objects.all? { |o| o.is_a? Hydra::PCDM::Object }
-      members = objects
+      raise ArgumentError, "each object must be a Hydra::PCDM::Object" unless objects.all? { |o| is_a_object? o }
+      self.members = objects
     end
 
     def objects
-      # TODO: query fedora for collection id && hasMember && rdf_type == RDFVocabularies::PCDMTerms.Object
+      self.members
     end
-
-    # TODO: Not sure how to handle coll1.objects << new_object.
-    #       Want to override << on coll1.objects to check that new_object is_a? Hydra::PCDM::Object
-
 
     def contains
       # always raise an error because contains is not an allowed behavior
       raise NoMethodError, "undefined method `contains' for :Hydra::PCDM::Collection"
+    end
+
+    def is_a_collection? collection
+      return false unless collection.respond_to? :type
+      collection.type.include? RDFVocabularies::PCDMTerms.Collection
+    end
+
+    def is_a_object? object
+      return false unless object.respond_to? :type
+      object.type.include? RDFVocabularies::PCDMTerms.Object
     end
 
     # TODO: RDF metadata can be added using property definitions.
@@ -72,5 +61,5 @@ module Hydra::PCDM
     #   * Are there any default properties to set for Collection's access metadata?
     #   * Is there a way to override default properties defined in this class?
   end
-end
 
+end
