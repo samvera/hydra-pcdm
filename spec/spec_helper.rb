@@ -7,6 +7,9 @@ Bundler.setup
 
 require 'hydra/pcdm'
 require 'pry'
+require 'active_fedora'
+require 'active_fedora/cleaner'
+require 'ldp'
 
 Dir['./spec/support/**/*.rb'].each { |f| require f }
 
@@ -19,5 +22,10 @@ RSpec.configure do |config|
 
   # Use the specified formatter
   config.formatter = :progress
-end
 
+  config.before :each do |example|
+    unless example.metadata[:no_clean]
+      ActiveFedora::Cleaner.clean!
+    end
+  end
+end
