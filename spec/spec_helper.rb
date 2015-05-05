@@ -12,6 +12,12 @@ require 'active_fedora/cleaner'
 
 Dir['./spec/support/**/*.rb'].each { |f| require f }
 
+# require 'http_logger'
+# HttpLogger.logger = Logger.new(STDOUT)
+# HttpLogger.ignore = [/localhost:8983\/solr/]
+# HttpLogger.colorize = false
+# HttpLogger.log_headers = true
+
 RSpec.configure do |config|
   config.color = true
   config.tty = true
