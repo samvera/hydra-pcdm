@@ -189,7 +189,7 @@ describe Hydra::PCDM::Collection do
       expect(collection1.objects).to eq []
     end
 
-    it 'should return empty array when only collections are aggregated' do      
+    it 'should return empty array when only collections are aggregated' do
       collection1.collections = [collection2,collection3]
       collection1.save
       expect(collection1.objects).to eq []
@@ -202,21 +202,4 @@ describe Hydra::PCDM::Collection do
       expect(collection1.objects).to eq [object1,object2]
     end
   end
-
-  describe '#METHOD_TO_SET_METADATA' do
-    xit 'should be able to set descriptive metadata' do
-      #   6) Hydra::PCDM::Collection can have descriptive metadata
-
-      # TODO Write test
-
-    end
-
-    xit 'should be able to set access metadata' do
-      #   7) Hydra::PCDM::Collection can have access metadata
-
-      # TODO Write test
-
-    end
-  end
-
 end
