@@ -27,7 +27,6 @@ module Hydra::PCDM
     # TODO: add code to enforce behavior rules
 
     # TODO: Make members private so adding to an aggregations has to go through the following methods.
-    # TODO: FIX: All of the following methods for aggregations are effected by the error "uninitialized constant Member".
 
 
 

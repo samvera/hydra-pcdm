@@ -18,31 +18,57 @@ describe 'Hydra::PCDM::Object' do
 
   # NOTE: This method is named 'members' because of the definition 'aggregates: members' in Hydra::PCDM::Object
   describe '#objects=' do
+    #   1) Hydra::PCDM::Object can aggregate (pcdm:hasMember) Hydra::PCDM::Object
 
-    xit 'should aggregate objects' do
-      #   1) Hydra::PCDM::Object can aggregate (pcdm:hasMember) Hydra::PCDM::Object
+    it 'should aggregate objects' do
 
-      # TODO Write test
+      # TODO: This test needs refinement with before and after managing objects in fedora.
 
+      object1 = Hydra::PCDM::Object.create
+      object2 = Hydra::PCDM::Object.create
+      object3 = Hydra::PCDM::Object.create
+
+      object1.objects = [object2,object3]
+      object1.save
+      expect(object1.objects).to eq [object2,object3]
     end
 
-    xit 'should NOT aggregate collections' do
-      #   4) Hydra::PCDM::Object can NOT aggregate Hydra::PCDM::Collection
+    xit 'should add an object to the objects aggregation' do
 
-      # TODO Write test
+      object1 = Hydra::PCDM::Object.create
+      object2 = Hydra::PCDM::Object.create
+      object3 = Hydra::PCDM::Object.create
+      object4 = Hydra::PCDM::Object.create
 
+      object1.objects = [object2,object3]
+      object1.save
+      object1.objects << object4
+      expect(object1.objects).to eq [object2,object3,object4]
     end
 
-    xit 'should NOT aggregate non-PCDM objects' do
-      #   5) Hydra::PCDM::Object can NOT aggregate non-PCDM object
+    it 'should NOT aggregate Hydra::PCDM::Collection in objects aggregation' do
+      # 4) Hydra::PCDM::Object can NOT aggregate Hydra::PCDM::Collection
 
-      # TODO Write test
+      object1 = Hydra::PCDM::Object.create
+      collection1 = Hydra::PCDM::Collection.create
+      expect{ object1.objects = [collection1] }.to raise_error(ArgumentError,"each object must be a Hydra::PCDM::Object")
+    end
 
+    it 'should NOT aggregate non-PCDM objects in objects aggregation' do
+      #   5) Hydra::PCDM::Collection can NOT aggregate non-PCDM objects
+
+      object1 = Hydra::PCDM::Object.create
+      string1 = "non-PCDM object"
+      expect{ object1.objects = [string1] }.to raise_error(ArgumentError,"each object must be a Hydra::PCDM::Object")
     end
   end
 
   describe '#objects' do
-
+    it 'should return empty array when no members' do
+      object1 = Hydra::PCDM::Object.create
+      object1.save
+      expect(object1.objects).to eq []
+    end
   end
 
   describe '#contains' do
@@ -80,4 +106,3 @@ describe 'Hydra::PCDM::Object' do
   end
 
 end
-
