@@ -37,40 +37,37 @@ module Hydra::PCDM
     end
 
     def collections= collections
-      # check that each collection is an instance of Hydra::PCDM::Collection
-      raise ArgumentError, "each collection must be a Hydra::PCDM::Collection" unless
-          collections.all? { |c| c.is_a? Hydra::PCDM::Collection }
-
-      # TODO - how to prevent A - B - C - A causing a recursive loop of collections?
-
-      current_objects = self.objects
-      new_members = current_objects + collections
-      self.members = new_members
+      raise ArgumentError, "each collection must be a Hydra::PCDM::Collection" unless collections.all? { |c| collection? c }
+      self.members = self.objects + collections
     end
 
     def collections
       all_members = self.members.container.to_a
-      all_members.select { |m| m.is_a? Hydra::PCDM::Collection }
+      all_members.select { |m| collection? m }
     end
 
     def objects= objects
-      # check that object is an instance of Hydra::PCDM::Object
-      raise ArgumentError, "each object must be a Hydra::PCDM::Object" unless
-          objects.all? { |o| o.is_a? Hydra::PCDM::Object }
-
-      current_collections = self.collections
-      new_members = current_collections + objects
-      self.members = new_members
+      raise ArgumentError, "each object must be a Hydra::PCDM::Object" unless objects.all? { |o| object? o }
+      self.members = self.collections + objects
     end
 
     def objects
       all_members = self.members.container.to_a
-      all_members.select { |m| m.is_a? Hydra::PCDM::Object }
+      all_members.select { |m| object? m }
     end
 
     def contains
-      # always raise an error because contains is not an allowed behavior
-      raise NoMethodError, "undefined method `contains' for :Hydra::PCDM::Collection"
+      raise NotImplementedError, "`contains' is not allowed for :Hydra::PCDM::Collection"
+    end
+
+    def collection? collection
+      return false unless collection.respond_to? :type
+      collection.type.include? RDFVocabularies::PCDMTerms.Collection
+    end
+
+    def object? object
+      return false unless object.respond_to? :type
+      object.type.include? RDFVocabularies::PCDMTerms.Object
     end
 
     # TODO: RDF metadata can be added using property definitions.
