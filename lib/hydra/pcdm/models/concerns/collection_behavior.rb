@@ -19,7 +19,6 @@ module Hydra::PCDM
     #   7) Hydra::PCDM::Collection can have access metadata
 
     # TODO: Make members private adding to an aggregations has to go through the following methods.
-    # TODO: FIX: All of the following methods for aggregations are effected by the error "uninitialized constant Member".
 
 
 

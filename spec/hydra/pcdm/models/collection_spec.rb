@@ -156,7 +156,7 @@ describe 'Hydra::PCDM::Collection' do
       expect{ collection1.objects = [collection2] }.to raise_error(ArgumentError,"each object must be a Hydra::PCDM::Object")
     end
 
-    it 'should NOT aggregate non-PCDM objects in collections aggregation' do
+    it 'should NOT aggregate non-PCDM objects in objects aggregation' do
       #   4) Hydra::PCDM::Collection can NOT aggregate non-PCDM objects
 
       collection1 = Hydra::PCDM::Collection.create
