@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Hydra::PCDM::Object' do
+describe Hydra::PCDM::Object do
 
   # TEST the following behaviors...
   #   1) Hydra::PCDM::Object can aggregate (pcdm:hasMember) Hydra::PCDM::Object
@@ -71,14 +71,23 @@ describe 'Hydra::PCDM::Object' do
     end
   end
 
-  describe '#contains' do
-    xit 'should contain files' do
-      #   2) Hydra::PCDM::Object can contain (pcdm:hasFile) Hydra::PCDM::File
+  describe '#files' do
+    let(:object) { described_class.create }
+    let(:file1) { object.files.build }
+    let(:file2) { object.files.build }
 
-      # TODO Write test
-
+    before do
+      file1.content = "I'm a file"
+      file2.content = "I am too"
+      object.save!
     end
 
+    subject { described_class.find(object.id).files }
+
+    it { is_expected.to eq [file1, file2] }
+  end
+
+  describe '#related_files' do
     xit 'should contain related files' do
       #   3) Hydra::PCDM::Object can contain (pcdm:hasRelatedFile) Hydra::PCDM::File
 
