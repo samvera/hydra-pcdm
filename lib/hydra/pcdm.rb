@@ -13,6 +13,11 @@ module Hydra
     autoload :CollectionBehavior,     'hydra/pcdm/models/concerns/collection_behavior'
     autoload :ObjectBehavior,         'hydra/pcdm/models/concerns/object_behavior'
 
+    # collection services
+    autoload :CreateCollection,           'hydra/pcdm/services/collection/create'
+
+
+
     def self.collection? collection
       return false unless collection.respond_to? :type
       collection.type.include? RDFVocabularies::PCDMTerms.Collection
