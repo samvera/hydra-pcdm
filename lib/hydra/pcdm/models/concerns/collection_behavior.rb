@@ -1,3 +1,5 @@
+require 'active_fedora/aggregation'
+
 module Hydra::PCDM
   module CollectionBehavior
     extend ActiveSupport::Concern
