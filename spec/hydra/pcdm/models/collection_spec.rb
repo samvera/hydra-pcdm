@@ -6,6 +6,7 @@ describe Hydra::PCDM::Collection do
   let(:collection2) { Hydra::PCDM::Collection.create }
   let(:collection3) { Hydra::PCDM::Collection.create }
   let(:collection4) { Hydra::PCDM::Collection.create }
+  let(:collection5) { Hydra::PCDM::Collection.create }
 
   let(:object1) { Hydra::PCDM::Object.create }
   let(:object2) { Hydra::PCDM::Object.create }
@@ -43,10 +44,11 @@ describe Hydra::PCDM::Collection do
       expect(collection1.collections).to eq [collection2,collection3,collection4]
     end
 
-    xit 'should aggregate collections in a sub-collection of a collection' do
-      collection1.collections << collection2
+    it 'should aggregate collections in a sub-collection of a collection' do
+      collection1.collections = [collection2]
       collection1.save
-      collection2.collections << collection3
+      collection2.collections = [collection3]
+      collection2.save
       expect(collection1.collections).to eq [collection2]
       expect(collection2.collections).to eq [collection3]
     end
@@ -98,9 +100,46 @@ describe Hydra::PCDM::Collection do
       end
     end
 
-    xit 'should NOT allow infinite loop in chain of aggregated collections' do
-       # TODO: write test to DISALLOW:  A -> B -> C -> A
-       # see issue #50
+    describe "adding collections that are ancestors" do
+      let(:error_message) { "a collection can't be an ancestor of itself" }
+
+      context "when the source collection is the same" do
+        it "raises an error" do
+          expect{ collection1.collections = [collection1]}.to raise_error(ArgumentError, error_message)
+        end
+      end
+      
+      before do
+        collection1.collections = [collection2]
+        collection1.save
+      end
+      
+      it "raises and error" do
+        expect{ collection2.collections = [collection1]}.to raise_error(ArgumentError, error_message)
+      end
+      
+      context "with more ancestors" do
+        before do
+          collection2.collections = [collection3]
+          collection2.save
+        end
+        
+        it "raises an error" do
+          expect{ collection3.collections = [collection1]}.to raise_error(ArgumentError, error_message)
+        end
+        
+        context "with a more complicated example" do     
+          before do
+            collection3.collections = [collection4, collection5]
+            collection3.save
+          end
+          
+          it "raises errors" do
+            expect{ collection4.collections = [collection1]}.to raise_error(ArgumentError, error_message)
+            expect{ collection4.collections = [collection2]}.to raise_error(ArgumentError, error_message)
+          end   
+        end
+      end
     end
   end
 

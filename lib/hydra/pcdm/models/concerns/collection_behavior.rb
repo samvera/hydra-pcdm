@@ -40,6 +40,7 @@ module Hydra::PCDM
 
     def collections= collections
       raise ArgumentError, "each collection must be a Hydra::PCDM::Collection" unless collections.all? { |c| Hydra::PCDM.collection? c }
+      raise ArgumentError, "a collection can't be an ancestor of itself" if collection_ancestor?(collections)
       self.members = self.objects + collections
     end
 
@@ -56,6 +57,28 @@ module Hydra::PCDM
     def objects
       all_members = self.members.container.to_a
       all_members.select { |m| Hydra::PCDM.object? m }
+    end
+
+    def collection_ancestor? collections
+      collections.each do |check|
+        return true if check.id == self.id
+        return true if ancestor?(check)
+      end
+      false
+    end
+
+    def ancestor? collection
+      return false if collection.collections.empty?
+      current_collections = collection.collections
+      next_batch = []
+      while !current_collections.empty? do
+        current_collections.each do |c|
+          return true if c.id == self.id
+          next_batch += c.collections
+        end
+        current_collections = next_batch
+      end
+      false
     end
 
     # TODO: RDF metadata can be added using property definitions.
