@@ -5,18 +5,22 @@ Hydra implementation of Portland Common Data Models (PCDM)
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add these lines to your application's Gemfile:
 
-    gem 'hydra-pcdm', :git => 'git@github.com:projecthydra-labs/hydra-pcdm.git', :branch => 'master'
-    
+```ruby
+  gem 'active-fedora', github: 'projecthydra/active_fedora' # hydra-pcdm requires an unreleased version of ActiveFedora
+  gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm'
+```
+
 Substitute another branch name for 'master' to test out a branch under development.    
 <!-- Temporarily comment out until gem is published.
     gem 'hydra-pcdm' 
 -->
 
 And then execute:
-
+```
     $ bundle
+```
 <!-- Temporarily comment out until gem is published.
 Or install it yourself as:
 
@@ -45,12 +49,39 @@ The sample model may change over time to reflect the state of the gam and what i
 
 ## Usage
 
-TODO: Write usage instructions here
+Hydra-pcdm provides three classes:
+```
+Hydra::PCDM::Object
+Hydra::PCDM::Collection
+Hydra::PCDM::File
+```
 
-## Contributing
+A `Hydra::PCDM::File` is a NonRDFSource &emdash; a bitstream.  You can use this to store content. A PCDM::File is contained by a PCDM::Object. A `File` has some attached technical metadata, but no descriptive metadata.  A `Hydra::PCDM::Object` contains files and other objects and may have descriptive metadata.  A `Hydra::PCDM::Collection` can contain other `Collection`s or `Object`s but not `File`s.  A `Collection` also may have descriptive metadata.
 
-1. Fork it ( https://github.com/[my-github-username]/hydra-pcdm/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+Typically usage involves extending the behavior provided by this gem. In your application you can write something like this:
+
+```ruby
+
+class Book < ActiveFedora::Base
+  include Hydra::PCDM::ObjectBehavior
+end
+
+class Collection < ActiveFedora::Base
+  include Hydra::PCDM::CollectionBehavior
+end
+
+c1 = Collection.create
+b1 = Book.create
+
+c1.members = [b1]
+# c1.members << b1 # This should work in the future
+c1.save
+
+# This section waiting on https://github.com/projecthydra-labs/hydra-pcdm/pull/52
+# f1 = b1.files.build
+# f1.conent = "The quick brown fox jumped over the lazy dog."
+# b1.save
+```
+
+## How to contribute
+If you'd like to contribute to this effort, please check out the [Contributing Guide](CONTRIBUTING.md)
