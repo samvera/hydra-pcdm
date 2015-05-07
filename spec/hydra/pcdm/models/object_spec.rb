@@ -95,23 +95,4 @@ describe Hydra::PCDM::Object do
 
     end
   end
-
-
-
-  describe '#METHOD_TO_SET_METADATA' do
-    xit 'should be able to set descriptive metadata' do
-      #   6) Hydra::PCDM::Collection can have descriptive metadata
-
-      # TODO Write test
-
-    end
-
-    xit 'should be able to set access metadata' do
-      #   7) Hydra::PCDM::Object can have descriptive metadata
-
-      # TODO Write test
-
-    end
-  end
-
 end
