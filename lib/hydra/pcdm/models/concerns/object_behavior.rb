@@ -38,42 +38,25 @@ module Hydra::PCDM
 
       # check that arg is an instance of Hydra::PCDM::Object or Hydra::PCDM::File
       raise ArgumentError, "argument must be either a Hydra::PCDM::Object or Hydra::PCDM::File" unless
-          arg.is_a?( Hydra::PCDM::Object ) || arg.is_a?( Hydra::PCDM::File )
-      members << arg  if arg.is_a? Hydra::PCDM::Object
-      files   << arg  if arg.is_a? Hydra::PCDM::File
+          ( Hydra::PCDM.object? arg ) || ( Hydra::PCDM.file? arg )
+      members << arg  if Hydra::PCDM.object? arg
+      files   << arg  if Hydra::PCDM.file? arg
     end
 
     def objects= objects
-      # check that object is an instance of Hydra::PCDM::Object
-      raise ArgumentError, "each object must be a Hydra::PCDM::Object" unless
-          objects.all? { |o| o.is_a? Hydra::PCDM::Object }
-
-      # TODO - how to prevent A - B - C - A causing a recursive loop of collections?
-
-      # TODO - may need something like the commented lines which was copied from Collection depending on how hasFile is implemented
-      # current_objects = self.objects
-      # new_members = current_objects + collections
-      # self.members = new_members
-
+      raise ArgumentError, "each object must be a Hydra::PCDM::Object" unless objects.all? { |o| Hydra::PCDM.object? o }
       self.members = objects
     end
 
     def objects
-      # TODO - may need something like the commented lines which was copied from Collection depending on how hasFile is implemented
-      # all_members = self.members.container.to_a
-      # all_members.select { |m| m.is_a? Hydra::PCDM::Object }
-
-      self.members
+      all_members = self.members.container.to_a
+      all_members.select { |m| Hydra::PCDM.object? m }
     end
-
-    # TODO: Not sure how to handle obj1.objects << new_object.
-    #       Want to override << on obj1.objects to check that new_object is_a? Hydra::PCDM::Object
-
 
     def contains= files
       # check that file is an instance of Hydra::PCDM::File
       raise ArgumentError, "each file must be a Hydra::PCDM::File" unless
-          files.all? { |f| f.is_a? Hydra::PCDM::File }
+          files.all? { |f| Hydra::PCDM.file? f }
       super(files)
     end
 

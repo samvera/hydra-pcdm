@@ -13,5 +13,20 @@ module Hydra
     autoload :CollectionBehavior,     'hydra/pcdm/models/concerns/collection_behavior'
     autoload :ObjectBehavior,         'hydra/pcdm/models/concerns/object_behavior'
 
+    def self.collection? collection
+      return false unless collection.respond_to? :type
+      collection.type.include? RDFVocabularies::PCDMTerms.Collection
+    end
+
+    def self.object? object
+      return false unless object.respond_to? :type
+      object.type.include? RDFVocabularies::PCDMTerms.Object
+    end
+
+    def self.file? file
+      return false unless file.respond_to? :type
+      file.type.include? RDFVocabularies::PCDMTerms.File
+    end
+
   end
 end
