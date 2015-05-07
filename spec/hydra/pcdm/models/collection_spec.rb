@@ -203,13 +203,6 @@ describe Hydra::PCDM::Collection do
     end
   end
 
-
-  describe '#contains' do
-    it 'should not be allowed' do
-      expect{ collection1.contains }.to raise_error(NotImplementedError, "`contains' is not allowed for :Hydra::PCDM::Collection")
-    end
-  end
-
   describe '#METHOD_TO_SET_METADATA' do
     xit 'should be able to set descriptive metadata' do
       #   6) Hydra::PCDM::Collection can have descriptive metadata

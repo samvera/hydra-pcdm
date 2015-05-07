@@ -56,10 +56,6 @@ module Hydra::PCDM
       all_members.select { |m| object? m }
     end
 
-    def contains
-      raise NotImplementedError, "`contains' is not allowed for :Hydra::PCDM::Collection"
-    end
-
     def collection? collection
       return false unless collection.respond_to? :type
       collection.type.include? RDFVocabularies::PCDMTerms.Collection
