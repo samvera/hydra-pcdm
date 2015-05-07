@@ -83,16 +83,23 @@ describe Hydra::PCDM::Object do
     end
 
     subject { described_class.find(object.id).files }
-
     it { is_expected.to eq [file1, file2] }
   end
 
   describe '#related_files' do
-    xit 'should contain related files' do
-      #   3) Hydra::PCDM::Object can contain (pcdm:hasRelatedFile) Hydra::PCDM::File
+    let(:object) { described_class.new }
+    let(:file1) { Hydra::PCDM::File.new.tap { |f| f.content = 'foo'; f.save } }
+    let(:file2) { Hydra::PCDM::File.new.tap { |f| f.content = 'bar'; f.save } }
 
-      # TODO Write test
-
+    before do
+      object.related_files = [file1, file2]
+      object.save!
     end
+
+    subject do
+      object.reload.related_files
+    end
+
+    it { is_expected.to include(file1, file2) }
   end
 end
