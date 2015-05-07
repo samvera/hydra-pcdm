@@ -6,11 +6,8 @@ module Hydra::PCDM
 
     included do
       type RDFVocabularies::PCDMTerms.Object  # TODO switch to using generated vocabulary when ready
-      aggregates :members, :predicate => RDFVocabularies::PCDMTerms.hasMember, :class_name => "ActiveFedora::Base"
-
-      # TODO How to specify contains relationship for Hydra::PCDM::Object contains Hydra::PCDM::File
-      # TODO will hasFile be an aggregation of Hydra::PCDM::Files
-      # aggregates :files, :predicate => RDFVocabularies::PCDMTerms.hasFile, :class_name => "ActiveFedora::File"
+      aggregates :members, predicate: RDFVocabularies::PCDMTerms.hasMember, class_name: "ActiveFedora::Base"
+      directly_contains :files, has_member_relation: RDFVocabularies::PCDMTerms.hasFile, class_name: "Hydra::PCDM::File"
     end
 
 
