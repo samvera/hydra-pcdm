@@ -18,6 +18,8 @@ module Hydra::PCDM
 
       directly_contains :files, has_member_relation: RDFVocabularies::PCDMTerms.hasFile,
         class_name: "Hydra::PCDM::File"
+      directly_contains :related_files, has_member_relation: RDFVocabularies::PCDMTerms.hasRelatedFile,
+        class_name: "Hydra::PCDM::File"
     end
 
     module ClassMethods

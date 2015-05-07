@@ -687,4 +687,47 @@ describe Hydra::PCDM::Object do
     end
   end
 
+  describe '#related_files' do
+    let(:object) { described_class.new }
+    let(:file1) { Hydra::PCDM::File.new.tap { |f| f.content = 'foo' } }
+    let(:file2) { Hydra::PCDM::File.new.tap { |f| f.content = 'bar' } }
+
+    context "with valid files" do
+      before do
+        object.related_files = [file1, file2]
+      end
+
+      subject do
+        object.related_files
+      end
+
+      it { is_expected.to include(file1, file2) }
+    end
+
+    context "with invalid files" do
+      it "should not allow assigning pcdm:Objects" do
+        expect { object.related_files << Hydra::PCDM::Object.new }.to raise_error(ActiveFedora::AssociationTypeMismatch, /Hydra::PCDM::File.* expected, got Hydra::PCDM::Object.*/)
+      end
+      it "should not allow assigning pcdm:Collections" do
+        expect { object.related_files << Hydra::PCDM::Collection.new }.to raise_error(ActiveFedora::AssociationTypeMismatch, /Hydra::PCDM::File.* expected, got Hydra::PCDM::Collection.*/)
+      end
+      it "should not allow assigning AF:File objects" do
+        expect { object.related_files << ActiveFedora::File.new }.to raise_error(ActiveFedora::AssociationTypeMismatch, /Hydra::PCDM::File.* expected, got ActiveFedora::File.*/)
+      end
+      it "should not allow assigning other objects" do
+        expect { object.related_files << "I am not a file" }.to raise_error(ActiveFedora::AssociationTypeMismatch, /Hydra::PCDM::File.* expected, got String.*/)
+      end
+    end
+
+    describe "#related_files.delete" do
+      before do
+        object.related_files = [file1, file2]
+      end
+      it "should allow removing a related file" do
+        expect(object.related_files.delete file2).to eq [file2]
+        expect(object.related_files).to eq [file1]
+      end
+    end
+  end
+
 end
