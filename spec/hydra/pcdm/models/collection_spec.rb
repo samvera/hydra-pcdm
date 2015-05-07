@@ -31,16 +31,16 @@ describe Hydra::PCDM::Collection do
 
   describe '#collections=' do
     it 'should aggregate collections' do
-      collection1.collections = [collection2,collection3]
+      collection1.collections = [collection2, collection3]
       collection1.save
-      expect(collection1.collections).to eq [collection2,collection3]
+      expect(collection1.collections).to eq [collection2, collection3]
     end
 
     xit 'should add a collection to the collections aggregation' do
       collection1.collections = [collection2,collection3]
       collection1.save
       collection1.collections << collection4
-      expect(collection1.collections).to eq [collection2,collection3,collection4]
+      expect(collection1.collections).to eq [collection2, collection3, collection4]
     end
 
     xit 'should aggregate collections in a sub-collection of a collection' do
@@ -200,6 +200,20 @@ describe Hydra::PCDM::Collection do
       collection1.objects = [object1,object2]
       collection1.save
       expect(collection1.objects).to eq [object1,object2]
+    end
+  end
+
+  describe 'Related objects' do
+    let(:object) { Hydra::PCDM::Object.create }
+    let(:collection) { Hydra::PCDM::Collection.create }
+
+    before do
+      collection.related_objects = [object]
+      collection.save
+    end
+
+    it 'persists' do
+      expect(collection.reload.related_objects).to eq [object]
     end
   end
 end

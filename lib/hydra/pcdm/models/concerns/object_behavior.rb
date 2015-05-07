@@ -5,9 +5,17 @@ module Hydra::PCDM
     extend ActiveSupport::Concern
 
     included do
-      type RDFVocabularies::PCDMTerms.Object  # TODO switch to using generated vocabulary when ready
-      aggregates :members, predicate: RDFVocabularies::PCDMTerms.hasMember, class_name: "ActiveFedora::Base"
-      directly_contains :files, has_member_relation: RDFVocabularies::PCDMTerms.hasFile, class_name: "Hydra::PCDM::File"
+      type RDFVocabularies::PCDMTerms.Object
+
+      aggregates :members, predicate: RDFVocabularies::PCDMTerms.hasMember,
+        class_name: "ActiveFedora::Base"
+
+      indirectly_contains :related_objects, has_member_relation: RDF::Vocab::ORE.aggregates,
+        inserted_content_relation: RDF::Vocab::ORE.proxyFor, class_name: "ActiveFedora::Base",
+        through: 'ActiveFedora::Aggregation::Proxy', foreign_key: :target
+
+      directly_contains :files, has_member_relation: RDFVocabularies::PCDMTerms.hasFile,
+        class_name: "Hydra::PCDM::File"
     end
 
 
