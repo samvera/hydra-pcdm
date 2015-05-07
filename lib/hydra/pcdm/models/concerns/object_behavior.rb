@@ -8,9 +8,14 @@ module Hydra::PCDM
       type RDFVocabularies::PCDMTerms.Object  # TODO switch to using generated vocabulary when ready
       aggregates :members, :predicate => RDFVocabularies::PCDMTerms.hasMember, :class_name => "ActiveFedora::Base"
 
+      def self.object? object
+        return false unless object.respond_to? :type
+        object.type.include? RDFVocabularies::PCDMTerms.Object
+      end
+
       # TODO How to specify contains relationship for Hydra::PCDM::Object contains Hydra::PCDM::File
-      # TODO will hasFile be an aggregation of Hydra::PCDM::Files
-      # aggregates :files, :predicate => RDFVocabularies::PCDMTerms.hasFile, :class_name => "ActiveFedora::File"
+      # TODO an activefedora-contains method is being written... TBA... something like
+      # contains :files, :predicate => RDFVocabularies::PCDMTerms.hasFile, :class_name => "ActiveFedora::File"
     end
 
 
@@ -41,32 +46,22 @@ module Hydra::PCDM
 
       # check that arg is an instance of Hydra::PCDM::Object or Hydra::PCDM::File
       raise ArgumentError, "argument must be either a Hydra::PCDM::Object or Hydra::PCDM::File" unless
-          arg.is_a?( Hydra::PCDM::Object ) || arg.is_a?( Hydra::PCDM::File )
-      members << arg  if arg.is_a? Hydra::PCDM::Object
-      files   << arg  if arg.is_a? Hydra::PCDM::File
+          (Hydra::PCDM::Object.object? arg) || (Hydra::PCDM::File.file? arg)
+      members << arg  if arg.is_a? Hydra::PCDM::Object.object? arg
+      files   << arg  if arg.is_a? Hydra::PCDM::File.file? arg
     end
 
     def objects= objects
       # check that object is an instance of Hydra::PCDM::Object
       raise ArgumentError, "each object must be a Hydra::PCDM::Object" unless
-          objects.all? { |o| o.is_a? Hydra::PCDM::Object }
-
-      # TODO - how to prevent A - B - C - A causing a recursive loop of collections?
-
-      # TODO - may need something like the commented lines which was copied from Collection depending on how hasFile is implemented
-      # current_objects = self.objects
-      # new_members = current_objects + collections
-      # self.members = new_members
-
+          objects.all? { |o| Hydra::PCDM::Object.object? o }
+      # TODO - how to prevent A - B - C - A causing a recursive loop of objects?
       self.members = objects
     end
 
     def objects
-      # TODO - may need something like the commented lines which was copied from Collection depending on how hasFile is implemented
-      # all_members = self.members.container.to_a
-      # all_members.select { |m| m.is_a? Hydra::PCDM::Object }
-
-      self.members
+      all_members = self.members.container.to_a
+      all_members.select { |m| Hydra::PCDM::Object.object? m }
     end
 
     # TODO: Not sure how to handle obj1.objects << new_object.

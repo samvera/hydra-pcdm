@@ -7,6 +7,11 @@ module Hydra::PCDM
     included do
       type RDFVocabularies::PCDMTerms.Collection  # TODO switch to using generated vocabulary when ready
       aggregates :members, :predicate => RDFVocabularies::PCDMTerms.hasMember, :class_name => "ActiveFedora::Base"
+
+      def self.collection? collection
+        return false unless collection.respond_to? :type
+        collection.type.include? RDFVocabularies::PCDMTerms.Collection
+      end
     end
 
     # behavior:
@@ -34,38 +39,31 @@ module Hydra::PCDM
 
       # check that arg is an instance of Hydra::PCDM::Collection or Hydra::PCDM::Object
       raise ArgumentError, "argument must be either a Hydra::PCDM::Collection or Hydra::PCDM::Object" unless
-          arg.is_a?( Hydra::PCDM::Collection ) || arg.is_a?( Hydra::PCDM::Object )
+          (Hydra::PCDM::Collection.collection? arg) || (Hydra::PCDM::Object.object? arg)
       members << arg
     end
 
     def collections= collections
-      raise ArgumentError, "each collection must be a Hydra::PCDM::Collection" unless collections.all? { |c| collection? c }
+      raise ArgumentError, "each collection must be a Hydra::PCDM::Collection" unless
+          collections.all? { |c| Hydra::PCDM::Collection.collection? c }
+      # TODO - how to prevent A - B - C - A causing an infinite loop of collections?
       self.members = self.objects + collections
     end
 
     def collections
       all_members = self.members.container.to_a
-      all_members.select { |m| collection? m }
+      all_members.select { |m| Hydra::PCDM::Collection.collection? m }
     end
 
     def objects= objects
-      raise ArgumentError, "each object must be a Hydra::PCDM::Object" unless objects.all? { |o| object? o }
+      raise ArgumentError, "each object must be a Hydra::PCDM::Object" unless
+          objects.all? { |o| Hydra::PCDM::Object.object? o }
       self.members = self.collections + objects
     end
 
     def objects
       all_members = self.members.container.to_a
-      all_members.select { |m| object? m }
-    end
-
-    def collection? collection
-      return false unless collection.respond_to? :type
-      collection.type.include? RDFVocabularies::PCDMTerms.Collection
-    end
-
-    def object? object
-      return false unless object.respond_to? :type
-      object.type.include? RDFVocabularies::PCDMTerms.Object
+      all_members.select { |m| Hydra::PCDM::Object.object? m }
     end
 
     # TODO: RDF metadata can be added using property definitions.
