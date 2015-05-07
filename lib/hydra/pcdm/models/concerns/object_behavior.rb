@@ -8,6 +8,7 @@ module Hydra::PCDM
       type RDFVocabularies::PCDMTerms.Object  # TODO switch to using generated vocabulary when ready
       aggregates :members, predicate: RDFVocabularies::PCDMTerms.hasMember, class_name: "ActiveFedora::Base"
       directly_contains :files, has_member_relation: RDFVocabularies::PCDMTerms.hasFile, class_name: "Hydra::PCDM::File"
+      property :related_files, predicate: RDFVocabularies::PCDMTerms.hasRelatedFile, class_name: 'Hydra::PCDM::File'
     end
 
 

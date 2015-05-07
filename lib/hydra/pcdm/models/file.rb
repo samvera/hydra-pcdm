@@ -6,5 +6,10 @@ module Hydra::PCDM
       configure type: RDFVocabularies::PCDMTerms.File
       property :label, predicate: ::RDF::RDFS.label
     end
+
+    # TODO move to ActiveFedora?
+    def resource
+      metadata_node
+    end
   end
 end
