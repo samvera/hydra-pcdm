@@ -28,9 +28,9 @@ describe Hydra::PCDM::Object do
       object2 = Hydra::PCDM::Object.create
       object3 = Hydra::PCDM::Object.create
 
-      object1.objects = [object2,object3]
+      object1.objects = [object2, object3]
       object1.save
-      expect(object1.objects).to eq [object2,object3]
+      expect(object1.objects).to eq [object2, object3]
     end
 
     xit 'should add an object to the objects aggregation' do
@@ -65,9 +65,22 @@ describe Hydra::PCDM::Object do
 
   describe '#objects' do
     it 'should return empty array when no members' do
-      object1 = Hydra::PCDM::Object.create
-      object1.save
+      object1 = Hydra::PCDM::Object.new
       expect(object1.objects).to eq []
+    end
+  end
+
+  describe 'Related objects' do
+    let(:object1) { Hydra::PCDM::Object.create }
+    let(:object2) { Hydra::PCDM::Object.create }
+
+    before do
+      object1.related_objects = [object2]
+      object1.save
+    end
+
+    it 'persists' do
+      expect(object1.reload.related_objects).to eq [object2]
     end
   end
 
