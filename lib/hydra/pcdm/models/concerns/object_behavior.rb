@@ -57,8 +57,7 @@ module Hydra::PCDM
     end
 
     def objects
-      all_members = self.members.container.to_a
-      all_members.select { |m| Hydra::PCDM.object? m }
+      members.to_a.select { |m| Hydra::PCDM.object? m }
     end
 
     def contains= files

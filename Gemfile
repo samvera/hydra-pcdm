@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation', ref: '50bb31e'
+gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation'
 gem 'active-fedora', github: 'projecthydra/active_fedora'
 
 
