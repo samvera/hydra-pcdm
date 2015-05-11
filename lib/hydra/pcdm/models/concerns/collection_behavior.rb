@@ -86,6 +86,28 @@ module Hydra::PCDM
       false
     end
 
+    def collection_ancestor? collections
+      collections.each do |check|
+        return true if check.id == self.id
+        return true if ancestor?(check)
+      end
+      false
+    end
+
+    def ancestor? collection
+      return false if collection.collections.empty?
+      current_collections = collection.collections
+      next_batch = []
+      while !current_collections.empty? do
+        current_collections.each do |c|
+          return true if c.id == self.id
+          next_batch += c.collections
+        end
+        current_collections = next_batch
+      end
+      false
+    end
+
     # TODO: RDF metadata can be added using property definitions.
     #   * How to distinguish between descriptive and access metadata?
     #   * Are there any default properties to set for Collection's descriptive metadata?
