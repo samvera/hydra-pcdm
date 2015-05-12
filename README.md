@@ -1,6 +1,6 @@
 # Hydra::PCDM
 [![Build Status](https://travis-ci.org/projecthydra-labs/hydra-pcdm.svg?branch=master)](https://travis-ci.org/projecthydra-labs/hydra-pcdm)
-[![Coverage Status](https://coveralls.io/repos/projecthydra-labs/hydra-pcdm/badge.svg)](https://coveralls.io/r/projecthydra-labs/hydra-pcdm)
+[![Coverage Status](https://coveralls.io/repos/projecthydra-labs/hydra-pcdm/badge.svg?branch=master)](https://coveralls.io/r/projecthydra-labs/hydra-pcdm?branch=master)
 
 Hydra implementation of Portland Common Data Models (PCDM)
 
