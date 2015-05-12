@@ -27,9 +27,6 @@ module Hydra::PCDM
     #   6) Hydra::PCDM::Collection can have descriptive metadata
     #   7) Hydra::PCDM::Collection can have access metadata
 
-    # TODO: Make members private adding to an aggregations has to go through the following methods.
-
-
 
     def << arg
 
@@ -46,7 +43,7 @@ module Hydra::PCDM
     end
 
     def collections= collections
-      raise ArgumentError, "each collection must be a Hydra::PCDM::Collection" unless collections.all? { |c| Hydra::PCDM.collection? c }
+      raise ArgumentError, "each collection must be a pcdm collection" unless collections.all? { |c| Hydra::PCDM.collection? c }
       raise ArgumentError, "a collection can't be an ancestor of itself" if collection_ancestor?(collections)
       self.members = self.objects + collections
     end
@@ -56,7 +53,7 @@ module Hydra::PCDM
     end
 
     def objects= objects
-      raise ArgumentError, "each object must be a Hydra::PCDM::Object" unless objects.all? { |o| Hydra::PCDM.object? o }
+      raise ArgumentError, "each object must be a pcdm object" unless objects.all? { |o| Hydra::PCDM.object? o }
       self.members = self.collections + objects
     end
 
@@ -91,8 +88,6 @@ module Hydra::PCDM
     #   * Are there any default properties to set for Collection's descriptive metadata?
     #   * Are there any default properties to set for Collection's access metadata?
     #   * Is there a way to override default properties defined in this class?
-
-    # TODO: Add ORE.aggregates related Hydra::PCDM::Objects.
 
   end
 end
