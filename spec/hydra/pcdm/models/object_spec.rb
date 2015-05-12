@@ -35,7 +35,19 @@ describe Hydra::PCDM::Object do
       expect(object1.objects).to eq [object2, object3]
     end
 
-    xit 'should add a object to the objects aggregation' do
+    context 'when aggregating other objects' do
+      before do
+        object1.objects = [object2, object3]
+        object1.save
+      end
+      subject { object1.objects }
+      it { is_expected.to eq [object2, object3] }
+      it 'solrizes member ids' do
+        expect(object1.to_solr["objects_ssim"]).to include(object3.id, object2.id)
+      end
+    end
+
+    xit 'should add an object to the objects aggregation' do
       object1.objects = [object2,object3]
       object1.save
       object1.objects << object4
@@ -151,9 +163,6 @@ describe Hydra::PCDM::Object do
   end
 
   describe 'Related objects' do
-    let(:object1) { Hydra::PCDM::Object.create }
-    let(:object2) { Hydra::PCDM::Object.create }
-
     before do
       object1.related_objects = [object2]
       object1.save

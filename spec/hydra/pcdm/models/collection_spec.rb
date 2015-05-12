@@ -157,12 +157,22 @@ describe Hydra::PCDM::Collection do
       expect(collection1.collections).to eq []
     end
 
-    it 'should only return collections' do
-      collection1.collections = [collection2,collection3]
-      collection1.objects = [object1,object2]
-      collection1.save
-      expect(collection1.collections).to eq [collection2,collection3]
-    end
+    context 'with other collections' do
+      before do
+        collection1.collections = [collection2,collection3]
+        collection1.objects = [object1,object2]
+        collection1.save
+      end
+      it 'should only return collections' do
+        expect(collection1.collections).to eq [collection2,collection3]
+      end
+      it 'should solrize member ids' do
+        expect(collection1.to_solr["objects_ssim"]).to include(object1.id,object2.id)
+        expect(collection1.to_solr["objects_ssim"]).not_to include(collection3.id,collection2.id)
+        expect(collection1.to_solr["collections_ssim"]).to include(collection3.id,collection2.id)
+        expect(collection1.to_solr["collections_ssim"]).not_to include(object1.id,object2.id)
+      end
+   end
   end
 
 
@@ -258,4 +268,5 @@ describe Hydra::PCDM::Collection do
       expect(collection.reload.related_objects).to eq [object]
     end
   end
+
 end

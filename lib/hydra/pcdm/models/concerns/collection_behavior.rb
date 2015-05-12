@@ -14,6 +14,9 @@ module Hydra::PCDM
         inserted_content_relation: RDF::Vocab::ORE.proxyFor, class_name: "ActiveFedora::Base",
         through: 'ActiveFedora::Aggregation::Proxy', foreign_key: :target
 
+      def self.indexer
+        Hydra::PCDM::Indexer
+      end
     end
 
     # behavior:

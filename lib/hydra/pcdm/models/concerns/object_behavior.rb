@@ -16,6 +16,10 @@ module Hydra::PCDM
 
       directly_contains :files, has_member_relation: RDFVocabularies::PCDMTerms.hasFile,
         class_name: "Hydra::PCDM::File"
+
+      def self.indexer
+        Hydra::PCDM::Indexer
+      end
     end
 
 
