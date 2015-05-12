@@ -20,21 +20,17 @@ module Hydra::PCDM
 
 
     # behavior:
-
     #   1) Hydra::PCDM::Object can aggregate (pcdm:hasMember) Hydra::PCDM::Object
+    #   2) Hydra::PCDM::Object can aggregate (ore:aggregates) Hydra::PCDM::Object  (Object related to the Object)
 
-    #   2) Hydra::PCDM::Object can contain (pcdm:hasFile) Hydra::PCDM::File
-    #   3) Hydra::PCDM::Object can contain (pcdm:hasRelatedFile) Hydra::PCDM::File
+    #   3) Hydra::PCDM::Object can contain (pcdm:hasFile) Hydra::PCDM::File
+    #   4) Hydra::PCDM::Object can contain (pcdm:hasRelatedFile) Hydra::PCDM::File
 
-    #   4) Hydra::PCDM::Object can NOT aggregate Hydra::PCDM::Collection
-    #   5) Hydra::PCDM::Object can NOT aggregate non-PCDM object
+    #   5) Hydra::PCDM::Object can NOT aggregate Hydra::PCDM::Collection
+    #   6) Hydra::PCDM::Object can NOT aggregate non-PCDM object
 
-    #   6) Hydra::PCDM::Object can have descriptive metadata
-    #   7) Hydra::PCDM::Object can have access metadata
-    # TODO: add code to enforce behavior rules
-
-    # TODO: Make members private so adding to an aggregations has to go through the following methods.
-
+    #   7) Hydra::PCDM::Object can have descriptive metadata
+    #   8) Hydra::PCDM::Object can have access metadata
 
 
     def << arg
@@ -45,14 +41,15 @@ module Hydra::PCDM
       #       Want to override << on obj1.objects to check that new_object is_a? Hydra::PCDM::Object
 
       # check that arg is an instance of Hydra::PCDM::Object or Hydra::PCDM::File
-      raise ArgumentError, "argument must be either a Hydra::PCDM::Object or Hydra::PCDM::File" unless
+      raise ArgumentError, "argument must be either a pcdm object or a pcdm file" unless
           ( Hydra::PCDM.object? arg ) || ( Hydra::PCDM.file? arg )
       members << arg  if Hydra::PCDM.object? arg
       files   << arg  if Hydra::PCDM.file? arg
     end
 
     def objects= objects
-      raise ArgumentError, "each object must be a Hydra::PCDM::Object" unless objects.all? { |o| Hydra::PCDM.object? o }
+      raise ArgumentError, "each object must be a pcdm object" unless objects.all? { |o| Hydra::PCDM.object? o }
+      raise ArgumentError, "an object can't be an ancestor of itself" if object_ancestor?(objects)
       self.members = objects
     end
 
@@ -60,14 +57,36 @@ module Hydra::PCDM
       members.to_a.select { |m| Hydra::PCDM.object? m }
     end
 
+    def object_ancestor? objects
+      objects.each do |check|
+        return true if check.id == self.id
+        return true if ancestor?(check)
+      end
+      false
+    end
+
+    def ancestor? object
+      return false if object.objects.empty?
+      current_objects = object.objects
+      next_batch = []
+      while !current_objects.empty? do
+        current_objects.each do |c|
+          return true if c.id == self.id
+          next_batch += c.objects
+        end
+        current_objects = next_batch
+      end
+      false
+    end
+
     def contains= files
       # check that file is an instance of Hydra::PCDM::File
-      raise ArgumentError, "each file must be a Hydra::PCDM::File" unless
+      raise ArgumentError, "each file must be a pcdm file" unless
           files.all? { |f| Hydra::PCDM.file? f }
       super(files)
     end
 
-    # TODO: Add hasRelatedFiles
+    # TODO: implement hasRelatedFiles
 
     # TODO: RDF metadata can be added using property definitions.
     #   * How to distinguish between descriptive and access metadata?

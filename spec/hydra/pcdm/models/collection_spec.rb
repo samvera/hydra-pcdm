@@ -54,16 +54,18 @@ describe Hydra::PCDM::Collection do
     end
 
     context 'with unacceptable collections' do
+      let(:error_message) { "each collection must be a pcdm collection" }
+
       it 'should NOT aggregate Hydra::PCDM::Objects in collections aggregation' do
-        expect{ collection1.collections = [object1] }.to raise_error(ArgumentError,"each collection must be a Hydra::PCDM::Collection")
+        expect{ collection1.collections = [object1] }.to raise_error(ArgumentError,error_message)
       end
 
       it 'should NOT aggregate non-PCDM objects in collections aggregation' do
-        expect{ collection1.collections = [non_PCDM_object] }.to raise_error(ArgumentError,"each collection must be a Hydra::PCDM::Collection")
+        expect{ collection1.collections = [non_PCDM_object] }.to raise_error(ArgumentError,error_message)
       end
 
       it 'should NOT aggregate AF::Base objects in collections aggregation' do
-        expect{ collection1.collections = [af_base_object] }.to raise_error(ArgumentError,"each collection must be a Hydra::PCDM::Collection")
+        expect{ collection1.collections = [af_base_object] }.to raise_error(ArgumentError,error_message)
       end
     end
 
@@ -179,12 +181,13 @@ describe Hydra::PCDM::Collection do
     end
 
     context "with unacceptable objects" do
+      let(:error_message) { "each object must be a pcdm object" }
       it 'should NOT aggregate Hydra::PCDM::Collection in objects aggregation' do
-        expect{ collection1.objects = [collection2] }.to raise_error(ArgumentError,"each object must be a Hydra::PCDM::Object")
+        expect{ collection1.objects = [collection2] }.to raise_error(ArgumentError,error_message)
       end
 
       it 'should NOT aggregate non-PCDM objects in collections aggregation' do
-        expect{ collection1.objects = [non_PCDM_object] }.to raise_error(ArgumentError,"each object must be a Hydra::PCDM::Object")
+        expect{ collection1.objects = [non_PCDM_object] }.to raise_error(ArgumentError,error_message)
       end
     end
 
