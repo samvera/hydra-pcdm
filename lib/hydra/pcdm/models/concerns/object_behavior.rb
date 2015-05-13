@@ -39,12 +39,9 @@ module Hydra::PCDM
 
     def << arg
 
-      # TODO This fails.  Tests using << operator are marked xit.
+      # TODO: Not sure how to handle obj1.objects << new_object.  (see issue #45)
+      #       Want to override << on obj1.objects to check that new_object passes Hydra::PCDM.object?
 
-      # TODO: Not sure how to handle obj1.objects << new_object.
-      #       Want to override << on obj1.objects to check that new_object is_a? Hydra::PCDM::Object
-
-      # check that arg is an instance of Hydra::PCDM::Object or Hydra::PCDM::File
       raise ArgumentError, "argument must be either a pcdm object or a pcdm file" unless
           ( Hydra::PCDM.object? arg ) || ( Hydra::PCDM.file? arg )
       members << arg  if Hydra::PCDM.object? arg
@@ -89,14 +86,6 @@ module Hydra::PCDM
           files.all? { |f| Hydra::PCDM.file? f }
       super(files)
     end
-
-    # TODO: implement hasRelatedFiles
-
-    # TODO: RDF metadata can be added using property definitions.
-    #   * How to distinguish between descriptive and access metadata?
-    #   * Are there any default properties to set for Object's descriptive metadata?
-    #   * Are there any default properties to set for Object's access metadata?
-    #   * Is there a way to override default properties defined in this class?
 
   end
 end

@@ -33,13 +33,11 @@ module Hydra::PCDM
 
     def << arg
 
-      # TODO This fails.  Tests using << operator are marked xit.
+      # TODO: Not sure how to handle coll1.collections << new_collection.  (see issue #45)
+      #       Want to override << on coll1.collections to check that new_collection passes Hydra::PCDM.collection?
+      # TODO: Not sure how to handle coll1.objects << new_object.  (see issue #45)
+      #       Want to override << on coll1.objects to check that new_object passes Hydra::PCDM.object?
 
-      # TODO: Not sure how to handle coll1.collections << new_collection and coll1.objects << new_object.
-      #       Want to override << on coll1.collections to check that new_collection is_a? Hydra::PCDM::Collection
-      #       Want to override << on coll1.objects to check that new_object is_a? Hydra::PCDM::Object
-
-      # check that arg is an instance of Hydra::PCDM::Collection or Hydra::PCDM::Object
       raise ArgumentError, "argument must be either a Hydra::PCDM::Collection or Hydra::PCDM::Object" unless
           ( Hydra::PCDM.collection? arg ) || ( Hydra::PCDM.object? arg )
       members << arg
@@ -85,12 +83,6 @@ module Hydra::PCDM
       end
       false
     end
-
-    # TODO: RDF metadata can be added using property definitions.
-    #   * How to distinguish between descriptive and access metadata?
-    #   * Are there any default properties to set for Collection's descriptive metadata?
-    #   * Are there any default properties to set for Collection's access metadata?
-    #   * Is there a way to override default properties defined in this class?
 
   end
 end

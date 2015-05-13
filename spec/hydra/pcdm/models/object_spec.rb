@@ -47,13 +47,6 @@ describe Hydra::PCDM::Object do
       end
     end
 
-    xit 'should add an object to the objects aggregation' do
-      object1.objects = [object2,object3]
-      object1.save
-      object1.objects << object4
-      expect(object1.objects).to eq [object2,object3,object4]
-    end
-
     it 'should aggregate objects in a sub-object of a object' do
       object1.objects = [object2]
       object1.save
@@ -187,12 +180,6 @@ describe Hydra::PCDM::Object do
     subject { described_class.find(object.id).files }
 
     it { is_expected.to eq [file1, file2] }
-  end
-
-  describe 'Related files' do
-    xit 'should allow related files' do
-      # TODO Write test
-    end
   end
 
 end
