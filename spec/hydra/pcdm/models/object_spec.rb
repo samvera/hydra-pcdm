@@ -10,6 +10,7 @@ describe Hydra::PCDM::Object do
 
   let(:file1) { Hydra::PCDM::File.new }
   let(:file2) { Hydra::PCDM::File.new }
+  let(:file3) { Hydra::PCDM::File.new }
 
   let(:collection1) { Hydra::PCDM::Collection.create }
   let(:non_PCDM_object)  { "I'm not a PCDM object" }
@@ -28,18 +29,46 @@ describe Hydra::PCDM::Object do
   #   7) Hydra::PCDM::Object can have descriptive metadata
   #   8) Hydra::PCDM::Object can have access metadata
 
+  describe '#<<' do
+    context 'with acceptable objects' do
+      it 'should add a object to the objects aggregation' do
+        object1.objects = [object2,object3]
+        object1.save
+        object1 << object4
+        expect(object1.objects).to eq [object2,object3,object4]
+      end
+
+      it 'should add a file to the files container' do
+        object1.files = [file1,file2]
+        object1.save
+        object1 << file3
+        expect(object1.files).to eq [file1,file2,file3]
+      end
+    end
+
+    context 'with unacceptable objects' do
+      let(:error_message) { "argument must be either a pcdm object or a pcdm file" }
+
+      it 'should NOT aggregate Hydra::PCDM::Collections in objects aggregation' do
+        expect{ object1 << collection1 }.to raise_error(ArgumentError,error_message)
+      end
+
+      it 'should NOT aggregate non-PCDM objects in objects aggregation' do
+        expect{ object1 << non_PCDM_object }.to raise_error(ArgumentError,error_message)
+      end
+
+      it 'should NOT aggregate AF::Base objects in objects aggregation' do
+        expect{ object1 << af_base_object }.to raise_error(ArgumentError,error_message)
+      end
+
+    end
+  end
+
   describe '#objects=' do
     it 'should aggregate objects' do
       object1.objects = [object2, object3]
       object1.save
       expect(object1.objects).to eq [object2, object3]
-    end
-
-    xit 'should add a object to the objects aggregation' do
-      object1.objects = [object2,object3]
-      object1.save
-      object1.objects << object4
-      expect(object1.objects).to eq [object2,object3,object4]
     end
 
     it 'should aggregate objects in a sub-object of a object' do
@@ -178,12 +207,6 @@ describe Hydra::PCDM::Object do
     subject { described_class.find(object.id).files }
 
     it { is_expected.to eq [file1, file2] }
-  end
-
-  describe 'Related files' do
-    xit 'should allow related files' do
-      # TODO Write test
-    end
   end
 
 end

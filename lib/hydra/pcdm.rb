@@ -24,8 +24,9 @@ module Hydra
     end
 
     def self.file? file
-      return false unless file.respond_to? :type
-      file.type.include? RDFVocabularies::PCDMTerms.File
+      return false unless file.respond_to? :metadata_node
+      rdf_type = file.metadata_node.query(predicate: RDF.type, object: RDFVocabularies::PCDMTerms.File).map(&:object)
+      rdf_type.include? RDFVocabularies::PCDMTerms.File
     end
 
   end

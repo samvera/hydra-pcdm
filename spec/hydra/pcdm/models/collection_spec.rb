@@ -26,22 +26,52 @@ describe Hydra::PCDM::Collection do
   #   6) Hydra::PCDM::Collection can have descriptive metadata
   #   7) Hydra::PCDM::Collection can have access metadata
 
+  describe '#<<' do
+    context 'with acceptable objects' do
+      it 'should add a collection to the collections aggregation' do
+        collection1.collections = [collection2,collection3]
+        collection1 << collection4
+        collection1.save
+        expect(collection1.collections).to eq [collection2, collection3, collection4]
+      end
 
-  # TODO need test to validate type is Hydra::PCDM::Collection
-  # TODO need test for 3) Hydra::PCDM::Collection can aggregate (ore:aggregates) Hydra::PCDM::Object
+      it 'should add an object to the objects aggregation' do
+        collection1.objects = [object1,object2]
+        collection1 << object3
+        collection1.save
+        expect(collection1.objects).to eq [object1,object2,object3]
+      end
+
+      it 'should add a mix of objects and collections to the appropriate aggregation' do
+        collection1 << object1
+        collection1 << collection2
+        collection1 << object2
+        collection1 << object3
+        collection1 << collection3
+        collection1.save
+        expect(collection1.objects).to eq [object1,object2,object3]
+        expect(collection1.collections).to eq [collection2, collection3]
+      end
+    end
+
+    context 'with unacceptable objects' do
+      let(:error_message) { "argument must be either a pcdm collection or pcdm object" }
+
+      it 'should NOT aggregate non-PCDM objects in collections aggregation' do
+        expect{ collection1 << non_PCDM_object }.to raise_error(ArgumentError,error_message)
+      end
+
+      it 'should NOT aggregate AF::Base objects in collections aggregation' do
+        expect{ collection1 << af_base_object }.to raise_error(ArgumentError,error_message)
+      end
+    end
+  end
 
   describe '#collections=' do
     it 'should aggregate collections' do
       collection1.collections = [collection2, collection3]
       collection1.save
       expect(collection1.collections).to eq [collection2, collection3]
-    end
-
-    xit 'should add a collection to the collections aggregation' do
-      collection1.collections = [collection2,collection3]
-      collection1.save
-      collection1.collections << collection4
-      expect(collection1.collections).to eq [collection2, collection3, collection4]
     end
 
     it 'should aggregate collections in a sub-collection of a collection' do
@@ -171,13 +201,6 @@ describe Hydra::PCDM::Collection do
       collection1.objects = [object1,object2]
       collection1.save
       expect(collection1.objects).to eq [object1,object2]
-    end
-
-    xit 'should add an object to the objects aggregation' do
-      collection1.objects = [object1,object2]
-      collection1.save
-      collection1.objects << object3
-      expect(collection1.objects).to eq [object1,object2,object3]
     end
 
     context "with unacceptable objects" do

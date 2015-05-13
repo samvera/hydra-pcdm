@@ -19,7 +19,7 @@ module Hydra::PCDM
     # behavior:
     #   1) Hydra::PCDM::Collection can aggregate (pcdm:hasMember)  Hydra::PCDM::Collection (no infinite loop, e.g., A -> B -> C -> A)
     #   2) Hydra::PCDM::Collection can aggregate (pcdm:hasMember)  Hydra::PCDM::Object
-    #   3) Hydra::PCDM::Collection can aggregate (ore:aggregates) Hydra::PCDM::Object  (Object related to the Collection)
+    #   3) Hydra::PCDM::Collection can aggregate (ore:aggregates)  Hydra::PCDM::Object  (Object related to the Collection)
 
     #   4) Hydra::PCDM::Collection can NOT aggregate non-PCDM object
     #   5) Hydra::PCDM::Collection can NOT contain (pcdm:hasFile)  Hydra::PCDM::File
@@ -30,14 +30,13 @@ module Hydra::PCDM
 
     def << arg
 
-      # TODO This fails.  Tests using << operator are marked xit.
-
-      # TODO: Not sure how to handle coll1.collections << new_collection and coll1.objects << new_object.
-      #       Want to override << on coll1.collections to check that new_collection is_a? Hydra::PCDM::Collection
-      #       Want to override << on coll1.objects to check that new_object is_a? Hydra::PCDM::Object
+      # TODO: Not sure how to handle coll1.collections << new_collection.  (see issue #45)
+      #       Want to override << on coll1.collections to check that new_work Hydra::PCDM.collection?
+      # TODO: Not sure how to handle coll1.objects << new_object.  (see issue #45)
+      #       Want to override << on coll1.objects to check that new_work Hydra::PCDM.object?
 
       # check that arg is an instance of Hydra::PCDM::Collection or Hydra::PCDM::Object
-      raise ArgumentError, "argument must be either a Hydra::PCDM::Collection or Hydra::PCDM::Object" unless
+      raise ArgumentError, "argument must be either a pcdm collection or pcdm object" unless
           ( Hydra::PCDM.collection? arg ) || ( Hydra::PCDM.object? arg )
       members << arg
     end
@@ -82,12 +81,6 @@ module Hydra::PCDM
       end
       false
     end
-
-    # TODO: RDF metadata can be added using property definitions.
-    #   * How to distinguish between descriptive and access metadata?
-    #   * Are there any default properties to set for Collection's descriptive metadata?
-    #   * Are there any default properties to set for Collection's access metadata?
-    #   * Is there a way to override default properties defined in this class?
 
   end
 end
