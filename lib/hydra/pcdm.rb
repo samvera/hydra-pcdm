@@ -3,6 +3,8 @@ module Hydra
 
     # vocabularies
     autoload :RDFVocabularies,        'hydra/pcdm/vocab/pcdm_terms'
+    autoload :EBUCoreVocabularies,    'hydra/pcdm/vocab/ebucore_terms'
+    autoload :SweetjplVocabularies,   'hydra/pcdm/vocab/sweetjpl_terms'
 
     # models
     autoload :Collection,             'hydra/pcdm/models/collection'
