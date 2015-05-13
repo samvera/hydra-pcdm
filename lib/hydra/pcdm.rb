@@ -28,8 +28,8 @@ module Hydra
     end
 
     def self.file? file
-      return false unless file.respond_to? :type
-      file.type.include? RDFVocabularies::PCDMTerms.File
+      return false unless file.respond_to? :metadata_node
+      file.metadata_node.type.include? RDFVocabularies::PCDMTerms.File
     end
 
   end
