@@ -27,21 +27,11 @@ describe Hydra::PCDM::Collection do
   #   7) Hydra::PCDM::Collection can have access metadata
 
 
-  # TODO need test to validate type is Hydra::PCDM::Collection
-  # TODO need test for 3) Hydra::PCDM::Collection can aggregate (ore:aggregates) Hydra::PCDM::Object
-
   describe '#collections=' do
     it 'should aggregate collections' do
       collection1.collections = [collection2, collection3]
       collection1.save
       expect(collection1.collections).to eq [collection2, collection3]
-    end
-
-    xit 'should add a collection to the collections aggregation' do
-      collection1.collections = [collection2,collection3]
-      collection1.save
-      collection1.collections << collection4
-      expect(collection1.collections).to eq [collection2, collection3, collection4]
     end
 
     it 'should aggregate collections in a sub-collection of a collection' do
@@ -181,13 +171,6 @@ describe Hydra::PCDM::Collection do
       collection1.objects = [object1,object2]
       collection1.save
       expect(collection1.objects).to eq [object1,object2]
-    end
-
-    xit 'should add an object to the objects aggregation' do
-      collection1.objects = [object1,object2]
-      collection1.save
-      collection1.objects << object3
-      expect(collection1.objects).to eq [object1,object2,object3]
     end
 
     context "with unacceptable objects" do

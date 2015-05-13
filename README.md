@@ -45,7 +45,7 @@ Reference:  [Portland Common Data Model](https://wiki.duraspace.org/x/9IoOB)
 
 To test the model and provide clarity we have included a sample mode that exercises the interfaces provided by the gem.
 The sample model may change over time to reflect the state of the gam and what it supports.  
-(TODO: Currently there is no code in the gem so it does not support any model including the example.)
+
 ![Sandwich Objet Model](https://docs.google.com/drawings/d/1wI4H3AH9pdIPllKIMO356c1cFHUN57azDlgIqMVODSw/pub?w=1369&h=727)
 
 ## Usage
@@ -78,10 +78,9 @@ c1.members = [b1]
 # c1.members << b1 # This should work in the future
 c1.save
 
-# This section waiting on https://github.com/projecthydra-labs/hydra-pcdm/pull/52
-# f1 = b1.files.build
-# f1.conent = "The quick brown fox jumped over the lazy dog."
-# b1.save
+f1 = b1.files.build
+f1.content = "The quick brown fox jumped over the lazy dog."
+b1.save
 ```
 
 ## How to contribute
