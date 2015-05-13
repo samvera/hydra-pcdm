@@ -28,9 +28,7 @@ RSpec.configure do |config|
   # Use the specified formatter
   config.formatter = :progress
 
-  config.before :each do |example|
-    unless example.metadata[:no_clean]
-      ActiveFedora::Cleaner.clean!
-    end
+  config.before :suite do
+    ActiveFedora::Cleaner.clean!
   end
 end
