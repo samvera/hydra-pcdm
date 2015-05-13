@@ -30,19 +30,6 @@ module Hydra::PCDM
     #   6) Hydra::PCDM::Collection can have descriptive metadata
     #   7) Hydra::PCDM::Collection can have access metadata
 
-
-    def << arg
-
-      # TODO: Not sure how to handle coll1.collections << new_collection.  (see issue #45)
-      #       Want to override << on coll1.collections to check that new_collection passes Hydra::PCDM.collection?
-      # TODO: Not sure how to handle coll1.objects << new_object.  (see issue #45)
-      #       Want to override << on coll1.objects to check that new_object passes Hydra::PCDM.object?
-
-      raise ArgumentError, "argument must be either a Hydra::PCDM::Collection or Hydra::PCDM::Object" unless
-          ( Hydra::PCDM.collection? arg ) || ( Hydra::PCDM.object? arg )
-      members << arg
-    end
-
     def collections= collections
       raise ArgumentError, "each collection must be a pcdm collection" unless collections.all? { |c| Hydra::PCDM.collection? c }
       raise ArgumentError, "a collection can't be an ancestor of itself" if collection_ancestor?(collections)
