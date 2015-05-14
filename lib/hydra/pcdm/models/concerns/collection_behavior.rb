@@ -71,6 +71,7 @@ module Hydra::PCDM
     end
 
     def ancestor? collection
+      return true if collection.id == self.id
       return false if collection.collections.empty?
       current_collections = collection.collections
       next_batch = []

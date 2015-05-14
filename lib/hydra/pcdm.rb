@@ -17,6 +17,25 @@ module Hydra
 
     autoload :Indexer,                'hydra/pcdm/indexer'
 
+    # collection services
+    autoload :AddCollectionToCollection,         'hydra/pcdm/services/collection/add_collection'
+    autoload :AddObjectToCollection,             'hydra/pcdm/services/collection/add_object'
+    autoload :AddRelatedObjectToCollection,      'hydra/pcdm/services/collection/add_related_object'
+    autoload :GetCollectionsFromCollection,      'hydra/pcdm/services/collection/get_collections'
+    autoload :GetObjectsFromCollection,          'hydra/pcdm/services/collection/get_objects'
+    autoload :GetRelatedObjectsFromCollection,   'hydra/pcdm/services/collection/get_related_objects'
+
+    # object services
+    autoload :AddFileToObject,                   'hydra/pcdm/services/object/add_file'
+    autoload :AddObjectToObject,                 'hydra/pcdm/services/object/add_object'
+    autoload :AddRelatedObjectToObject,          'hydra/pcdm/services/object/add_related_object'
+    autoload :CreateObject,                      'hydra/pcdm/services/object/create'
+    autoload :GetObjectsFromObject,              'hydra/pcdm/services/object/get_objects'
+    autoload :GetRelatedObjectsFromObject,       'hydra/pcdm/services/object/get_related_objects'
+    autoload :GetFilesFromObject,                'hydra/pcdm/services/object/get_collections'
+
+
+    # model validations
     def self.collection? collection
       return false unless collection.respond_to? :type
       collection.type.include? RDFVocabularies::PCDMTerms.Collection
