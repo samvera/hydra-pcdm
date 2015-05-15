@@ -67,6 +67,7 @@ module Hydra::PCDM
     end
 
     def ancestor? object
+      return true if object.id == self.id
       return false if object.objects.empty?
       current_objects = object.objects
       next_batch = []

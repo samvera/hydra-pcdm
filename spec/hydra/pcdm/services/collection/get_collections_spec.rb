@@ -35,6 +35,6 @@ describe Hydra::PCDM::GetCollectionsFromCollection do
       it 'should only return collections' do
         expect(Hydra::PCDM::GetCollectionsFromCollection.call( subject )).to eq [collection1,collection2]
       end
-   end
+    end
   end
 end
