@@ -22,19 +22,13 @@ module Hydra::PCDM
       end
     end
 
-
-    # behavior:
-    #   1) Hydra::PCDM::Object can aggregate (pcdm:hasMember) Hydra::PCDM::Object
-    #   2) Hydra::PCDM::Object can aggregate (ore:aggregates) Hydra::PCDM::Object  (Object related to the Object)
-
-    #   3) Hydra::PCDM::Object can contain (pcdm:hasFile) Hydra::PCDM::File
-    #   4) Hydra::PCDM::Object can contain (pcdm:hasRelatedFile) Hydra::PCDM::File
-
-    #   5) Hydra::PCDM::Object can NOT aggregate Hydra::PCDM::Collection
-    #   6) Hydra::PCDM::Object can NOT aggregate non-PCDM object
-
-    #   7) Hydra::PCDM::Object can have descriptive metadata
-    #   8) Hydra::PCDM::Object can have access metadata
+    # TODO: Remove this method, see issue #98
+    def << arg
+      raise ArgumentError, "argument must be either a pcdm object or a pcdm file" unless
+          ( Hydra::PCDM.object? arg ) || ( Hydra::PCDM.file? arg )
+      members << arg  if Hydra::PCDM.object? arg
+      files   << arg  if Hydra::PCDM.file? arg
+    end
 
     def objects= objects
       raise ArgumentError, "each object must be a pcdm object" unless objects.all? { |o| Hydra::PCDM.object? o }

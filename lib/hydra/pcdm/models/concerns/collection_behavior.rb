@@ -19,16 +19,12 @@ module Hydra::PCDM
       end
     end
 
-    # behavior:
-    #   1) Hydra::PCDM::Collection can aggregate (pcdm:hasMember)  Hydra::PCDM::Collection (no infinite loop, e.g., A -> B -> C -> A)
-    #   2) Hydra::PCDM::Collection can aggregate (pcdm:hasMember)  Hydra::PCDM::Object
-    #   3) Hydra::PCDM::Collection can aggregate (ore:aggregates) Hydra::PCDM::Object  (Object related to the Collection)
-
-    #   4) Hydra::PCDM::Collection can NOT aggregate non-PCDM object
-    #   5) Hydra::PCDM::Collection can NOT contain (pcdm:hasFile)  Hydra::PCDM::File
-
-    #   6) Hydra::PCDM::Collection can have descriptive metadata
-    #   7) Hydra::PCDM::Collection can have access metadata
+    # TODO: Remove this method, see issue #98
+    def << arg
+      raise ArgumentError, "argument must be either a Hydra::PCDM::Collection or Hydra::PCDM::Object" unless
+          ( Hydra::PCDM.collection? arg ) || ( Hydra::PCDM.object? arg )
+      members << arg
+    end
 
     def collections= collections
       raise ArgumentError, "each collection must be a pcdm collection" unless collections.all? { |c| Hydra::PCDM.collection? c }
