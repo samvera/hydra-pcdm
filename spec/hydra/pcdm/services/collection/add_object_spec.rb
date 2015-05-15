@@ -110,6 +110,30 @@ describe Hydra::PCDM::AddObjectToCollection do
       end
     end
 
-  end
+    context 'with unacceptable parent collection' do
+      let(:collection2)      { Hydra::PCDM::Collection.create }
+      let(:object1)          { Hydra::PCDM::Object.create }
+      let(:file1)            { Hydra::PCDM::File.new }
+      let(:non_PCDM_object)  { "I'm not a PCDM object" }
+      let(:af_base_object)   { ActiveFedora::Base.create }
 
+      let(:error_message) { 'parent_collection must be a pcdm collection' }
+
+      it 'should NOT accept Hydra::PCDM::Objects as parent collection' do
+        expect{ Hydra::PCDM::AddObjectToCollection.call( object1, collection2 ) }.to raise_error(ArgumentError,error_message)
+      end
+
+      it 'should NOT accept Hydra::PCDM::Files as parent collection' do
+        expect{ Hydra::PCDM::AddObjectToCollection.call( file1, collection2 ) }.to raise_error(ArgumentError,error_message)
+      end
+
+      it 'should NOT accept non-PCDM objects as parent collection' do
+        expect{ Hydra::PCDM::AddObjectToCollection.call( non_PCDM_object, collection2 ) }.to raise_error(ArgumentError,error_message)
+      end
+
+      it 'should NOT accept AF::Base objects as parent collection' do
+        expect{ Hydra::PCDM::AddObjectToCollection.call( af_base_object, collection2 ) }.to raise_error(ArgumentError,error_message)
+      end
+    end
+  end
 end
