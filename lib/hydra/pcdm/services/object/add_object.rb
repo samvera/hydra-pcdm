@@ -13,7 +13,7 @@ module Hydra::PCDM
       raise ArgumentError, "parent_object must be a pcdm object" unless Hydra::PCDM.object? parent_object
       raise ArgumentError, "child_object must be a pcdm object" unless Hydra::PCDM.object? child_object
       raise ArgumentError, "an object can't be an ancestor of itself" if parent_object.ancestor? child_object
-      parent_object << child_object
+      parent_object.members << child_object
     end
 
   end
