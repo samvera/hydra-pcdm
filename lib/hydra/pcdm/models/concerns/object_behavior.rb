@@ -36,18 +36,6 @@ module Hydra::PCDM
     #   7) Hydra::PCDM::Object can have descriptive metadata
     #   8) Hydra::PCDM::Object can have access metadata
 
-
-    def << arg
-
-      # TODO: Not sure how to handle obj1.objects << new_object.  (see issue #45)
-      #       Want to override << on obj1.objects to check that new_object passes Hydra::PCDM.object?
-
-      raise ArgumentError, "argument must be either a pcdm object or a pcdm file" unless
-          ( Hydra::PCDM.object? arg ) || ( Hydra::PCDM.file? arg )
-      members << arg  if Hydra::PCDM.object? arg
-      files   << arg  if Hydra::PCDM.file? arg
-    end
-
     def objects= objects
       raise ArgumentError, "each object must be a pcdm object" unless objects.all? { |o| Hydra::PCDM.object? o }
       raise ArgumentError, "an object can't be an ancestor of itself" if object_ancestor?(objects)
