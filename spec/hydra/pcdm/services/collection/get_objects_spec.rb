@@ -32,7 +32,7 @@ describe Hydra::PCDM::GetObjectsFromCollection do
         subject.save
       end
 
-      it 'should only return objects' do
+      it 'should only return related objects' do
         expect(Hydra::PCDM::GetObjectsFromCollection.call( subject )).to eq [object1,object2]
       end
    end

@@ -86,7 +86,8 @@ describe Hydra::PCDM::AddRelatedObjectToObject do
       let(:object1) { Hydra::PCDM::Object.create }
       let(:object2) { Hydra::PCDM::Object.create }
 
-      xit 'should NOT allow related objects to repeat' do
+      it 'should NOT allow related objects to repeat' do
+        skip 'skipping this test because issue #92 needs to be addressed' do
         Hydra::PCDM::AddRelatedObjectToObject.call( subject, object1 )
         Hydra::PCDM::AddRelatedObjectToObject.call( subject, object2 )
         Hydra::PCDM::AddRelatedObjectToObject.call( subject, object1 )
@@ -94,6 +95,7 @@ describe Hydra::PCDM::AddRelatedObjectToObject do
         expect( related_objects.include? object1 ).to be true
         expect( related_objects.include? object2 ).to be true
         expect( related_objects.size ).to eq 2
+      end
       end
     end
   end
