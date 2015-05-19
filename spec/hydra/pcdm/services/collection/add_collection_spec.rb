@@ -53,13 +53,6 @@ describe Hydra::PCDM::AddCollectionToCollection do
           Hydra::PCDM::AddCollectionToCollection.call( subject, collection3 )
           expect( Hydra::PCDM::GetCollectionsFromCollection.call( subject ) ).to eq [collection1,collection2,collection3]
         end
-
-        it 'should solrize member ids' do
-          expect(subject.to_solr["objects_ssim"]).to include(object1.id,object2.id)
-          expect(subject.to_solr["objects_ssim"]).not_to include(collection2.id,collection1.id)
-          expect(subject.to_solr["collections_ssim"]).to include(collection2.id,collection1.id)
-          expect(subject.to_solr["collections_ssim"]).not_to include(object1.id,object2.id)
-        end
       end
 
       describe "adding collections that are ancestors" do

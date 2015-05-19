@@ -13,9 +13,11 @@ module Hydra::PCDM
       indirectly_contains :related_objects, has_member_relation: RDF::Vocab::ORE.aggregates,
         inserted_content_relation: RDF::Vocab::ORE.proxyFor, class_name: "ActiveFedora::Base",
         through: 'ActiveFedora::Aggregation::Proxy', foreign_key: :target
+    end
 
-      def self.indexer
-        Hydra::PCDM::Indexer
+    module ClassMethods
+      def indexer
+        Hydra::PCDM::CollectionIndexer
       end
     end
 
@@ -30,19 +32,19 @@ module Hydra::PCDM
     #   6) Hydra::PCDM::Collection can have descriptive metadata
     #   7) Hydra::PCDM::Collection can have access metadata
 
-    def collections= collections
+    def child_collections= collections
       raise ArgumentError, "each collection must be a pcdm collection" unless collections.all? { |c| Hydra::PCDM.collection? c }
       raise ArgumentError, "a collection can't be an ancestor of itself" if collection_ancestor?(collections)
-      self.members = self.objects + collections
+      self.members = objects + collections
     end
 
-    def collections
+    def child_collections
       members.to_a.select { |m| Hydra::PCDM.collection? m }
     end
 
     def objects= objects
       raise ArgumentError, "each object must be a pcdm object" unless objects.all? { |o| Hydra::PCDM.object? o }
-      self.members = self.collections + objects
+      self.members = child_collections + objects
     end
 
     def objects
@@ -59,13 +61,13 @@ module Hydra::PCDM
 
     def ancestor? collection
       return true if collection.id == self.id
-      return false if collection.collections.empty?
-      current_collections = collection.collections
+      return false if collection.child_collections.empty?
+      current_collections = collection.child_collections
       next_batch = []
       while !current_collections.empty? do
         current_collections.each do |c|
           return true if c.id == self.id
-          next_batch += c.collections
+          next_batch += c.child_collections
         end
         current_collections = next_batch
       end

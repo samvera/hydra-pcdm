@@ -1,5 +1,8 @@
+require 'active_support'
+
 module Hydra
   module PCDM
+    extend ActiveSupport::Autoload
 
     # vocabularies
     autoload :RDFVocabularies,        'hydra/pcdm/vocab/pcdm_terms'
@@ -15,7 +18,8 @@ module Hydra
     autoload :CollectionBehavior,     'hydra/pcdm/models/concerns/collection_behavior'
     autoload :ObjectBehavior,         'hydra/pcdm/models/concerns/object_behavior'
 
-    autoload :Indexer,                'hydra/pcdm/indexer'
+    autoload :CollectionIndexer
+    autoload :ObjectIndexer
 
     # collection services
     autoload :AddCollectionToCollection,         'hydra/pcdm/services/collection/add_collection'

@@ -45,14 +45,6 @@ describe Hydra::PCDM::AddRelatedObjectToObject do
           expect( related_objects.include? object3 ).to be true
           expect( related_objects.size ).to eq 2
         end
-
-        it 'should solrize member ids' do
-          expect(subject.to_solr["objects_ssim"]).to include(object1.id)
-          expect(subject.to_solr["objects_ssim"]).not_to include(object2.id,object3.id)
-          # expect(subject.to_solr["objects_ssim"]).not_to include(file1.id,file2.id)
-          # expect(subject.to_solr["files_ssim"]).not_to include(file1.id,file2.id)
-          # expect(subject.to_solr["files_ssim"]).to include(object1.id,object2.id)
-        end
       end
     end
 
