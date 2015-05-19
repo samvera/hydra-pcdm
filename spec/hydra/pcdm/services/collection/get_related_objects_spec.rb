@@ -28,7 +28,7 @@ describe Hydra::PCDM::GetRelatedObjectsFromCollection do
         expect(Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject )).to eq []
       end
 
-      it 'should only return objects' do
+      it 'should only return related objects' do
         Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object2 )
         expect(Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject )).to eq [object2]
       end

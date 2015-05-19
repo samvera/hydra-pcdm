@@ -31,12 +31,13 @@ describe Hydra::PCDM::AddCollectionToCollection do
         expect( Hydra::PCDM::GetCollectionsFromCollection.call( collection1 ) ).to eq [collection2]
       end
 
-      xit 'should allow collections to repeat' do
-        # TODO Can collections repeat???
+      it 'should allow collections to repeat' do
+        skip 'skipping this test because issue #94 needs to be addressed' do
         Hydra::PCDM::AddCollectionToCollection.call( subject, collection1 )
         Hydra::PCDM::AddCollectionToCollection.call( subject, collection2 )
         Hydra::PCDM::AddCollectionToCollection.call( subject, collection1 )
         expect( Hydra::PCDM::GetCollectionsFromCollection.call( subject ) ).to eq [collection1,collection2,collection1]
+      end
       end
 
       context 'with collections and objects' do

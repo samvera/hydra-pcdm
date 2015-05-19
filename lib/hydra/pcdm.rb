@@ -24,6 +24,9 @@ module Hydra
     autoload :GetCollectionsFromCollection,      'hydra/pcdm/services/collection/get_collections'
     autoload :GetObjectsFromCollection,          'hydra/pcdm/services/collection/get_objects'
     autoload :GetRelatedObjectsFromCollection,   'hydra/pcdm/services/collection/get_related_objects'
+    autoload :RemoveCollectionFromCollection,    'hydra/pcdm/services/collection/remove_collection'
+    autoload :RemoveObjectFromCollection,        'hydra/pcdm/services/collection/remove_object'
+    autoload :RemoveRelatedObjectFromCollection, 'hydra/pcdm/services/collection/remove_related_object'
 
     # object services
     autoload :AddFileToObject,                   'hydra/pcdm/services/object/add_file'
@@ -33,6 +36,8 @@ module Hydra
     autoload :GetObjectsFromObject,              'hydra/pcdm/services/object/get_objects'
     autoload :GetRelatedObjectsFromObject,       'hydra/pcdm/services/object/get_related_objects'
     autoload :GetFilesFromObject,                'hydra/pcdm/services/object/get_collections'
+    autoload :RemoveObjectFromObject,            'hydra/pcdm/services/object/remove_object'
+    autoload :RemoveRelatedObjectFromObject,     'hydra/pcdm/services/object/remove_related_object'
 
 
     # model validations
