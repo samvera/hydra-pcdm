@@ -55,7 +55,7 @@ describe Hydra::PCDM::Object do
       end
 
       subject { Foo.indexer }
-      it { is_expected.to eq Hydra::PCDM::Indexer }
+      it { is_expected.to eq Hydra::PCDM::ObjectIndexer }
     end
 
     context "when overridden with AS::Concern" do

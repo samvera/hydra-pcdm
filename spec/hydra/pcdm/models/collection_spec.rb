@@ -9,11 +9,11 @@ describe Hydra::PCDM::Collection do
   let(:object1) { Hydra::PCDM::Object.create }
   let(:object2) { Hydra::PCDM::Object.create }
 
-  describe '#collections=' do
+  describe '#child_collections=' do
     it 'should aggregate collections' do
-      collection1.collections = [collection2, collection3]
+      collection1.child_collections = [collection2, collection3]
       collection1.save
-      expect(collection1.collections).to eq [collection2, collection3]
+      expect(collection1.child_collections).to eq [collection2, collection3]
     end
   end
 
@@ -39,4 +39,44 @@ describe Hydra::PCDM::Collection do
     end
   end
 
+  describe ".indexer" do
+    after do
+      Object.send(:remove_const, :Foo)
+    end
+
+    context "without overriding" do
+      before do
+        class Foo < ActiveFedora::Base
+          include Hydra::PCDM::CollectionBehavior
+        end
+      end
+
+      subject { Foo.indexer }
+      it { is_expected.to eq Hydra::PCDM::CollectionIndexer }
+    end
+
+    context "when overridden with AS::Concern" do
+      before do
+        module IndexingStuff
+          extend ActiveSupport::Concern
+
+          class AltIndexer; end
+
+          module ClassMethods
+            def indexer
+              AltIndexer
+            end
+          end
+        end
+
+        class Foo < ActiveFedora::Base
+          include Hydra::PCDM::CollectionBehavior
+          include IndexingStuff
+        end
+      end
+
+      subject { Foo.indexer }
+      it { is_expected.to eq IndexingStuff::AltIndexer }
+    end
+  end
 end

@@ -43,13 +43,6 @@ describe Hydra::PCDM::AddObjectToCollection do
           Hydra::PCDM::AddObjectToCollection.call( subject, object3 )
           expect( Hydra::PCDM::GetObjectsFromCollection.call( subject ) ).to eq [object1,object2,object3]
         end
-
-        it 'should solrize member ids' do
-          expect(subject.to_solr["objects_ssim"]).to include(object1.id,object2.id)
-          expect(subject.to_solr["objects_ssim"]).not_to include(collection2.id,collection1.id)
-          expect(subject.to_solr["collections_ssim"]).to include(collection2.id,collection1.id)
-          expect(subject.to_solr["collections_ssim"]).not_to include(object1.id,object2.id)
-        end
       end
 
       describe 'aggregates objects that implement Hydra::PCDM' do

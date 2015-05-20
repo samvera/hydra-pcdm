@@ -45,13 +45,6 @@ describe Hydra::PCDM::AddRelatedObjectToCollection do
           expect( related_objects.include? object4 ).to be true
           expect( related_objects.size ).to eq 2
         end
-
-        it 'should solrize member ids' do
-          expect(subject.to_solr["objects_ssim"]).to include(object1.id,object2.id)
-          expect(subject.to_solr["objects_ssim"]).not_to include(collection2.id,collection1.id,object3.id,object4.id)
-          expect(subject.to_solr["collections_ssim"]).to include(collection2.id,collection1.id)
-          expect(subject.to_solr["collections_ssim"]).not_to include(object1.id,object2.id,object3.id,object4.id)
-        end
       end
     end
 

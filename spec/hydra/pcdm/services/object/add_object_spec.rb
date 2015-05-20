@@ -55,13 +55,6 @@ describe Hydra::PCDM::AddObjectToObject do
           Hydra::PCDM::AddObjectToObject.call( subject, object3 )
           expect( Hydra::PCDM::GetObjectsFromObject.call( subject ) ).to eq [object1,object2,object3]
         end
-
-        it 'should solrize member ids' do
-          expect(subject.to_solr["objects_ssim"]).to include(object1.id,object2.id)
-          # expect(subject.to_solr["objects_ssim"]).not_to include(file1.id,file21.id)
-          # expect(subject.to_solr["files_ssim"]).not_to include(file1.id,file2.id)
-          # expect(subject.to_solr["files_ssim"]).to include(object1.id,object2.id)
-        end
       end
 
       describe 'adding objects that are ancestors' do

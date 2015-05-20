@@ -21,7 +21,7 @@ module Hydra::PCDM
 
     module ClassMethods
       def indexer
-        Hydra::PCDM::Indexer
+        Hydra::PCDM::ObjectIndexer
       end
     end
 
