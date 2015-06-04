@@ -32,6 +32,11 @@ module Hydra
     autoload :RemoveObjectFromCollection,        'hydra/pcdm/services/collection/remove_object'
     autoload :RemoveRelatedObjectFromCollection, 'hydra/pcdm/services/collection/remove_related_object'
 
+    # file services
+    autoload :AddTypeToFile,                     'hydra/pcdm/services/file/add_type'
+    autoload :GetMimeTypeForFile,                'hydra/pcdm/services/file/get_mime_type'
+
+
     # object services
     autoload :AddFileToObject,                   'hydra/pcdm/services/object/add_file'
     autoload :AddObjectToObject,                 'hydra/pcdm/services/object/add_object'

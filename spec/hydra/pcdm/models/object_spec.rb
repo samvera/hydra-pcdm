@@ -41,6 +41,61 @@ describe Hydra::PCDM::Object do
     it { is_expected.to eq [file1, file2] }
   end
 
+  describe "filtering files" do
+    let(:object) { described_class.create }
+    let(:thumbnail)   do
+      file = object.files.build
+      Hydra::PCDM::AddTypeToFile.call(file, pcdm_thumbnail_uri)
+    end
+
+    let(:file)                { object.files.build }
+    let(:pcdm_thumbnail_uri)  { ::RDF::URI("http://pcdm.org/ThumbnailImage") }
+
+    before do
+      object.files = [file]
+      object.save
+    end
+
+    describe "filter_files_by_type" do
+      context "when the object has files with that type" do
+        before do
+          thumbnail
+        end
+        it "allows you to filter the contained files by type URI" do
+          expect( object.filter_files_by_type(pcdm_thumbnail_uri) ).to eq [thumbnail]
+        end
+        it "only overrides the #files method when you specify :type" do
+          expect( object.files ).to eq [file, thumbnail]
+        end
+      end
+      context "when the object does NOT have any files with that type" do
+        it "returns an empty array" do
+          expect( object.filter_files_by_type(pcdm_thumbnail_uri) ).to eq []
+        end
+      end
+    end
+
+    describe "file_of_type" do
+      context "when the object has files with that type" do
+        before do
+          thumbnail
+        end
+        it "returns the first file with the requested type" do
+          expect( object.file_of_type(pcdm_thumbnail_uri) ).to eq thumbnail
+        end
+      end
+      context "when the object does NOT have any files with that type" do
+        it "initializes a contained file with the requested type" do
+          returned_file =  object.file_of_type(pcdm_thumbnail_uri)
+          expect(object.files).to include(returned_file)
+          expect(returned_file).to be_new_record
+          expect(returned_file.metadata_node.get_values(:type)).to include(pcdm_thumbnail_uri)
+        end
+      end
+    end
+  end
+
+
 
   describe ".indexer" do
     after do

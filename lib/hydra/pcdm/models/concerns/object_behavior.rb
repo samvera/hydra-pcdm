@@ -1,6 +1,16 @@
 require 'active_fedora/aggregation'
 
 module Hydra::PCDM
+
+  # behavior:
+  #   1) Hydra::PCDM::Object can aggregate (pcdm:hasMember) Hydra::PCDM::Object
+  #   2) Hydra::PCDM::Object can aggregate (ore:aggregates) Hydra::PCDM::Object  (Object related to the Object)
+  #   3) Hydra::PCDM::Object can contain (pcdm:hasFile) Hydra::PCDM::File
+  #   4) Hydra::PCDM::Object can contain (pcdm:hasRelatedFile) Hydra::PCDM::File
+  #   5) Hydra::PCDM::Object can NOT aggregate Hydra::PCDM::Collection
+  #   6) Hydra::PCDM::Object can NOT aggregate non-PCDM object
+  #   7) Hydra::PCDM::Object can have descriptive metadata
+  #   8) Hydra::PCDM::Object can have access metadata
   module ObjectBehavior
     extend ActiveSupport::Concern
 
@@ -24,20 +34,6 @@ module Hydra::PCDM
         Hydra::PCDM::ObjectIndexer
       end
     end
-
-
-    # behavior:
-    #   1) Hydra::PCDM::Object can aggregate (pcdm:hasMember) Hydra::PCDM::Object
-    #   2) Hydra::PCDM::Object can aggregate (ore:aggregates) Hydra::PCDM::Object  (Object related to the Object)
-
-    #   3) Hydra::PCDM::Object can contain (pcdm:hasFile) Hydra::PCDM::File
-    #   4) Hydra::PCDM::Object can contain (pcdm:hasRelatedFile) Hydra::PCDM::File
-
-    #   5) Hydra::PCDM::Object can NOT aggregate Hydra::PCDM::Collection
-    #   6) Hydra::PCDM::Object can NOT aggregate non-PCDM object
-
-    #   7) Hydra::PCDM::Object can have descriptive metadata
-    #   8) Hydra::PCDM::Object can have access metadata
 
     def objects= objects
       raise ArgumentError, "each object must be a pcdm object" unless objects.all? { |o| Hydra::PCDM.object? o }
@@ -77,6 +73,30 @@ module Hydra::PCDM
       raise ArgumentError, "each file must be a pcdm file" unless
           files.all? { |f| Hydra::PCDM.file? f }
       super(files)
+    end
+
+    # Returns directly contained files that have the requested RDF Type
+    # @param [RDF::URI] uri for the desired Type
+    # @example
+    #   filter_files_by_type(::RDF::URI("http://pcdm.org/ExtractedText"))
+    def filter_files_by_type uri
+      self.files.reject do |file|
+        file.metadata_node.query(predicate: RDF.type, object: uri).map(&:object).empty?
+      end
+    end
+
+    # Finds or Initializes directly contained file with the requested RDF Type
+    # @param [RDF::URI] uri for the desired Type
+    # @example
+    #   file_of_type(::RDF::URI("http://pcdm.org/ExtractedText"))
+    def file_of_type uri
+      matching_files =  filter_files_by_type(uri)
+      if  matching_files.empty?
+        file = self.files.build
+        Hydra::PCDM::AddTypeToFile.call(file, uri)
+      else
+        return matching_files.first
+      end
     end
 
   end
