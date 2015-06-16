@@ -1,4 +1,5 @@
 require 'active_support'
+require 'mime/types'
 
 module Hydra
   module PCDM
