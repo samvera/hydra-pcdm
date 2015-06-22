@@ -14,6 +14,7 @@ module Hydra
     autoload :Collection,             'hydra/pcdm/models/collection'
     autoload :Object,                 'hydra/pcdm/models/object'
     autoload :File,                   'hydra/pcdm/models/file'
+    autoload :VersionedFile,          'hydra/pcdm/models/versioned_file'
 
     # behavior concerns
     autoload :CollectionBehavior,     'hydra/pcdm/models/concerns/collection_behavior'

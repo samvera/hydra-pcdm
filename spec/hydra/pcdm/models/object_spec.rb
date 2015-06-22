@@ -88,7 +88,7 @@ describe Hydra::PCDM::Object do
     end
 
     let(:file)                { object.files.build }
-    let(:pcdm_thumbnail_uri)  { ::RDF::URI("http://pcdm.org/ThumbnailImage") }
+    let(:pcdm_thumbnail_uri)  { ::RDF::URI("http://pcdm.org/use#ThumbnailImage") }
 
     before do
       object.files = [file]

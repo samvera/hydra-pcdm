@@ -2,8 +2,12 @@ require 'spec_helper'
 
 describe Hydra::PCDM::File do
 
-  let(:file) { Hydra::PCDM::File.new }
-  let(:reloaded) { Hydra::PCDM::File.new(file.uri) }
+  let(:file) { Hydra::PCDM::VersionedFile.new }
+  let(:reloaded) { Hydra::PCDM::VersionedFile.new(file.uri) }
+
+  it "has_many_versions" do
+    expect(file.class).to be_versionable
+  end
 
   describe "when saving" do
     before do
@@ -11,7 +15,7 @@ describe Hydra::PCDM::File do
       file.save
     end
     subject { reloaded }
-    # it { is_expected.to be_persisted } # This check isn't currently supported by ActiveFedora
+    it { is_expected.to be_persisted }
     it "sets the PCDMTerms.File RDF type" do
       expect(reloaded.metadata_node.query(predicate: RDF.type, object: RDFVocabularies::PCDMTerms.File).map(&:object)).to eq [RDFVocabularies::PCDMTerms.File]
     end
@@ -50,14 +54,6 @@ describe Hydra::PCDM::File do
       expect(reloaded.date_created).to eq [date_created]
       expect(reloaded.date_modified).to eq [date_modified]
       expect(reloaded.byte_order).to eq ["little-endian"]
-    end
-
-    it "does not save server managed properties" do
-      # Currently we can't write this property because Fedora 
-      # complains that it's a server managed property. This test 
-      # is mostly to document this situation.
-      file.file_hash = "the-hash"
-      expect{file.save}.to raise_error(Ldp::BadRequest)
     end
   end
 
