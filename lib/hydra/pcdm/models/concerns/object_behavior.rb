@@ -45,6 +45,18 @@ module Hydra::PCDM
       members.to_a.select { |m| Hydra::PCDM.object? m }
     end
 
+    def parents
+      aggregated_by
+    end
+
+    def parent_objects
+      aggregated_by.select { |parent| parent.class.included_modules.include?(Hydra::PCDM::ObjectBehavior) }
+    end
+
+    def parent_collections
+      aggregated_by.select { |parent| parent.class.included_modules.include?(Hydra::PCDM::CollectionBehavior) }
+    end
+
     def object_ancestor? objects
       objects.each do |check|
         return true if check.id == self.id

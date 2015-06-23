@@ -14,6 +14,45 @@ describe Hydra::PCDM::Object do
     end
   end
 
+  context 'when aggregated by other objects' do
+
+    before(:all) do
+      # Using before(:all) and instance variable because regular :let syntax had a significant impact on performance
+      # All of the tests in this context are describing idempotent behavior, so isolation between examples isn't necessary.
+      @collection1 = Hydra::PCDM::Collection.create
+      @collection2 = Hydra::PCDM::Collection.create
+      @parent_object = Hydra::PCDM::Object.create
+      @object =  Hydra::PCDM::Object.create
+      @collection1.members << @object
+      @collection1.save
+      @collection2.members << @object
+      @collection2.save
+      @parent_object.members << @object
+      @parent_object.save
+      @object.reload
+    end
+
+    describe 'parents' do
+      subject { @object.parents }
+      it "finds all nodes that aggregate the object with hasMember" do
+        expect(subject).to include(@collection1, @collection2, @parent_object)
+      end
+    end
+    describe 'parent_objects' do
+      subject { @object.parent_objects }
+      it "finds objects that aggregate the object with hasMember" do
+        expect(subject).to eq [@parent_object]
+      end
+    end
+    describe 'parent_collections' do
+      subject { @object.parent_collections }
+      it "finds collections that aggregate the object with hasMember" do
+        expect(subject).to include(@collection1, @collection2)
+        expect(subject.count).to eq 2
+      end
+    end
+  end
+
   describe 'Related objects' do
     before do
       object1.related_objects = [object2]
