@@ -82,6 +82,6 @@ module RDFVocabularies
       "dc:title" => %(Portland Common Data Model).freeze,
       label: "".freeze,
       "owl:versionInfo" => %(2015/03/16).freeze,
-      "rdfs:seeAlso" => %(https://wiki.duraspace.org/display/FF/Portland+Common+Data+Model).freeze
+      "rdfs:seeAlso" => %(https://github.com/duraspace/pcdm/wiki).freeze
   end
 end

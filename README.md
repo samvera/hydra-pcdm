@@ -33,12 +33,12 @@ We are using [Web ACL](http://www.w3.org/wiki/WebAccessControl) as implemented b
 
 ## PCDM Model
 
-Reference:  [Portland Common Data Model](https://wiki.duraspace.org/x/9IoOB)
+Reference:  [Portland Common Data Model](https://github.com/duraspace/pcdm/wiki)
 
 
 ### Model Definition
 
-![PCDM Model Definition](https://wiki.duraspace.org/download/attachments/68061940/coll-object-file.png?version=1&modificationDate=1425932362178&api=v2)
+![PCDM Model Definition](https://raw.githubusercontent.com/wiki/duraspace/pcdm/images/coll-object-file.png)
 
 
 ### Example
