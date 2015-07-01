@@ -90,7 +90,7 @@ module Hydra::PCDM
     # Returns directly contained files that have the requested RDF Type
     # @param [RDF::URI] uri for the desired Type
     # @example
-    #   filter_files_by_type(::RDF::URI("http://pcdm.org/ExtractedText"))
+    #   filter_files_by_type(::RDF::URI("http://pcdm.org/use#ExtractedText"))
     def filter_files_by_type uri
       self.files.reject do |file|
         file.metadata_node.query(predicate: RDF.type, object: uri).map(&:object).empty?
@@ -100,7 +100,7 @@ module Hydra::PCDM
     # Finds or Initializes directly contained file with the requested RDF Type
     # @param [RDF::URI] uri for the desired Type
     # @example
-    #   file_of_type(::RDF::URI("http://pcdm.org/ExtractedText"))
+    #   file_of_type(::RDF::URI("http://pcdm.org/use#ExtractedText"))
     def file_of_type uri
       matching_files =  filter_files_by_type(uri)
       if  matching_files.empty?

@@ -88,9 +88,11 @@ describe Hydra::PCDM::Object do
     end
 
     let(:file)                { object.files.build }
-    let(:pcdm_thumbnail_uri)  { ::RDF::URI("http://pcdm.org/ThumbnailImage") }
+    let(:pcdm_thumbnail_uri)  { ::RDF::URI("http://pcdm.org/use#ThumbnailImage") }
 
     before do
+      # Need to add content so that content_changed? returns true.
+      file.content="demo content"
       object.files = [file]
       object.save
     end
