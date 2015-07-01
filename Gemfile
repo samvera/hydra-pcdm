@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation'
-gem 'active-fedora', github: 'projecthydra/active_fedora', ref: '1db3d1f'
+gem 'active-fedora', '~> 9.2.0.rc2'
 
 unless ENV['CI']
   gem 'pry'
