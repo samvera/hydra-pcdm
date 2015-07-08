@@ -52,6 +52,9 @@ module Hydra
     # Validators
     autoload :Validators,                        'hydra/pcdm/validators'
 
+    # Iterators
+    autoload :DeepMemberIterator,                'hydra/pcdm/deep_member_iterator'
+
 
     # model validations
     def self.collection? collection

@@ -15,6 +15,7 @@ module Hydra::PCDM
         through: 'ActiveFedora::Aggregation::Proxy', foreign_key: :target
 
       validates_with Validators::MembersAreObjects
+      validates_with Validators::MembersNotAncestors
     end
 
     module ClassMethods

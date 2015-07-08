@@ -27,6 +27,7 @@ module Hydra::PCDM
       directly_contains :files, has_member_relation: RDFVocabularies::PCDMTerms.hasFile,
         class_name: "Hydra::PCDM::File"
       validates_with Validators::MembersAreObjects
+      validates_with Validators::MembersNotAncestors
     end
 
     module ClassMethods

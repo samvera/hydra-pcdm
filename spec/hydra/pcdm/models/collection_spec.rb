@@ -20,8 +20,13 @@ describe Hydra::PCDM::Collection do
   describe "validations" do
     context "when there are not PCDM objects in members" do
       it "should validate with MembersAreObjects" do
-        object = described_class.new
-        expect(object._validators.values.flatten.map(&:class)).to include Hydra::PCDM::Validators::MembersAreObjects
+        expect(validators(described_class.new)).to include Hydra::PCDM::Validators::MembersAreObjects
+      end
+      it "should validate with MembersNotAncestors" do
+        expect(validators(described_class.new)).to include Hydra::PCDM::Validators::MembersNotAncestors
+      end
+      def validators(object)
+        object._validators.values.flatten.map(&:class)
       end
     end
   end

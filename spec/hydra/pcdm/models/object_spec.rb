@@ -23,7 +23,14 @@ describe Hydra::PCDM::Object do
       end
       it "should validate with MembersAreObjects" do
         object = described_class.new
-        expect(object._validators.values.flatten.map(&:class)).to include Hydra::PCDM::Validators::MembersAreObjects
+        expect(validators(object)).to include Hydra::PCDM::Validators::MembersAreObjects
+      end
+      it "should validate with MembersNotAncestors" do
+        expect(validators(described_class.new)).to include Hydra::PCDM::Validators::MembersNotAncestors
+      end
+
+      def validators(object)
+        object._validators.values.flatten.map(&:class)
       end
     end
   end
