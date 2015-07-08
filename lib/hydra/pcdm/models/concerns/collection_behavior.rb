@@ -13,6 +13,8 @@ module Hydra::PCDM
       indirectly_contains :related_objects, has_member_relation: RDF::Vocab::ORE.aggregates,
         inserted_content_relation: RDF::Vocab::ORE.proxyFor, class_name: "ActiveFedora::Base",
         through: 'ActiveFedora::Aggregation::Proxy', foreign_key: :target
+
+      validates_with Validators::MembersAreObjects
     end
 
     module ClassMethods

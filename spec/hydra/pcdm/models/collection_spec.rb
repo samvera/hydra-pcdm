@@ -17,6 +17,15 @@ describe Hydra::PCDM::Collection do
     end
   end
 
+  describe "validations" do
+    context "when there are not PCDM objects in members" do
+      it "should validate with MembersAreObjects" do
+        object = described_class.new
+        expect(object._validators.values.flatten.map(&:class)).to include Hydra::PCDM::Validators::MembersAreObjects
+      end
+    end
+  end
+
   describe '#objects=' do
     it 'should aggregate objects' do
       collection1.objects = [object1,object2]
