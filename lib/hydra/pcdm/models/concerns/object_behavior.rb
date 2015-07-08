@@ -26,7 +26,7 @@ module Hydra::PCDM
 
       directly_contains :files, has_member_relation: RDFVocabularies::PCDMTerms.hasFile,
         class_name: "Hydra::PCDM::File"
-
+      validates_with Validators::MembersAreObjects
     end
 
     module ClassMethods
@@ -39,6 +39,14 @@ module Hydra::PCDM
       raise ArgumentError, "each object must be a pcdm object" unless objects.all? { |o| Hydra::PCDM.object? o }
       raise ArgumentError, "an object can't be an ancestor of itself" if object_ancestor?(objects)
       self.members = objects
+    end
+
+    def pcdm_object?
+      true
+    end
+
+    def pcdm_collection?
+      false
     end
 
     def objects

@@ -31,6 +31,14 @@ module Hydra::PCDM
 
     #   6) Hydra::PCDM::Collection can have descriptive metadata
     #   7) Hydra::PCDM::Collection can have access metadata
+    #
+    def pcdm_object?
+      false
+    end
+
+    def pcdm_collection?
+      true
+    end
 
     def child_collections= collections
       raise ArgumentError, "each collection must be a pcdm collection" unless collections.all? { |c| Hydra::PCDM.collection? c }

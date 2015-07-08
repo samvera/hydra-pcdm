@@ -13,6 +13,20 @@ describe Hydra::PCDM::Object do
       expect(object1.objects).to eq [object2, object3]
     end
   end
+  
+  describe "validations" do
+    context "when there are not PCDM objects in members" do
+      it "should be invalid" do
+        object = described_class.new
+        object.members = [ActiveFedora::Base.new]
+        expect(object).not_to be_valid
+      end
+      it "should validate with MembersAreObjects" do
+        object = described_class.new
+        expect(object._validators.values.flatten.map(&:class)).to include Hydra::PCDM::Validators::MembersAreObjects
+      end
+    end
+  end
 
   context 'when aggregated by other objects' do
 

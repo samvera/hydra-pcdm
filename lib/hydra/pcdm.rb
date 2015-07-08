@@ -49,6 +49,9 @@ module Hydra
     autoload :RemoveObjectFromObject,            'hydra/pcdm/services/object/remove_object'
     autoload :RemoveRelatedObjectFromObject,     'hydra/pcdm/services/object/remove_related_object'
 
+    # Validators
+    autoload :Validators,                        'hydra/pcdm/validators'
+
 
     # model validations
     def self.collection? collection
