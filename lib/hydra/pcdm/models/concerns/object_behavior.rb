@@ -92,7 +92,7 @@ module Hydra::PCDM
     #   filter_files_by_type(::RDF::URI("http://pcdm.org/ExtractedText"))
     def filter_files_by_type uri
       self.files.reject do |file|
-        file.metadata_node.query(predicate: RDF.type, object: uri).map(&:object).empty?
+        !file.metadata_node.type.include?(uri)
       end
     end
 
