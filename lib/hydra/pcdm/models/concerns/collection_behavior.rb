@@ -53,20 +53,19 @@ module Hydra::PCDM
 
     def collection_ancestor? collections
       collections.each do |check|
-        return true if check.id == self.id
         return true if ancestor?(check)
       end
       false
     end
 
     def ancestor? collection
-      return true if collection.id == self.id
+      return true if collection == self
       return false if collection.child_collections.empty?
       current_collections = collection.child_collections
       next_batch = []
       while !current_collections.empty? do
         current_collections.each do |c|
-          return true if c.id == self.id
+          return true if c == self
           next_batch += c.child_collections
         end
         current_collections = next_batch

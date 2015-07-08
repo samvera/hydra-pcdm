@@ -59,20 +59,19 @@ module Hydra::PCDM
 
     def object_ancestor? objects
       objects.each do |check|
-        return true if check.id == self.id
         return true if ancestor?(check)
       end
       false
     end
 
     def ancestor? object
-      return true if object.id == self.id
+      return true if object == self
       return false if object.objects.empty?
       current_objects = object.objects
       next_batch = []
       while !current_objects.empty? do
         current_objects.each do |c|
-          return true if c.id == self.id
+          return true if c == self
           next_batch += c.objects
         end
         current_objects = next_batch
