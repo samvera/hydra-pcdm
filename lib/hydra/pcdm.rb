@@ -40,7 +40,6 @@ module Hydra
 
     # object services
     autoload :AddFileToObject,                   'hydra/pcdm/services/object/add_file'
-    autoload :AddObjectToObject,                 'hydra/pcdm/services/object/add_object'
     autoload :AddRelatedObjectToObject,          'hydra/pcdm/services/object/add_related_object'
     autoload :CreateObject,                      'hydra/pcdm/services/object/create'
     autoload :GetObjectsFromObject,              'hydra/pcdm/services/object/get_objects'
@@ -49,21 +48,29 @@ module Hydra
     autoload :RemoveObjectFromObject,            'hydra/pcdm/services/object/remove_object'
     autoload :RemoveRelatedObjectFromObject,     'hydra/pcdm/services/object/remove_related_object'
 
+    # Iterators
+    autoload :DeepMemberIterator,                'hydra/pcdm/deep_member_iterator'
+
+    # Associations
+    autoload :Reflection,                        'hydra/pcdm/associations/reflection'
+    autoload :Association,                       'hydra/pcdm/associations/association'
+    autoload :AncestorChecker,                   'hydra/pcdm/ancestor_checker'
+
 
     # model validations
     def self.collection? collection
       return false unless collection.respond_to? :type
-      collection.type.include? RDFVocabularies::PCDMTerms.Collection
+      Array(collection.type).include? RDFVocabularies::PCDMTerms.Collection
     end
 
     def self.object? object
       return false unless object.respond_to? :type
-      object.type.include? RDFVocabularies::PCDMTerms.Object
+      Array(object.type).include? RDFVocabularies::PCDMTerms.Object
     end
 
     def self.file? file
       return false unless file.respond_to? :metadata_node
-      file.metadata_node.type.include? RDFVocabularies::PCDMTerms.File
+      Array(file.metadata_node.type).include? RDFVocabularies::PCDMTerms.File
     end
 
   end

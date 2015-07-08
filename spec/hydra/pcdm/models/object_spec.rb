@@ -14,6 +14,19 @@ describe Hydra::PCDM::Object do
     end
   end
 
+  describe "#members=" do
+    it 'should raise an error if you add a non-PCDM type object' do
+      expect { object1.members = [ActiveFedora::Base.new] }.to raise_error(ActiveFedora::AssociationTypeMismatch)
+    end
+    it "should raise an error if you add an ancestor" do
+      ancestor_checker = instance_double(Hydra::PCDM::AncestorChecker)
+      allow(Hydra::PCDM::AncestorChecker).to receive(:new).with(object1).and_return(ancestor_checker)
+      allow(ancestor_checker).to receive(:ancestor?).with(object1).and_return(true)
+
+      expect { object1.members = [object1] }.to raise_error(ActiveFedora::AssociationTypeMismatch)
+    end
+  end
+
   context 'when aggregated by other objects' do
 
     before do
