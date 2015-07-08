@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Hydra::PCDM::Object do
 
-  let(:object1) { Hydra::PCDM::Object.create }
-  let(:object2) { Hydra::PCDM::Object.create }
-  let(:object3) { Hydra::PCDM::Object.create }
+  let(:object1) { Hydra::PCDM::Object.new }
+  let(:object2) { Hydra::PCDM::Object.new }
+  let(:object3) { Hydra::PCDM::Object.new }
 
   describe '#objects=' do
     it 'should aggregate objects' do
@@ -16,20 +16,23 @@ describe Hydra::PCDM::Object do
 
   context 'when aggregated by other objects' do
 
-    before(:all) do
+    before do
       # Using before(:all) and instance variable because regular :let syntax had a significant impact on performance
       # All of the tests in this context are describing idempotent behavior, so isolation between examples isn't necessary.
-      @collection1 = Hydra::PCDM::Collection.create
-      @collection2 = Hydra::PCDM::Collection.create
-      @parent_object = Hydra::PCDM::Object.create
-      @object =  Hydra::PCDM::Object.create
+      @collection1 = Hydra::PCDM::Collection.new
+      @collection2 = Hydra::PCDM::Collection.new
+      @parent_object = Hydra::PCDM::Object.new
+      @object =  Hydra::PCDM::Object.new
       @collection1.members << @object
-      @collection1.save
       @collection2.members << @object
-      @collection2.save
       @parent_object.members << @object
-      @parent_object.save
-      @object.reload
+      allow(@object).to receive(:id).and_return("banana")
+      proxies = [
+        build_proxy(container: @collection1),
+        build_proxy(container: @collection2),
+        build_proxy(container: @parent_object)
+      ]
+      allow(ActiveFedora::Aggregation::Proxy).to receive(:where).with(proxyFor_ssim: @object.id).and_return(proxies)
     end
 
     describe 'parents' do
@@ -38,6 +41,7 @@ describe Hydra::PCDM::Object do
         expect(subject).to include(@collection1, @collection2, @parent_object)
       end
     end
+
     describe 'parent_objects' do
       subject { @object.parent_objects }
       it "finds objects that aggregate the object with hasMember" do
@@ -50,6 +54,9 @@ describe Hydra::PCDM::Object do
         expect(subject).to include(@collection1, @collection2)
         expect(subject.count).to eq 2
       end
+    end
+    def build_proxy(container:)
+      instance_double(ActiveFedora::Aggregation::Proxy, container: container)
     end
   end
 
@@ -65,19 +72,13 @@ describe Hydra::PCDM::Object do
   end
 
   describe '#files' do
-    let(:object) { described_class.create }
-    let(:file1) { object.files.build }
-    let(:file2) { object.files.build }
-
-    before do
-      file1.content = "I'm a file"
-      file2.content = "I am too"
-      object.save!
+    subject { described_class.new }
+    it "should have a files relation" do
+      reflection = subject.reflections[:files]
+      expect(reflection.macro).to eq :directly_contains
+      expect(reflection.options[:has_member_relation]).to eq RDFVocabularies::PCDMTerms.hasFile
+      expect(reflection.options[:class_name].to_s).to eq "Hydra::PCDM::File"
     end
-
-    subject { described_class.find(object.id).files }
-
-    it { is_expected.to eq [file1, file2] }
   end
 
   describe "filtering files" do
@@ -91,8 +92,7 @@ describe Hydra::PCDM::Object do
     let(:pcdm_thumbnail_uri)  { ::RDF::URI("http://pcdm.org/ThumbnailImage") }
 
     before do
-      object.files = [file]
-      object.save
+      file
     end
 
     describe "filter_files_by_type" do

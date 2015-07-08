@@ -29,6 +29,6 @@ RSpec.configure do |config|
   config.formatter = :progress
 
   config.before :suite do
-    ActiveFedora::Cleaner.clean!
+    ActiveFedora::Cleaner.clean! if ActiveFedora::Base.count > 0
   end
 end
