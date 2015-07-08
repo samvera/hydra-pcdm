@@ -40,7 +40,6 @@ module Hydra
 
     # object services
     autoload :AddFileToObject,                   'hydra/pcdm/services/object/add_file'
-    autoload :AddObjectToObject,                 'hydra/pcdm/services/object/add_object'
     autoload :AddRelatedObjectToObject,          'hydra/pcdm/services/object/add_related_object'
     autoload :CreateObject,                      'hydra/pcdm/services/object/create'
     autoload :GetObjectsFromObject,              'hydra/pcdm/services/object/get_objects'

@@ -3,7 +3,7 @@ module Hydra::PCDM
     include Enumerable
     attr_reader :record
     def initialize(record)
-      @record = record
+      @record = HasMembers.new(record)
     end
 
     def each
@@ -15,6 +15,11 @@ module Hydra::PCDM
           yield deep_member
         end
       end
+    end
+  end
+  class HasMembers < SimpleDelegator
+    def members
+      __getobj__.try(:members) || []
     end
   end
 end

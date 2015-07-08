@@ -20,8 +20,8 @@ describe Hydra::PCDM::GetObjectsFromObject do
       before do
         file1.content = "I'm a file"
         file2.content = "I am too"
-        Hydra::PCDM::AddObjectToObject.call( subject, object1 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object2 )
+        subject.objects += [object1]
+        subject.objects += [object2]
         subject.save!
       end
 
