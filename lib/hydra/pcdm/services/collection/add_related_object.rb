@@ -10,7 +10,7 @@ module Hydra::PCDM
     # @return [Hydra::PCDM::Collection] the updated pcdm collection
 
     def self.call( parent_collection, child_related_object )
-      raise ArgumentError, 'parent_collection must be a pcdm object' unless Hydra::PCDM.collection? parent_collection
+      raise ArgumentError, 'parent_collection must be a pcdm collection' unless Hydra::PCDM.collection? parent_collection
       raise ArgumentError, 'child_related_object must be a pcdm object' unless Hydra::PCDM.object? child_related_object
 
       # parent_collection.related_objects = parent_collection.related_objects.to_a + child_related_object
