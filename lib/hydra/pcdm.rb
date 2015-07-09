@@ -40,7 +40,6 @@ module Hydra
 
     # object services
     autoload :AddFileToObject,                   'hydra/pcdm/services/object/add_file'
-    autoload :AddObjectToObject,                 'hydra/pcdm/services/object/add_object'
     autoload :AddRelatedObjectToObject,          'hydra/pcdm/services/object/add_related_object'
     autoload :CreateObject,                      'hydra/pcdm/services/object/create'
     autoload :GetObjectsFromObject,              'hydra/pcdm/services/object/get_objects'
@@ -48,6 +47,12 @@ module Hydra
     autoload :GetFilesFromObject,                'hydra/pcdm/services/object/get_collections'
     autoload :RemoveObjectFromObject,            'hydra/pcdm/services/object/remove_object'
     autoload :RemoveRelatedObjectFromObject,     'hydra/pcdm/services/object/remove_related_object'
+
+    # Validators
+    autoload :Validators,                        'hydra/pcdm/validators'
+
+    # Iterators
+    autoload :DeepMemberIterator,                'hydra/pcdm/deep_member_iterator'
 
 
     # model validations

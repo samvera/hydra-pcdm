@@ -33,7 +33,7 @@ describe Hydra::PCDM::AddRelatedObjectToObject do
         before do
           file1.content = "I'm a file"
           file2.content = "I am too"
-          Hydra::PCDM::AddObjectToObject.call( subject, object1 )
+          subject.objects += [object1]
           Hydra::PCDM::AddRelatedObjectToObject.call( subject, object2 )
           subject.save!
         end
