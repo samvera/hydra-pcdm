@@ -2,16 +2,16 @@ require 'spec_helper'
 
 describe Hydra::PCDM::RemoveCollectionFromCollection do
 
-  subject { Hydra::PCDM::Collection.create }
+  subject { Hydra::PCDM::Collection.new }
 
-    let(:collection1) { Hydra::PCDM::Collection.create }
-    let(:collection2) { Hydra::PCDM::Collection.create }
-    let(:collection3) { Hydra::PCDM::Collection.create }
-    let(:collection4) { Hydra::PCDM::Collection.create }
-    let(:collection5) { Hydra::PCDM::Collection.create }
+    let(:collection1) { Hydra::PCDM::Collection.new }
+    let(:collection2) { Hydra::PCDM::Collection.new }
+    let(:collection3) { Hydra::PCDM::Collection.new }
+    let(:collection4) { Hydra::PCDM::Collection.new }
+    let(:collection5) { Hydra::PCDM::Collection.new }
 
-    let(:object1) { Hydra::PCDM::Object.create }
-    let(:object2) { Hydra::PCDM::Object.create }
+    let(:object1) { Hydra::PCDM::Object.new }
+    let(:object2) { Hydra::PCDM::Object.new }
 
 
   describe '#call' do
@@ -89,10 +89,10 @@ describe Hydra::PCDM::RemoveCollectionFromCollection do
   end
 
   context 'with unacceptable collections' do
-    let(:object1)  { Hydra::PCDM::Object.create }
+    let(:object1)  { Hydra::PCDM::Object.new }
     let(:file1)    { Hydra::PCDM::File.new }
     let(:non_PCDM_object) { "I'm not a PCDM object" }
-    let(:af_base_object)  { ActiveFedora::Base.create }
+    let(:af_base_object)  { ActiveFedora::Base.new }
 
     let(:error_type)    { ArgumentError }
     let(:error_message) { 'child_collection must be a pcdm collection' }
@@ -115,11 +115,11 @@ describe Hydra::PCDM::RemoveCollectionFromCollection do
   end
 
   context 'with unacceptable parent collection' do
-    let(:collection2)      { Hydra::PCDM::Collection.create }
-    let(:object1)          { Hydra::PCDM::Object.create }
+    let(:collection2)      { Hydra::PCDM::Collection.new }
+    let(:object1)          { Hydra::PCDM::Object.new }
     let(:file1)            { Hydra::PCDM::File.new }
     let(:non_PCDM_object)  { "I'm not a PCDM object" }
-    let(:af_base_object)   { ActiveFedora::Base.create }
+    let(:af_base_object)   { ActiveFedora::Base.new }
 
     let(:error_type)    { ArgumentError }
     let(:error_message) { 'parent_collection must be a pcdm collection' }
