@@ -26,4 +26,33 @@ describe Hydra::PCDM::GetRelatedObjectsFromObject do
       expect( related_objects.size ).to eq 2
     end
   end
+
+  context 'with unacceptable inputs' do
+    before(:all) do
+      @collection101   = Hydra::PCDM::Collection.new
+      @file101         = Hydra::PCDM::File.new
+      @non_PCDM_object = "I'm not a PCDM object"
+      @af_base_object  = ActiveFedora::Base.new
+    end
+
+    context 'that are unacceptable parent objects' do
+      let(:error_message) { 'parent_object must be a pcdm object' }
+
+      it 'should NOT accept Hydra::PCDM::Collections as parent object' do
+        expect{ Hydra::PCDM::GetRelatedObjectsFromObject.call( @collection101 ) }.to raise_error(ArgumentError,error_message)
+      end
+
+      it 'should NOT accept Hydra::PCDM::Files as parent object' do
+        expect{ Hydra::PCDM::GetRelatedObjectsFromObject.call( @file101 ) }.to raise_error(ArgumentError,error_message)
+      end
+
+      it 'should NOT accept non-PCDM objects as parent object' do
+        expect{ Hydra::PCDM::GetRelatedObjectsFromObject.call( @non_PCDM_object ) }.to raise_error(ArgumentError,error_message)
+      end
+
+      it 'should NOT accept AF::Base objects as parent object' do
+        expect{ Hydra::PCDM::GetRelatedObjectsFromObject.call( @af_base_object ) }.to raise_error(ArgumentError,error_message)
+      end
+    end
+  end
 end
