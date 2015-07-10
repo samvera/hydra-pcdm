@@ -2,14 +2,13 @@ require 'spec_helper'
 
 describe Hydra::PCDM::GetObjectsFromObject do
 
-  subject { Hydra::PCDM::Object.create }
+  subject { Hydra::PCDM::Object.new }
 
-  let(:object1) { Hydra::PCDM::Object.create }
-  let(:object2) { Hydra::PCDM::Object.create }
+  let(:object1) { Hydra::PCDM::Object.new }
+  let(:object2) { Hydra::PCDM::Object.new }
 
   describe '#call' do
     it 'should return empty array when no members' do
-      subject.save
       expect(Hydra::PCDM::GetObjectsFromObject.call( subject )).to eq []
     end
 
@@ -18,11 +17,11 @@ describe Hydra::PCDM::GetObjectsFromObject do
       let(:file2) { subject.files.build }
 
       before do
+        subject.save
         file1.content = "I'm a file"
         file2.content = "I am too"
         Hydra::PCDM::AddObjectToObject.call( subject, object1 )
         Hydra::PCDM::AddObjectToObject.call( subject, object2 )
-        subject.save!
       end
 
       it 'should only return objects' do
