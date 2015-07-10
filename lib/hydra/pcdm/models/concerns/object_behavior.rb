@@ -26,12 +26,22 @@ module Hydra::PCDM
 
       directly_contains :files, has_member_relation: RDFVocabularies::PCDMTerms.hasFile,
         class_name: "Hydra::PCDM::File"
-
     end
 
     module ClassMethods
       def indexer
         Hydra::PCDM::ObjectIndexer
+      end
+
+      # Overrides https://github.com/projecthydra-labs/activefedora-aggregation/blob/9a110a07f31e03d39566553d4c4bec88c4d5a177/lib/active_fedora/aggregation/base_extension.rb#L32 to customize the Association that's generated to add more validation to it.
+      def create_reflection(macro, name, options, active_fedora)
+        if macro == :aggregation
+          Hydra::PCDM::Reflection.new(macro, name, options, active_fedora).tap do |reflection|
+            add_reflection name, reflection
+          end
+        else
+          super
+        end
       end
     end
 
@@ -39,6 +49,16 @@ module Hydra::PCDM
       raise ArgumentError, "each object must be a pcdm object" unless objects.all? { |o| Hydra::PCDM.object? o }
       raise ArgumentError, "an object can't be an ancestor of itself" if object_ancestor?(objects)
       self.members = objects
+    end
+
+    # @return [Boolean] whether this instance is a PCDM Object.
+    def pcdm_object?
+      true
+    end
+
+    # @return [Boolean] whether this instance is a PCDM Collection.
+    def pcdm_collection?
+      false
     end
 
     def objects

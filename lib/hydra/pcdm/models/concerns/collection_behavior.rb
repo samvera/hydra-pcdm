@@ -13,6 +13,7 @@ module Hydra::PCDM
       indirectly_contains :related_objects, has_member_relation: RDF::Vocab::ORE.aggregates,
         inserted_content_relation: RDF::Vocab::ORE.proxyFor, class_name: "ActiveFedora::Base",
         through: 'ActiveFedora::Aggregation::Proxy', foreign_key: :target
+
     end
 
     module ClassMethods
@@ -31,6 +32,14 @@ module Hydra::PCDM
 
     #   6) Hydra::PCDM::Collection can have descriptive metadata
     #   7) Hydra::PCDM::Collection can have access metadata
+    #
+    def pcdm_object?
+      false
+    end
+
+    def pcdm_collection?
+      true
+    end
 
     def child_collections= collections
       raise ArgumentError, "each collection must be a pcdm collection" unless collections.all? { |c| Hydra::PCDM.collection? c }

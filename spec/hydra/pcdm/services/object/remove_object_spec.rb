@@ -13,7 +13,7 @@ describe Hydra::PCDM::RemoveObjectFromObject do
   describe '#call' do
     context 'when it is the only object' do
       before do
-        Hydra::PCDM::AddObjectToObject.call( subject, object1 )
+        subject.objects += [object1]
         expect( Hydra::PCDM::GetObjectsFromObject.call( subject )).to eq [object1]
       end
 
@@ -25,11 +25,7 @@ describe Hydra::PCDM::RemoveObjectFromObject do
 
     context 'when multiple objects' do
       before do
-        Hydra::PCDM::AddObjectToObject.call( subject, object1 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object2 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object3 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object4 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object5 )
+        subject.objects += [object1, object2, object3, object4, object5]
         expect( Hydra::PCDM::GetObjectsFromObject.call( subject )).to eq [object1,object2,object3,object4,object5]
       end
 
@@ -59,13 +55,7 @@ describe Hydra::PCDM::RemoveObjectFromObject do
 
     context 'when object repeats' do
       before do
-        Hydra::PCDM::AddObjectToObject.call( subject, object1 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object2 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object3 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object2 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object4 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object2 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object5 )
+        subject.objects += [object1, object2, object3, object2, object4, object2, object5]
         expect(Hydra::PCDM::GetObjectsFromObject.call( subject )).to eq [object1,object2,object3,object2,object4,object2,object5]
       end
 
@@ -109,18 +99,12 @@ describe Hydra::PCDM::RemoveObjectFromObject do
       end
 
       it 'and multiple objects in object should return nil when changes are in memory' do
-        Hydra::PCDM::AddObjectToObject.call( subject, object1 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object2 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object4 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object5 )
+        subject.objects += [object1, object2, object4, object5]
         expect( Hydra::PCDM::RemoveObjectFromObject.call( subject, object3 )).to be nil
       end
 
       it 'should return nil when changes are saved' do
-        Hydra::PCDM::AddObjectToObject.call( subject, object1 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object2 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object4 )
-        Hydra::PCDM::AddObjectToObject.call( subject, object5 )
+        subject.objects += [object1, object2, object4, object5]
         subject.save
         expect( Hydra::PCDM::RemoveObjectFromObject.call( subject.reload, object3 ) ).to be nil
       end
