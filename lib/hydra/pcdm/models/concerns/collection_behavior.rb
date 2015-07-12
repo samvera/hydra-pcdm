@@ -44,20 +44,28 @@ module Hydra::PCDM
     def child_collections= collections
       raise ArgumentError, "each collection must be a pcdm collection" unless collections.all? { |c| Hydra::PCDM.collection? c }
       raise ArgumentError, "a collection can't be an ancestor of itself" if collection_ancestor?(collections)
-      self.members = objects + collections
+      self.members = child_objects + collections
     end
 
     def child_collections
       members.to_a.select { |m| Hydra::PCDM.collection? m }
     end
 
-    def objects= objects
+    def child_objects= objects
       raise ArgumentError, "each object must be a pcdm object" unless objects.all? { |o| Hydra::PCDM.object? o }
       self.members = child_collections + objects
     end
 
-    def objects
+    def child_objects
       members.to_a.select { |m| Hydra::PCDM.object? m }
+    end
+
+    def parents
+      aggregated_by
+    end
+
+    def parent_collections
+      aggregated_by.select { |parent| parent.class.included_modules.include?(Hydra::PCDM::CollectionBehavior) }
     end
 
     def collection_ancestor? collections
