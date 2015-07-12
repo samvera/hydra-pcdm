@@ -2,28 +2,239 @@ require 'spec_helper'
 
 describe Hydra::PCDM::Object do
 
-  let(:object1) { Hydra::PCDM::Object.new }
-  let(:object2) { Hydra::PCDM::Object.new }
-  let(:object3) { Hydra::PCDM::Object.new }
+  describe '#child_objects=' do
+    context 'with acceptable child objects' do
+      let(:object1) { described_class.new }
+      let(:object2) { described_class.new }
+      let(:object3) { described_class.new }
+      let(:object4) { described_class.new }
+      let(:object5) { described_class.new }
 
-  describe '#objects=' do
-    it 'should aggregate objects' do
-      object1.objects = [object2, object3]
-      object1.save
-      expect(object1.objects).to eq [object2, object3]
+      it 'should add objects objects' do
+        subject.child_objects = [object1,object2]
+        subject.child_objects << object3
+        subject.child_objects += [object4,object5]
+        expect( subject.child_objects ).to eq [object1,object2,object3,object4,object5]
+      end
+
+      it 'should allow sub-objects' do
+        subject.child_objects = [object1,object2]
+        object1.child_objects = [object3]
+        expect( subject.child_objects ).to eq [object1,object2]
+        expect( object1.child_objects ).to eq [object3]
+      end
+
+      it 'should allow repeating objects' do
+        subject.child_objects = [object1,object2]
+        subject.child_objects << object1
+        expect( subject.child_objects ).to eq [object1,object2,object1]
+      end
+
+      describe 'adding objects that are ancestors' do
+        let(:error_type)    { ArgumentError }
+        let(:error_message) { "an object can't be an ancestor of itself" }
+
+        context 'when the source object is the same' do
+          it 'raises an error' do
+            expect{ object1.child_objects = [object1] }.to raise_error(error_type, error_message)
+            expect{ object1.child_objects += [object1] }.to raise_error(error_type, error_message)
+            expect{ object1.child_objects << [object1] }.to raise_error(error_type, error_message)
+          end
+        end
+
+        before do
+          object1.child_objects = [object2]
+        end
+
+        it 'raises an error' do
+          expect{ object2.child_objects += [object1] }.to raise_error(error_type, error_message)
+          expect{ object2.child_objects << [object1] }.to raise_error(error_type, error_message)
+          expect{ object2.child_objects = [object1] }.to raise_error(error_type, error_message)
+        end
+
+        context 'with more ancestors' do
+          before do
+            object2.child_objects = [object3]
+          end
+
+          it 'raises an error' do
+            expect{ object3.child_objects << [object1] }.to raise_error(error_type, error_message)
+            expect{ object3.child_objects = [object1] }.to raise_error(error_type, error_message)
+            expect{ object3.child_objects += [object1] }.to raise_error(error_type, error_message)
+          end
+
+          context 'with a more complicated example' do
+            before do
+              object3.child_objects = [object4,object5]
+            end
+
+            it 'raises errors' do
+              expect{ object4.child_objects = [object1] }.to raise_error(error_type, error_message)
+              expect{ object4.child_objects += [object1] }.to raise_error(error_type, error_message)
+              expect{ object4.child_objects << [object1] }.to raise_error(error_type, error_message)
+
+              expect{ object4.child_objects = [object2] }.to raise_error(error_type, error_message)
+              expect{ object4.child_objects += [object2] }.to raise_error(error_type, error_message)
+              expect{ object4.child_objects << [object2] }.to raise_error(error_type, error_message)
+            end
+          end
+        end
+      end
+    end
+
+    context 'with unacceptable child objects' do
+      before(:all) do
+        @collection101   = Hydra::PCDM::Collection.new
+        @object101       = Hydra::PCDM::Object.new
+        @file101         = Hydra::PCDM::File.new
+        @non_PCDM_object = "I'm not a PCDM object"
+        @af_base_object  = ActiveFedora::Base.new
+      end
+
+      let(:error_type)    { ActiveFedora::AssociationTypeMismatch }
+      let(:error_message) { 'each object must be a pcdm object' }
+
+      it 'should NOT aggregate Hydra::PCDM::Collection in objects aggregation' do
+        expect{ @object101.child_objects = [@collection101] }.to raise_error(error_type,error_message)
+        expect{ @object101.child_objects += [@collection101] }.to raise_error(error_type,error_message)
+        expect{ @object101.child_objects << @collection101 }.to raise_error(error_type,error_message)
+      end
+
+      it 'should NOT aggregate Hydra::PCDM::Files in objects aggregation' do
+        expect{ @object101.child_objects += [@file1] }.to raise_error(error_type,error_message)
+        expect{ @object101.child_objects << @file1 }.to raise_error(error_type,error_message)
+        expect{ @object101.child_objects = [@file1] }.to raise_error(error_type,error_message)
+      end
+
+      it 'should NOT aggregate non-PCDM objects in objects aggregation' do
+        expect{ @object101.child_objects << @non_PCDM_object }.to raise_error(error_type,error_message)
+        expect{ @object101.child_objects = [@non_PCDM_object] }.to raise_error(error_type,error_message)
+        expect{ @object101.child_objects += [@non_PCDM_object] }.to raise_error(error_type,error_message)
+      end
+
+      it 'should NOT aggregate AF::Base objects in objects aggregation' do
+        expect{ @object101.child_objects = [@af_base_object] }.to raise_error(error_type,error_message)
+        expect{ @object101.child_objects += [@af_base_object] }.to raise_error(error_type,error_message)
+        expect{ @object101.child_objects << @af_base_object }.to raise_error(error_type,error_message)
+      end
     end
   end
 
-  describe "#members=" do
-    it 'should raise an error if you add a non-PCDM type object' do
-      expect { object1.members = [ActiveFedora::Base.new] }.to raise_error(ActiveFedora::AssociationTypeMismatch)
-    end
-    it "should raise an error if you add an ancestor" do
-      ancestor_checker = instance_double(Hydra::PCDM::AncestorChecker)
-      allow(Hydra::PCDM::AncestorChecker).to receive(:new).with(object1).and_return(ancestor_checker)
-      allow(ancestor_checker).to receive(:ancestor?).with(object1).and_return(true)
+  describe '#members=' do
+    context 'with acceptable child objects' do
+      let(:object1) { described_class.new }
+      let(:object2) { described_class.new }
+      let(:object3) { described_class.new }
+      let(:object4) { described_class.new }
+      let(:object5) { described_class.new }
 
-      expect { object1.members = [object1] }.to raise_error(ActiveFedora::AssociationTypeMismatch)
+      it 'should add objects' do
+        subject.members = [object1,object2]
+        subject.members << object3
+        subject.members += [object4,object5]
+        expect( subject.members ).to eq [object1,object2,object3,object4,object5]
+      end
+
+      it 'should allow sub-objects' do
+        subject.members = [object1,object2]
+        object1.members = [object3]
+        expect( subject.members ).to eq [object1,object2]
+        expect( object1.members ).to eq [object3]
+      end
+
+      it 'should allow repeating objects' do
+        subject.members = [object1,object2]
+        subject.members << object1
+        expect( subject.members ).to eq [object1,object2,object1]
+      end
+
+      describe 'adding objects that are ancestors' do
+        let(:error_type)    { ArgumentError }
+        let(:error_message) { "an object can't be an ancestor of itself" }
+
+        context 'when the source object is the same' do
+          it 'raises an error' do
+            expect{ object1.members = [object1] }.to raise_error(error_type, error_message)
+            expect{ object1.members += [object1] }.to raise_error(error_type, error_message)
+            expect{ object1.members << [object1] }.to raise_error(error_type, error_message)
+          end
+        end
+
+        before do
+          object1.members = [object2]
+        end
+
+        it 'raises an error' do
+          expect{ object2.members += [object1] }.to raise_error(error_type, error_message)
+          expect{ object2.members << [object1] }.to raise_error(error_type, error_message)
+          expect{ object2.members = [object1] }.to raise_error(error_type, error_message)
+        end
+
+        context 'with more ancestors' do
+          before do
+            object2.members = [object3]
+          end
+
+          it 'raises an error' do
+            expect{ object3.members << [object1] }.to raise_error(error_type, error_message)
+            expect{ object3.members = [object1] }.to raise_error(error_type, error_message)
+            expect{ object3.members += [object1] }.to raise_error(error_type, error_message)
+          end
+
+          context 'with a more complicated example' do
+            before do
+              object3.members = [object4,object5]
+            end
+
+            it 'raises errors' do
+              expect{ object4.members = [object1] }.to raise_error(error_type, error_message)
+              expect{ object4.members += [object1] }.to raise_error(error_type, error_message)
+              expect{ object4.members << [object1] }.to raise_error(error_type, error_message)
+
+              expect{ object4.members = [object2] }.to raise_error(error_type, error_message)
+              expect{ object4.members += [object2] }.to raise_error(error_type, error_message)
+              expect{ object4.members << [object2] }.to raise_error(error_type, error_message)
+            end
+          end
+        end
+      end
+    end
+
+    context 'with unacceptable child objects' do
+      before(:all) do
+        @collection101   = Hydra::PCDM::Collection.new
+        @object101       = Hydra::PCDM::Object.new
+        @file101         = Hydra::PCDM::File.new
+        @non_PCDM_object = "I'm not a PCDM object"
+        @af_base_object  = ActiveFedora::Base.new
+      end
+
+      let(:error_type)    { ArgumentError }
+      let(:error_message) { 'each object must be a pcdm object' }
+
+      it 'should NOT aggregate Hydra::PCDM::Collection in objects aggregation' do
+        expect{ @object101.members = [@collection101] }.to raise_error(error_type,error_message)
+        expect{ @object101.members += [@collection101] }.to raise_error(error_type,error_message)
+        expect{ @object101.members << @collection101 }.to raise_error(error_type,error_message)
+      end
+
+      it 'should NOT aggregate Hydra::PCDM::Files in objects aggregation' do
+        expect{ @object101.members += [@file1] }.to raise_error(error_type,error_message)
+        expect{ @object101.members << @file1 }.to raise_error(error_type,error_message)
+        expect{ @object101.members = [@file1] }.to raise_error(error_type,error_message)
+      end
+
+      it 'should NOT aggregate non-PCDM objects in objects aggregation' do
+        expect{ @object101.members << @non_PCDM_object }.to raise_error(error_type,error_message)
+        expect{ @object101.members = [@non_PCDM_object] }.to raise_error(error_type,error_message)
+        expect{ @object101.members += [@non_PCDM_object] }.to raise_error(error_type,error_message)
+      end
+
+      it 'should NOT aggregate AF::Base objects in objects aggregation' do
+        expect{ @object101.members = [@af_base_object] }.to raise_error(error_type,error_message)
+        expect{ @object101.members += [@af_base_object] }.to raise_error(error_type,error_message)
+        expect{ @object101.members << @af_base_object }.to raise_error(error_type,error_message)
+      end
     end
   end
 
@@ -74,6 +285,9 @@ describe Hydra::PCDM::Object do
   end
 
   describe 'Related objects' do
+    let(:object1) { described_class.new }
+    let(:object2) { described_class.new }
+
     before do
       object1.related_objects = [object2]
       object1.save
@@ -146,8 +360,6 @@ describe Hydra::PCDM::Object do
       end
     end
   end
-
-
 
   describe ".indexer" do
     after do
