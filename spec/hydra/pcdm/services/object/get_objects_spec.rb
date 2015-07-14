@@ -20,7 +20,7 @@ describe Hydra::PCDM::GetObjectsFromObject do
         subject.save
         file1.content = "I'm a file"
         file2.content = "I am too"
-        subject.objects += [object1, object2]
+        subject.child_objects += [object1, object2]
       end
 
       it 'should only return objects' do

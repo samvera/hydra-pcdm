@@ -45,12 +45,6 @@ module Hydra::PCDM
       end
     end
 
-    def objects= objects
-      raise ArgumentError, "each object must be a pcdm object" unless objects.all? { |o| Hydra::PCDM.object? o }
-      raise ArgumentError, "an object can't be an ancestor of itself" if object_ancestor?(objects)
-      self.members = objects
-    end
-
     # @return [Boolean] whether this instance is a PCDM Object.
     def pcdm_object?
       true
@@ -59,10 +53,6 @@ module Hydra::PCDM
     # @return [Boolean] whether this instance is a PCDM Collection.
     def pcdm_collection?
       false
-    end
-
-    def objects
-      members.to_a.select { |m| Hydra::PCDM.object? m }
     end
 
     def parents
@@ -77,6 +67,26 @@ module Hydra::PCDM
       aggregated_by.select { |parent| parent.class.included_modules.include?(Hydra::PCDM::CollectionBehavior) }
     end
 
+    def child_objects= objects
+      raise ArgumentError, "each object must be a pcdm object" unless objects.all? { |o| Hydra::PCDM.object? o }
+      raise ArgumentError, "an object can't be an ancestor of itself" if object_ancestor?(objects)
+      self.members = objects
+    end
+    
+    def objects= objects
+      warn "[DEPRECATION] `objects=` is deprecated.  Please use `child_objects=` instead.  This has a target date for removal of 07-31-2015"
+      self.child_objects= objects
+    end
+
+    def child_objects
+      members.to_a.select { |m| Hydra::PCDM.object? m }
+    end
+
+    def objects
+      warn "[DEPRECATION] `objects` is deprecated.  Please use `child_objects` instead.  This has a target date for removal of 07-31-2015"
+      self.child_objects
+    end
+
     def object_ancestor? objects
       objects.each do |check|
         return true if ancestor?(check)
@@ -86,13 +96,13 @@ module Hydra::PCDM
 
     def ancestor? object
       return true if object == self
-      return false if object.objects.empty?
-      current_objects = object.objects
+      return false if object.child_objects.empty?
+      current_objects = object.child_objects
       next_batch = []
       while !current_objects.empty? do
         current_objects.each do |c|
           return true if c == self
-          next_batch += c.objects
+          next_batch += c.child_objects
         end
         current_objects = next_batch
       end
