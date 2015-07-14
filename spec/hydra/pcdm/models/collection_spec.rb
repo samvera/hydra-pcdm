@@ -17,11 +17,49 @@ describe Hydra::PCDM::Collection do
     end
   end
 
-  describe '#objects=' do
+  describe '#child_objects=' do
     it 'should aggregate objects' do
-      collection1.objects = [object1,object2]
+      collection1.child_objects = [object1,object2]
       collection1.save
-      expect(collection1.objects).to eq [object1,object2]
+      expect(collection1.child_objects).to eq [object1,object2]
+    end
+  end
+
+  context 'when aggregated by other objects' do
+
+    before do
+      # Using before(:all) and instance variable because regular :let syntax had a significant impact on performance
+      # All of the tests in this context are describing idempotent behavior, so isolation between examples isn't necessary.
+      @collection1 = Hydra::PCDM::Collection.new
+      @collection2 = Hydra::PCDM::Collection.new
+      @collection =  Hydra::PCDM::Collection.new
+      @collection1.members << @collection
+      @collection2.members << @collection
+      allow(@collection).to receive(:id).and_return("banana")
+      proxies = [
+          build_proxy(container: @collection1),
+          build_proxy(container: @collection2),
+      ]
+      allow(ActiveFedora::Aggregation::Proxy).to receive(:where).with(proxyFor_ssim: @collection.id).and_return(proxies)
+    end
+
+    describe 'parents' do
+      subject { @collection.parents }
+      it "finds all nodes that aggregate the object with hasMember" do
+        expect(subject).to include(@collection1, @collection2)
+        expect(subject.count).to eq 2
+      end
+    end
+
+    describe 'parent_collections' do
+      subject { @collection.parent_collections }
+      it "finds collections that aggregate the object with hasMember" do
+        expect(subject).to include(@collection1, @collection2)
+        expect(subject.count).to eq 2
+      end
+    end
+    def build_proxy(container:)
+      instance_double(ActiveFedora::Aggregation::Proxy, container: container)
     end
   end
 

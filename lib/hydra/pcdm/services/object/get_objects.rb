@@ -11,7 +11,7 @@ module Hydra::PCDM
     def self.call( parent_object )
       raise ArgumentError, "parent_object must be a pcdm object" unless Hydra::PCDM.object? parent_object
 
-      parent_object.objects
+      parent_object.child_objects
     end
 
   end

@@ -11,7 +11,7 @@ module Hydra::PCDM
     def self.call( parent_collection )
       raise ArgumentError, "parent_collection must be a pcdm collection" unless Hydra::PCDM.collection? parent_collection
 
-      parent_collection.objects
+      parent_collection.child_objects
     end
 
   end
