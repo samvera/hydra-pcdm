@@ -11,13 +11,18 @@ module Hydra
     autoload :SweetjplVocabularies,   'hydra/pcdm/vocab/sweetjpl_terms'
 
     # models
-    autoload :Collection,             'hydra/pcdm/models/collection'
-    autoload :Object,                 'hydra/pcdm/models/object'
-    autoload :File,                   'hydra/pcdm/models/file'
+    autoload_under 'models' do
+      autoload :Collection
+      autoload :Object
+      autoload :File
+    end
 
     # behavior concerns
-    autoload :CollectionBehavior,     'hydra/pcdm/models/concerns/collection_behavior'
-    autoload :ObjectBehavior,         'hydra/pcdm/models/concerns/object_behavior'
+    autoload_under 'models/concerns' do
+      autoload :CollectionBehavior
+      autoload :ObjectBehavior
+      autoload :ChildObjects
+    end
 
     autoload :CollectionIndexer
     autoload :ObjectIndexer
