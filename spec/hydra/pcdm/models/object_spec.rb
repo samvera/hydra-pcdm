@@ -2,6 +2,17 @@ require 'spec_helper'
 
 describe Hydra::PCDM::Object do
 
+  describe "#child_object_ids" do
+    let(:child1) { described_class.new(id: '1') }
+    let(:child2) { described_class.new(id: '2') }
+    let(:object) { described_class.new }
+    before { object.child_objects = [child1, child2] }
+
+    subject { object.child_object_ids }
+
+    it { is_expected.to eq ["1", "2"] }
+  end
+
   describe '#objects=, +=' do
     context 'with acceptable child objects' do
       let(:object1) { described_class.new }
