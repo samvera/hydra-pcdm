@@ -21,7 +21,7 @@ describe Hydra::PCDM::RemoveRelatedObjectFromCollection do
       end
 
       it 'should remove related object while changes are in memory' do
-          expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object1 ) ).to eq object1
+        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object1 ) ).to eq object1
         expect( Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject )).to eq []
       end
 
@@ -72,33 +72,41 @@ describe Hydra::PCDM::RemoveRelatedObjectFromCollection do
     end
 
     context 'when related object is missing' do
-      it 'should return nil when 0 related objects and 0 collections and objects' do
-        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object1 )).to be nil
+      it 'should return empty array when 0 related objects and 0 collections and objects' do
+      skip( "pending resolution of AF 864") do
+        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object1 )).to eq []
+      end
       end
 
-      it 'should return nil when 0 related objects, but has collections and objects and changes in memory' do
+      it 'should return empty array when 0 related objects, but has collections and objects and changes in memory' do
+      skip( "pending resolution of AF 864") do
         Hydra::PCDM::AddCollectionToCollection.call( subject, collection1 )
         Hydra::PCDM::AddCollectionToCollection.call( subject, collection2 )
         Hydra::PCDM::AddObjectToCollection.call( subject, object1 )
         Hydra::PCDM::AddObjectToCollection.call( subject, object2 )
-        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object1 )).to be nil
+        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object1 )).to eq []
+      end
       end
 
-      it 'should return nil when other related objects and changes are in memory' do
+      it 'should return empty array when other related objects and changes are in memory' do
+      skip( "pending resolution of AF 864") do
         Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object1 )
         Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object2 )
         Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object4 )
         Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object5 )
-        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object3 )).to be nil
+        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object3 )).to eq []
+      end
       end
 
-      it 'should return nil when changes are saved' do
+      it 'should return empty array when changes are saved' do
+      skip( "pending resolution of AF 864") do
         Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object1 )
         Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object2 )
         Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object4 )
         Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object5 )
         subject.save
-        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject.reload, object3 )).to be nil
+        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject.reload, object3 )).to eq []
+      end
       end
     end
   end

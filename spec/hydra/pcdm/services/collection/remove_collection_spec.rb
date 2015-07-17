@@ -71,75 +71,31 @@ describe Hydra::PCDM::RemoveCollectionFromCollection do
     end
 
     context 'when collection is missing' do
-      it 'and 0 sub-collections should return nil' do
-        expect( Hydra::PCDM::RemoveCollectionFromCollection.call( subject, collection1 ) ).to be nil
+      it 'and 0 sub-collections should return empty array' do
+      skip( "pending resolution of AF-agg 55 and AF 864") do
+        expect( Hydra::PCDM::RemoveCollectionFromCollection.call( subject, collection1 ) ).to eq []
+      end
       end
 
-      it 'and multiple sub-collections should return nil when changes are in memory' do
+      it 'and multiple sub-collections should return empty array when changes are in memory' do
+      skip( "pending resolution of AF-agg 55 and AF 864") do
         Hydra::PCDM::AddCollectionToCollection.call( subject, collection1 )
         Hydra::PCDM::AddCollectionToCollection.call( subject, collection2 )
         Hydra::PCDM::AddCollectionToCollection.call( subject, collection4 )
         Hydra::PCDM::AddCollectionToCollection.call( subject, collection5 )
-        expect( Hydra::PCDM::RemoveCollectionFromCollection.call( subject, collection3 ) ).to be nil
+        expect( Hydra::PCDM::RemoveCollectionFromCollection.call( subject, collection3 ) ).to eq []
+      end
       end
 
-      it 'should return nil when changes are saved' do
+      it 'should return empty array when changes are saved' do
+      skip( "pending resolution of AF-agg 55 and AF 864") do
         Hydra::PCDM::AddCollectionToCollection.call( subject, collection1 )
         Hydra::PCDM::AddCollectionToCollection.call( subject, collection2 )
         Hydra::PCDM::AddCollectionToCollection.call( subject, collection4 )
         Hydra::PCDM::AddCollectionToCollection.call( subject, collection5 )
         subject.save
-        expect( Hydra::PCDM::RemoveCollectionFromCollection.call( subject.reload, collection3 ) ).to be nil
+        expect( Hydra::PCDM::RemoveCollectionFromCollection.call( subject.reload, collection3 ) ).to eq []
       end
-    end
-  end
-
-  context 'with unacceptable inputs' do
-    before(:all) do
-      @collection101   = Hydra::PCDM::Collection.new
-      @object101       = Hydra::PCDM::Object.new
-      @file101         = Hydra::PCDM::File.new
-      @non_PCDM_object = "I'm not a PCDM object"
-      @af_base_object  = ActiveFedora::Base.new
-    end
-
-    context 'that are unacceptable child collections' do
-      let(:error_message) { 'child_collection must be a pcdm collection' }
-
-      it 'should NOT remove Hydra::PCDM::Objects from collections aggregation' do
-        expect{ Hydra::PCDM::RemoveCollectionFromCollection.call( @collection101, @object101 ) }.to raise_error(ArgumentError,error_message)
-      end
-
-      it 'should NOT remove Hydra::PCDM::Files from collections aggregation' do
-        expect{ Hydra::PCDM::RemoveCollectionFromCollection.call( @collection101, @file101 ) }.to raise_error(ArgumentError,error_message)
-      end
-
-      it 'should NOT remove non-PCDM objects from collections aggregation' do
-        expect{ Hydra::PCDM::RemoveCollectionFromCollection.call( @collection101, @non_PCDM_object ) }.to raise_error(ArgumentError,error_message)
-      end
-
-      it 'should NOT remove AF::Base objects from collections aggregation' do
-        expect{ Hydra::PCDM::RemoveCollectionFromCollection.call( @collection101, @af_base_object ) }.to raise_error(ArgumentError,error_message)
-      end
-    end
-
-    context 'that are unacceptable parent collections' do
-      let(:error_message) { 'parent_collection must be a pcdm collection' }
-
-      it 'should NOT accept Hydra::PCDM::Objects as parent collection' do
-        expect{ Hydra::PCDM::RemoveCollectionFromCollection.call( @object101, @collection101 ) }.to raise_error(ArgumentError,error_message)
-      end
-
-      it 'should NOT accept Hydra::PCDM::Files as parent collection' do
-        expect{ Hydra::PCDM::RemoveCollectionFromCollection.call( @file101, @collection101 ) }.to raise_error(ArgumentError,error_message)
-      end
-
-      it 'should NOT accept non-PCDM objects as parent collection' do
-        expect{ Hydra::PCDM::RemoveCollectionFromCollection.call( @non_PCDM_object, @collection101 ) }.to raise_error(ArgumentError,error_message)
-      end
-
-      it 'should NOT accept AF::Base objects as parent collection' do
-        expect{ Hydra::PCDM::RemoveCollectionFromCollection.call( @af_base_object, @collection101 ) }.to raise_error(ArgumentError,error_message)
       end
     end
   end

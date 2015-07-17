@@ -57,8 +57,8 @@ module Hydra
     autoload :DeepMemberIterator,                'hydra/pcdm/deep_member_iterator'
 
     # Associations
-    autoload :Reflection,                        'hydra/pcdm/associations/reflection'
-    autoload :Association,                       'hydra/pcdm/associations/association'
+    autoload :AncestorReflection,                'hydra/pcdm/associations/ancestor_reflection'
+    autoload :AncestorAssociation,               'hydra/pcdm/associations/ancestor_association'
     autoload :AncestorChecker,                   'hydra/pcdm/ancestor_checker'
 
 

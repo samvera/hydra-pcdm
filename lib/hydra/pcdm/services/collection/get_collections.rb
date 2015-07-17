@@ -9,9 +9,8 @@ module Hydra::PCDM
     # @return [Array<Hydra::PCDM::Collection>] all member collections
 
     def self.call( parent_collection )
-      raise ArgumentError, "parent_collection must be a pcdm collection" unless Hydra::PCDM.collection? parent_collection
-
-      parent_collection.child_collections
+      warn "[DEPRECATION] `Hydra::PCDM::GetCollectionsFromCollection` is deprecated.  Please use syntax `child_collections = parent_collection.child_collections` instead.  This has a target date for removal of 07-31-2015"
+      parent_collection.child_collections.to_a
     end
 
   end

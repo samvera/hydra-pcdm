@@ -34,11 +34,12 @@ describe Hydra::PCDM::AddCollectionToCollection do
       end
 
       describe "adding collections that are ancestors" do
-        let(:error_message) { "a collection can't be an ancestor of itself" }
+        let(:error_type)    { ArgumentError }
+        let(:error_message) { 'Hydra::PCDM::Collection with ID:  failed to pass AncestorChecker validation' }
 
         context "when the source collection is the same" do
           it "raises an error" do
-            expect{ Hydra::PCDM::AddCollectionToCollection.call( subject, subject ) }.to raise_error(ArgumentError, error_message)
+            expect{ Hydra::PCDM::AddCollectionToCollection.call( subject, subject ) }.to raise_error(error_type, error_message)
           end
         end
 
@@ -47,7 +48,7 @@ describe Hydra::PCDM::AddCollectionToCollection do
         end
 
         it "raises and error" do
-          expect{ Hydra::PCDM::AddCollectionToCollection.call( collection1, subject ) }.to raise_error(ArgumentError, error_message)
+          expect{ Hydra::PCDM::AddCollectionToCollection.call( collection1, subject ) }.to raise_error(error_type, error_message)
         end
 
         context "with more ancestors" do
@@ -56,7 +57,7 @@ describe Hydra::PCDM::AddCollectionToCollection do
           end
 
           it "raises an error" do
-            expect{ Hydra::PCDM::AddCollectionToCollection.call( collection2, subject ) }.to raise_error(ArgumentError, error_message)
+            expect{ Hydra::PCDM::AddCollectionToCollection.call( collection2, subject ) }.to raise_error(error_type, error_message)
           end
 
           context "with a more complicated example" do
@@ -66,8 +67,8 @@ describe Hydra::PCDM::AddCollectionToCollection do
             end
 
             it "raises errors" do
-              expect{ Hydra::PCDM::AddCollectionToCollection.call( collection3, subject ) }.to raise_error(ArgumentError, error_message)
-              expect{ Hydra::PCDM::AddCollectionToCollection.call( collection3, collection1 ) }.to raise_error(ArgumentError, error_message)
+              expect{ Hydra::PCDM::AddCollectionToCollection.call( collection3, subject ) }.to raise_error(error_type, error_message)
+              expect{ Hydra::PCDM::AddCollectionToCollection.call( collection3, collection1 ) }.to raise_error(error_type, error_message)
             end
           end
         end
@@ -123,42 +124,25 @@ describe Hydra::PCDM::AddCollectionToCollection do
       end
 
       context 'that are unacceptable child collections' do
-        let(:error_message) { 'child_collection must be a pcdm collection' }
+        let(:error_type1)    { ArgumentError }
+        let(:error_message1) { 'Hydra::PCDM::Object with ID:  was expected to pcdm_collection?, but it was false' }
+        let(:error_type2)    { NoMethodError }
+        let(:error_message2) { /undefined method `pcdm_collection\?' for .*/ }
 
         it 'should NOT aggregate Hydra::PCDM::Objects in collections aggregation' do
-          expect{ Hydra::PCDM::AddCollectionToCollection.call( @collection101, @object101 ) }.to raise_error(ArgumentError,error_message)
+          expect{ Hydra::PCDM::AddCollectionToCollection.call( @collection101, @object101 ) }.to raise_error(error_type1,error_message1)
         end
 
         it 'should NOT aggregate Hydra::PCDM::Files in collections aggregation' do
-          expect{ Hydra::PCDM::AddCollectionToCollection.call( @collection101, @file101 ) }.to raise_error(ArgumentError,error_message)
+          expect{ Hydra::PCDM::AddCollectionToCollection.call( @collection101, @file101 ) }.to raise_error(error_type2,error_message2)
         end
 
         it 'should NOT aggregate non-PCDM objects in collections aggregation' do
-          expect{ Hydra::PCDM::AddCollectionToCollection.call( @collection101, @non_PCDM_object ) }.to raise_error(ArgumentError,error_message)
+          expect{ Hydra::PCDM::AddCollectionToCollection.call( @collection101, @non_PCDM_object ) }.to raise_error(error_type2,error_message2)
         end
 
         it 'should NOT aggregate AF::Base objects in collections aggregation' do
-          expect{ Hydra::PCDM::AddCollectionToCollection.call( @collection101, @af_base_object ) }.to raise_error(ArgumentError,error_message)
-        end
-      end
-
-      context 'that are unacceptable parent collections' do
-        let(:error_message) { 'parent_collection must be a pcdm collection' }
-
-        it 'should NOT accept Hydra::PCDM::Objects as parent collection' do
-          expect{ Hydra::PCDM::AddCollectionToCollection.call( @object101, @collection101 ) }.to raise_error(ArgumentError,error_message)
-        end
-
-        it 'should NOT accept Hydra::PCDM::Files as parent collection' do
-          expect{ Hydra::PCDM::AddCollectionToCollection.call( @file101, @collection101 ) }.to raise_error(ArgumentError,error_message)
-        end
-
-        it 'should NOT accept non-PCDM objects as parent collection' do
-          expect{ Hydra::PCDM::AddCollectionToCollection.call( @non_PCDM_object, @collection101 ) }.to raise_error(ArgumentError,error_message)
-        end
-
-        it 'should NOT accept AF::Base objects as parent collection' do
-          expect{ Hydra::PCDM::AddCollectionToCollection.call( @af_base_object, @collection101 ) }.to raise_error(ArgumentError,error_message)
+          expect{ Hydra::PCDM::AddCollectionToCollection.call( @collection101, @af_base_object ) }.to raise_error(error_type2,error_message2)
         end
       end
     end
