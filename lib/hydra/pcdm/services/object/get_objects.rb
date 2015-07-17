@@ -9,9 +9,8 @@ module Hydra::PCDM
     # @return [Array<Hydra::PCDM::Object>] all member objects
 
     def self.call( parent_object )
-      raise ArgumentError, "parent_object must be a pcdm object" unless Hydra::PCDM.object? parent_object
-
-      parent_object.child_objects
+      warn "[DEPRECATION] `Hydra::PCDM::GetObjectsFromObject` is deprecated.  Please use syntax `child_objects = parent_object.child_objects` instead.  This has a target date for removal of 07-31-2015"
+      parent_object.child_objects.to_a
     end
 
   end

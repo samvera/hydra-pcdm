@@ -10,9 +10,8 @@ module Hydra::PCDM
     # @return [Hydra::PCDM::Collection] the updated pcdm collection
 
     def self.call( parent_collection, child_object )
-      raise ArgumentError, "parent_collection must be a pcdm collection" unless Hydra::PCDM.collection? parent_collection
-      raise ArgumentError, "child_object must be a pcdm object" unless Hydra::PCDM.object? child_object
-      parent_collection.members << child_object
+      warn "[DEPRECATION] `Hydra::PCDM::AddObjectToCollection` is deprecated.  Please use syntax `parent_collection.child_objects = child_object` instead.  This has a target date for removal of 07-31-2015"
+      parent_collection.child_objects << child_object
     end
 
   end

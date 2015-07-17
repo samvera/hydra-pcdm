@@ -20,6 +20,8 @@ module Hydra::PCDM
       aggregates :members, predicate: RDFVocabularies::PCDMTerms.hasMember,
         class_name: "ActiveFedora::Base"
 
+      filters_association :members, as: :child_objects, condition: :pcdm_object?
+
       indirectly_contains :related_objects, has_member_relation: RDF::Vocab::ORE.aggregates,
         inserted_content_relation: RDF::Vocab::ORE.proxyFor, class_name: "ActiveFedora::Base",
         through: 'ActiveFedora::Aggregation::Proxy', foreign_key: :target
@@ -36,7 +38,7 @@ module Hydra::PCDM
       # Overrides https://github.com/projecthydra-labs/activefedora-aggregation/blob/9a110a07f31e03d39566553d4c4bec88c4d5a177/lib/active_fedora/aggregation/base_extension.rb#L32 to customize the Association that's generated to add more validation to it.
       def create_reflection(macro, name, options, active_fedora)
         if macro == :aggregation
-          Hydra::PCDM::Reflection.new(macro, name, options, active_fedora).tap do |reflection|
+          Hydra::PCDM::AncestorReflection.new(macro, name, options, active_fedora).tap do |reflection|
             add_reflection name, reflection
           end
         else
@@ -70,25 +72,16 @@ module Hydra::PCDM
     include ChildObjects
 
     def object_ancestor? objects
-      objects.each do |check|
-        return true if ancestor?(check)
+      warn "[DEPRECATION] `object_ancestor?` is deprecated.  Please use `AncestorChecker.new(parent_object).ancestor?(child_object)` for each object instead.  This has a target date for removal of 07-31-2015"
+      objects.each do |obj|
+        return true if AncestorChecker.new(self).ancestor?(obj)
       end
       false
     end
 
     def ancestor? object
-      return true if object == self
-      return false if object.child_objects.empty?
-      current_objects = object.child_objects
-      next_batch = []
-      while !current_objects.empty? do
-        current_objects.each do |c|
-          return true if c == self
-          next_batch += c.child_objects
-        end
-        current_objects = next_batch
-      end
-      false
+      warn "[DEPRECATION] `ancestor?` is deprecated.  Please use `AncestorChecker.new(parent_object).ancestor?(child_object)` instead.  This has a target date for removal of 07-31-2015"
+      AncestorChecker.new(self).ancestor?(object)
     end
 
     def contains= files
@@ -121,7 +114,6 @@ module Hydra::PCDM
         return matching_files.first
       end
     end
-
   end
 end
 

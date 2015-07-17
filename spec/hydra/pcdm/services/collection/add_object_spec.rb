@@ -73,42 +73,25 @@ describe Hydra::PCDM::AddObjectToCollection do
       end
 
       context 'with unacceptable objects' do
-        let(:error_message) { 'child_object must be a pcdm object' }
+        let(:error_type1)    { ArgumentError }
+        let(:error_message1) { 'Hydra::PCDM::Collection with ID:  was expected to pcdm_object?, but it was false' }
+        let(:error_type2)    { NoMethodError }
+        let(:error_message2) { /undefined method `pcdm_object\?' for .*/ }
 
         it 'should NOT aggregate Hydra::PCDM::Collection in objects aggregation' do
-          expect{ Hydra::PCDM::AddObjectToCollection.call( @collection101, @collection102 ) }.to raise_error(ArgumentError,error_message)
+          expect{ Hydra::PCDM::AddObjectToCollection.call( @collection101, @collection102 ) }.to raise_error(error_type1,error_message1)
         end
 
         it 'should NOT aggregate Hydra::PCDM::Files in objects aggregation' do
-          expect{ Hydra::PCDM::AddObjectToCollection.call( @collection101, @file101 ) }.to raise_error(ArgumentError,error_message)
+          expect{ Hydra::PCDM::AddObjectToCollection.call( @collection101, @file101 ) }.to raise_error(error_type2,error_message2)
         end
 
         it 'should NOT aggregate non-PCDM objects in objects aggregation' do
-          expect{ Hydra::PCDM::AddObjectToCollection.call( @collection101, @non_PCDM_object ) }.to raise_error(ArgumentError,error_message)
+          expect{ Hydra::PCDM::AddObjectToCollection.call( @collection101, @non_PCDM_object ) }.to raise_error(error_type2,error_message2)
         end
 
         it 'should NOT aggregate AF::Base objects in objects aggregation' do
-          expect{ Hydra::PCDM::AddObjectToCollection.call( @collection101, @af_base_object ) }.to raise_error(ArgumentError,error_message)
-        end
-      end
-
-      context 'with unacceptable parent collection' do
-        let(:error_message) { 'parent_collection must be a pcdm collection' }
-
-        it 'should NOT accept Hydra::PCDM::Objects as parent collection' do
-          expect{ Hydra::PCDM::AddObjectToCollection.call( @object101, @object102 ) }.to raise_error(ArgumentError,error_message)
-        end
-
-        it 'should NOT accept Hydra::PCDM::Files as parent collection' do
-          expect{ Hydra::PCDM::AddObjectToCollection.call( @file101, @object102 ) }.to raise_error(ArgumentError,error_message)
-        end
-
-        it 'should NOT accept non-PCDM objects as parent collection' do
-          expect{ Hydra::PCDM::AddObjectToCollection.call( @non_PCDM_object, @object102 ) }.to raise_error(ArgumentError,error_message)
-        end
-
-        it 'should NOT accept AF::Base objects as parent collection' do
-          expect{ Hydra::PCDM::AddObjectToCollection.call( @af_base_object, @object102 ) }.to raise_error(ArgumentError,error_message)
+          expect{ Hydra::PCDM::AddObjectToCollection.call( @collection101, @af_base_object ) }.to raise_error(error_type2,error_message2)
         end
       end
     end

@@ -22,6 +22,9 @@ module Hydra::PCDM
       aggregates :members, predicate: RDFVocabularies::PCDMTerms.hasMember,
         class_name: "ActiveFedora::Base"
 
+      filters_association :members, as: :child_collections, condition: :pcdm_collection?
+      filters_association :members, as: :child_objects, condition: :pcdm_object?
+
       indirectly_contains :related_objects, has_member_relation: RDF::Vocab::ORE.aggregates,
         inserted_content_relation: RDF::Vocab::ORE.proxyFor, class_name: "ActiveFedora::Base",
         through: 'ActiveFedora::Aggregation::Proxy', foreign_key: :target
@@ -31,6 +34,17 @@ module Hydra::PCDM
     module ClassMethods
       def indexer
         Hydra::PCDM::CollectionIndexer
+      end
+
+      # Overrides https://github.com/projecthydra-labs/activefedora-aggregation/blob/9a110a07f31e03d39566553d4c4bec88c4d5a177/lib/active_fedora/aggregation/base_extension.rb#L32 to customize the Association that's generated to add more validation to it.
+      def create_reflection(macro, name, options, active_fedora)
+        if macro == :aggregation
+          Hydra::PCDM::AncestorReflection.new(macro, name, options, active_fedora).tap do |reflection|
+            add_reflection name, reflection
+          end
+        else
+          super
+        end
       end
     end
 
@@ -50,50 +64,24 @@ module Hydra::PCDM
       aggregated_by.select { |parent| parent.class.included_modules.include?(Hydra::PCDM::CollectionBehavior) }
     end
 
-    def child_collections= collections
-      raise ArgumentError, "each collection must be a pcdm collection" unless collections.all? { |c| Hydra::PCDM.collection? c }
-      raise ArgumentError, "a collection can't be an ancestor of itself" if collection_ancestor?(collections)
-      self.members = child_objects + collections
-    end
-
-    def child_collections
-      members.to_a.select { |m| Hydra::PCDM.collection? m }
-    end
-
     def child_collection_ids
       child_collections.map(&:id)
     end
 
     include ChildObjects
 
-    def child_objects= objects
-      raise ArgumentError, "each object must be a pcdm object" unless objects.all? { |o| Hydra::PCDM.object? o }
-      self.members = child_collections + objects
-    end
-
-
-    def collection_ancestor? collections
-      collections.each do |check|
-        return true if ancestor?(check)
+     def collection_ancestor? collections
+      warn "[DEPRECATION] `collection_ancestor?` is deprecated.  Please use `AncestorChecker.new(parent_collection).ancestor?(child_collection)` for each collection instead.  This has a target date for removal of 07-31-2015"
+      collections.each do |col|
+        return true if AncestorChecker.new(self).ancestor?(col)
       end
       false
     end
 
     def ancestor? collection
-      return true if collection == self
-      return false if collection.child_collections.empty?
-      current_collections = collection.child_collections
-      next_batch = []
-      while !current_collections.empty? do
-        current_collections.each do |c|
-          return true if c == self
-          next_batch += c.child_collections
-        end
-        current_collections = next_batch
-      end
-      false
+      warn "[DEPRECATION] `collection_ancestor?` is deprecated.  Please use `AncestorChecker.new(parent_collection).ancestor?(child_collection)` instead.  This has a target date for removal of 07-31-2015"
+      AncestorChecker.new(self).ancestor?(collection)
     end
-
   end
 end
 
