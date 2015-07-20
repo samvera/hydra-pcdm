@@ -9,7 +9,9 @@ describe Hydra::PCDM::CollectionIndexer do
 
   before do
     allow(collection).to receive(:child_collections).and_return([child_collections1, child_collections2])
+    allow(collection).to receive(:child_collection_ids).and_return(collection.child_collections.map(&:id))
     allow(collection).to receive(:child_objects).and_return([child_object1])
+    allow(collection).to receive(:child_object_ids).and_return(collection.child_objects.map(&:id))
     allow(collection).to receive(:member_ids).and_return(['123', '456', '789'])
   end
 
