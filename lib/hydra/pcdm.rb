@@ -1,5 +1,7 @@
 require 'active_support'
 require 'mime/types'
+require 'active_fedora/aggregation'
+
 
 module Hydra
   module PCDM
@@ -22,6 +24,7 @@ module Hydra
       autoload :CollectionBehavior
       autoload :ObjectBehavior
       autoload :ChildObjects
+      autoload :PcdmBehavior
     end
 
     autoload :CollectionIndexer
