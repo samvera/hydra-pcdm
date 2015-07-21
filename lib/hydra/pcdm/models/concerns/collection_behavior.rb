@@ -25,6 +25,9 @@ module Hydra::PCDM
       def indexer
         Hydra::PCDM::CollectionIndexer
       end
+      
+      def type_validator
+      end
     end
 
     def pcdm_object?

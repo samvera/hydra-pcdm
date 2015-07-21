@@ -1,4 +1,4 @@
-module Hydra::PCDM
+module Hydra::PCDM::Validators
   class AncestorValidator
     def self.validate!(association,record)
       new(association.owner, record).validate!
@@ -20,7 +20,7 @@ module Hydra::PCDM
     private
 
     def ancestor_checker
-      @ancestor_checker ||= AncestorChecker.new(owner)
+      @ancestor_checker ||= ::Hydra::PCDM::AncestorChecker.new(owner)
     end
   end
 end

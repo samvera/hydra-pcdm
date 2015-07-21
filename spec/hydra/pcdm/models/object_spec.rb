@@ -232,35 +232,27 @@ describe Hydra::PCDM::Object do
       let(:error_type3)    { ActiveFedora::AssociationTypeMismatch }
       let(:error_message3) { /ActiveFedora::Base\(#\d+\) expected, got String\(#[\d]+\)/ }
 
-      let(:error_type4)    { NoMethodError }
-      let(:error_message4) { "undefined method `pcdm_collection?' for #<ActiveFedora::Base id: nil>" }
-
-      it 'should NOT aggregate Hydra::PCDM::Collection in objects aggregation' do
-      skip( "pending resolution of PCDM-135") do
+      it 'should NOT aggregate Hydra::PCDM::Collection in members aggregation' do
         expect { @object101.members = [@collection101] }.to raise_error(error_type1,error_message1)
         expect { @object101.members += [@collection101] }.to raise_error(error_type1,error_message1)
         expect { @object101.members << @collection101 }.to raise_error(error_type1,error_message1)
       end
-      end
-
-      it 'should NOT aggregate Hydra::PCDM::Files in objects aggregation' do
+      it 'should NOT aggregate Hydra::PCDM::Files in members aggregation' do
         expect { @object101.members += [@file1] }.to raise_error(error_type2,error_message2)
         expect { @object101.members << @file1 }.to raise_error(error_type2,error_message2)
         expect { @object101.members = [@file1] }.to raise_error(error_type2,error_message2)
       end
 
-      it 'should NOT aggregate non-PCDM objects in objects aggregation' do
+      it 'should NOT aggregate non-PCDM objects in members aggregation' do
         expect { @object101.members << @non_PCDM_object }.to raise_error(error_type3,error_message3)
         expect { @object101.members = [@non_PCDM_object] }.to raise_error(error_type3,error_message3)
         expect { @object101.members += [@non_PCDM_object] }.to raise_error(error_type3,error_message3)
       end
 
-      it 'should NOT aggregate AF::Base objects in objects aggregation' do
-      skip( "pending resolution of PCDM-143") do
-        expect { @object101.members = [@af_base_object] }.to raise_error(error_type4,error_message4)
-        expect { @object101.members += [@af_base_object] }.to raise_error(error_type4,error_message4)
-        expect { @object101.members << @af_base_object }.to raise_error(error_type4,error_message4)
-      end
+      it 'should NOT aggregate non-PCDM AF::Base objects in members aggregation' do
+        expect { @object101.members = [@af_base_object] }.to raise_error(error_type1,error_message1)
+        expect { @object101.members += [@af_base_object] }.to raise_error(error_type1,error_message1)
+        expect { @object101.members << @af_base_object }.to raise_error(error_type1,error_message1)
       end
     end
   end
