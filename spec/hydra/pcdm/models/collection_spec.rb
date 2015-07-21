@@ -2,17 +2,16 @@ require 'spec_helper'
 
 describe Hydra::PCDM::Collection do
 
-  let(:collection1) { Hydra::PCDM::Collection.create }
-  let(:collection2) { Hydra::PCDM::Collection.create }
-  let(:collection3) { Hydra::PCDM::Collection.create }
+  let(:collection1) { Hydra::PCDM::Collection.new }
+  let(:collection2) { Hydra::PCDM::Collection.new }
+  let(:collection3) { Hydra::PCDM::Collection.new }
 
-  let(:object1) { Hydra::PCDM::Object.create }
-  let(:object2) { Hydra::PCDM::Object.create }
+  let(:object1) { Hydra::PCDM::Object.new }
+  let(:object2) { Hydra::PCDM::Object.new }
 
   describe '#child_collections=' do
     it 'should aggregate collections' do
       collection1.child_collections = [collection2, collection3]
-      collection1.save
       expect(collection1.child_collections).to eq [collection2, collection3]
     end
   end
@@ -20,7 +19,6 @@ describe Hydra::PCDM::Collection do
   describe '#child_objects=' do
     it 'should aggregate objects' do
       collection1.child_objects = [object1,object2]
-      collection1.save
       expect(collection1.child_objects).to eq [object1,object2]
     end
   end
@@ -76,8 +74,8 @@ describe Hydra::PCDM::Collection do
   end
 
   describe 'Related objects' do
-    let(:object1)     { Hydra::PCDM::Object.create }
-    let(:collection1) { Hydra::PCDM::Collection.create }
+    let(:object1)     { Hydra::PCDM::Object.new }
+    let(:collection1) { Hydra::PCDM::Collection.new }
 
     before do
       collection1.related_objects = [object1]
