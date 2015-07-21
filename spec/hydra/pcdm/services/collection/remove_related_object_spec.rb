@@ -7,8 +7,6 @@ describe Hydra::PCDM::RemoveRelatedObjectFromCollection do
   let(:object1) { Hydra::PCDM::Object.new }
   let(:object2) { Hydra::PCDM::Object.new }
   let(:object3) { Hydra::PCDM::Object.new }
-  let(:object4) { Hydra::PCDM::Object.new }
-  let(:object5) { Hydra::PCDM::Object.new }
 
   let(:collection1) { Hydra::PCDM::Collection.new }
   let(:collection2) { Hydra::PCDM::Collection.new }
@@ -42,32 +40,29 @@ describe Hydra::PCDM::RemoveRelatedObjectFromCollection do
         Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object1 )
         Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object2 )
         Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object3 )
-        Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object4 )
-        Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object5 )
-        expect( Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject )).to eq [object1,object2,object3,object4,object5]
+        expect( Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject )).to eq [object1,object2,object3]
       end
 
       it 'should remove first related object when changes are in memory' do
         expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object1 ) ).to eq object1
-        expect( Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject )).to eq [object2,object3,object4,object5]
+        expect( Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject )).to eq [object2,object3]
       end
 
       it 'should remove last related object when changes are in memory' do
-        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object5 ) ).to eq object5
-        expect( Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject )).to eq [object1,object2,object3,object4]
+        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object3 ) ).to eq object3
+        expect( Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject )).to eq [object1,object2]
       end
 
       it 'should remove middle related object when changes are in memory' do
-        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object3 ) ).to eq object3
-        expect( Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject )).to eq [object1,object2,object4,object5]
+        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object2 ) ).to eq object2
+        expect( Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject )).to eq [object1,object3]
       end
 
       it 'should remove middle related object when changes are saved' do
+        expect( Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject )).to eq [object1,object2,object3]
+        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object2 ) ).to eq object2
         subject.save
-        expect( Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject.reload )).to eq [object1,object2,object3,object4,object5]
-        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object3 ) ).to eq object3
-        subject.save
-        expect( Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject.reload )).to eq [object1,object2,object4,object5]
+        expect( Hydra::PCDM::GetRelatedObjectsFromCollection.call( subject.reload )).to eq [object1,object3]
       end
     end
 
@@ -91,21 +86,17 @@ describe Hydra::PCDM::RemoveRelatedObjectFromCollection do
       it 'should return empty array when other related objects and changes are in memory' do
       skip( "pending resolution of AF 864") do
         Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object1 )
-        Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object2 )
-        Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object4 )
-        Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object5 )
-        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object3 )).to eq []
+        Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object3 )
+        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject, object2 )).to eq []
       end
       end
 
       it 'should return empty array when changes are saved' do
       skip( "pending resolution of AF 864") do
         Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object1 )
-        Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object2 )
-        Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object4 )
-        Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object5 )
+        Hydra::PCDM::AddRelatedObjectToCollection.call( subject, object3 )
         subject.save
-        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject.reload, object3 )).to eq []
+        expect( Hydra::PCDM::RemoveRelatedObjectFromCollection.call( subject.reload, object2 )).to eq []
       end
       end
     end
