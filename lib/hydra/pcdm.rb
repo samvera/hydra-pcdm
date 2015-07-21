@@ -61,10 +61,7 @@ module Hydra
 
     # Associations
     autoload :AncestorChecker,                   'hydra/pcdm/ancestor_checker'
-    autoload :AncestorValidator,                 'hydra/pcdm/ancestor_validator'
-    autoload :PCDMValidator,                     'hydra/pcdm/pcdm_validator'
-    autoload :CompositeValidator,                'hydra/pcdm/composite_validator'
-
+    autoload :Validators,                        'hydra/pcdm/validators'
 
     # model validations
     def self.collection? collection

@@ -13,9 +13,10 @@ module Hydra::PCDM
 
     module ClassMethods
       def type_validator
-        @type_validator ||= CompositeValidator.new(
-          PCDMValidator,
-          AncestorValidator
+        @type_validator ||= Validators::CompositeValidator.new(
+          super,
+          Validators::PCDMValidator,
+          Validators::AncestorValidator
         )
       end
     end

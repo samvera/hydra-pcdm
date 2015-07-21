@@ -24,6 +24,10 @@ module Hydra::PCDM
       def indexer
         Hydra::PCDM::ObjectIndexer
       end
+
+      def type_validator
+        @type_validator ||= Validators::PCDMObjectValidator
+      end
     end
 
     # @return [Boolean] whether this instance is a PCDM Object.

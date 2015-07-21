@@ -232,6 +232,11 @@ describe Hydra::PCDM::Object do
       let(:error_type3)    { ActiveFedora::AssociationTypeMismatch }
       let(:error_message3) { /ActiveFedora::Base\(#\d+\) expected, got String\(#[\d]+\)/ }
 
+      it 'should NOT aggregate Hydra::PCDM::Collection in members aggregation' do
+        expect { @object101.members = [@collection101] }.to raise_error(error_type1,error_message1)
+        expect { @object101.members += [@collection101] }.to raise_error(error_type1,error_message1)
+        expect { @object101.members << @collection101 }.to raise_error(error_type1,error_message1)
+      end
       it 'should NOT aggregate Hydra::PCDM::Files in members aggregation' do
         expect { @object101.members += [@file1] }.to raise_error(error_type2,error_message2)
         expect { @object101.members << @file1 }.to raise_error(error_type2,error_message2)

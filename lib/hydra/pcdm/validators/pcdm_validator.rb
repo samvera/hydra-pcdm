@@ -1,4 +1,4 @@
-module Hydra::PCDM
+module Hydra::PCDM::Validators
   class PCDMValidator
     def self.validate!(reflection, record)
       if !record.try(:pcdm_object?) && !record.try(:pcdm_collection?)
