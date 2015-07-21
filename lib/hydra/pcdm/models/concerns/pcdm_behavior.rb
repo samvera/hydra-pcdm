@@ -26,7 +26,7 @@ module Hydra::PCDM
     end
 
     def parent_collections
-      aggregated_by.select { |parent| parent.class.included_modules.include?(Hydra::PCDM::CollectionBehavior) }
+      aggregated_by.select(&:pcdm_collection?)
     end
 
   end
