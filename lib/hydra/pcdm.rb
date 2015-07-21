@@ -60,9 +60,8 @@ module Hydra
     autoload :DeepMemberIterator,                'hydra/pcdm/deep_member_iterator'
 
     # Associations
-    autoload :AncestorReflection,                'hydra/pcdm/associations/ancestor_reflection'
-    autoload :AncestorAssociation,               'hydra/pcdm/associations/ancestor_association'
     autoload :AncestorChecker,                   'hydra/pcdm/ancestor_checker'
+    autoload :AncestorValidator,                 'hydra/pcdm/ancestor_validator'
 
 
     # model validations
