@@ -200,26 +200,20 @@ describe Hydra::PCDM::Collection do
     end
     context 'when collection is missing' do
       it 'and 0 sub-collections should return empty array' do
-      skip( "pending resolution of AF-agg 55 and AF 864") do
-        expect( subject.members.remove collection1 ).to eq []
-      end
+        expect( subject.members.delete collection1 ).to eq []
       end
 
       it 'and multiple sub-collections should return empty array when changes are in memory' do
-      skip( "pending resolution of AF-agg 55 and AF 864") do
         subject.members << collection1
         subject.members << collection3
-        expect( subject.members.remove collection2 ).to eq []
-      end
+        expect( subject.members.delete collection2 ).to eq []
       end
 
       it 'should return empty array when changes are saved' do
-      skip( "pending resolution of AF-agg 55 and AF 864") do
         subject.members << collection1
         subject.members << collection3
         subject.save
-        expect( subject.members.remove collection2 ).to eq []
-      end
+        expect( subject.members.delete collection2 ).to eq []
       end
     end
   end
@@ -378,10 +372,8 @@ describe Hydra::PCDM::Collection do
       # TODO pending implementation of multiple objects
 
       it 'should remove first occurrence when changes in memory' do
-      skip( "pending resolution of AF-agg 46 and PCDM 102") do
         expect( subject.child_objects.delete object2 ).to eq [object2]
-        expect( subject.child_objects ).to eq [object1,object3,object2,object4,object2,object5]
-      end
+        expect( subject.child_objects ).to eq [object1,object3,object4,object5]
       end
 
       it 'should remove last occurrence when changes in memory' do
@@ -411,27 +403,23 @@ describe Hydra::PCDM::Collection do
     end
 
     context 'when object is missing' do
+      let(:object3) { Hydra::PCDM::Object.new }
+
       it 'and 0 objects in collection should return empty array' do
-      skip( "pending resolution of AF-agg 55 and AF 864") do
-        expect( subject.child_objects.remove object1 ).to eq []
-      end
+        expect( subject.child_objects.delete object1 ).to eq []
       end
 
       it 'and multiple objects in collection should return empty array when changes are in memory' do
-      skip( "pending resolution of AF-agg 55 and AF 864") do
         subject.child_objects << object1
         subject.child_objects << object2
         expect( subject.child_objects.delete object3 ).to eq []
       end
-      end
 
       it 'should return empty array when changes are saved' do
-      skip( "pending resolution of AF-agg 55 and AF 864") do
         subject.child_objects << object1
         subject.child_objects << object2
         subject.save
         expect( subject.reload.child_objects.delete object3 ).to eq []
-      end
       end
     end
   end
@@ -480,15 +468,11 @@ describe Hydra::PCDM::Collection do
         end
 
         it 'should NOT aggregate Hydra::PCDM::Files in objects aggregation' do
-          skip 'pending resolution of Hydra::PCDM issue #153' do
-            expect{ collection2.related_objects << @file1 }.to raise_error(ArgumentError)
-          end
+          expect{ collection2.related_objects << @file101 }.to raise_error(ActiveFedora::AssociationTypeMismatch,/ActiveFedora::Base\(#\d+\) expected, got Hydra::PCDM::File\(#\d+\)/)
         end
 
         it 'should NOT aggregate non-PCDM objects in objects aggregation' do
-          skip 'pending resolution of Hydra::PCDM issue #153' do
-            expect{ collection2.related_objects << @non_PCDM_object }.to raise_error(ArgumentError)
-          end
+          expect{ collection2.related_objects << @non_PCDM_object }.to raise_error(ActiveFedora::AssociationTypeMismatch,/ActiveFedora::Base\(#\d+\) expected, got String\(#\d+\)/)
         end
 
         it 'should NOT aggregate AF::Base objects in objects aggregation' do
@@ -586,37 +570,31 @@ describe Hydra::PCDM::Collection do
     end
 
     context 'when related object is missing' do
+      let(:object3) { Hydra::PCDM::Object.new }
+
       it 'should return empty array when 0 related objects and 0 collections and objects' do
-      skip( "pending resolution of AF 864") do
         expect( subject.related_objects.delete object1 ).to eq []
-      end
       end
 
       it 'should return empty array when 0 related objects, but has collections and objects and changes in memory' do
-      skip( "pending resolution of AF 864") do
         subject.members << collection1
         subject.members << collection2
         subject.members << object1
         subject.members << object2
         expect( subject.related_objects.delete object1 ).to eq []
       end
-      end
 
       it 'should return empty array when other related objects and changes are in memory' do
-      skip( "pending resolution of AF 864") do
         subject.related_objects << object1
         subject.related_objects << object3
         expect( subject.related_objects.delete object2 ).to eq []
       end
-      end
 
       it 'should return empty array when changes are saved' do
-      skip( "pending resolution of AF 864") do
         subject.related_objects << object1
         subject.related_objects << object3
         subject.save
         expect( subject.reload.related_objects.delete object2 ).to eq []
-      end
       end
     end
   end

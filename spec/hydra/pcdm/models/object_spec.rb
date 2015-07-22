@@ -160,10 +160,8 @@ describe Hydra::PCDM::Object do
       end
 
       it 'should allow repeating objects' do
-      skip( "pending resolution of PCDM-105 and AF-853") do
         subject.members = [object1,object2,object1]
         expect( subject.members ).to eq [object1,object2,object1]
-      end
       end
 
       describe 'adding objects that are ancestors' do
@@ -463,40 +461,32 @@ describe Hydra::PCDM::Object do
 
     context 'when related object is missing' do
       it 'should return empty array when 0 related objects and 0 objects' do
-      skip( "pending resolution of AF 864") do
         expect( subject.related_objects.delete object1 ).to eq []
-      end
       end
 
       it 'should return empty array when other related objects and changes in memory' do
-      skip( "pending resolution of AF 864") do
         subject.related_objects << object1
         subject.related_objects << object2
         subject.related_objects << object4
         subject.related_objects << object5
         expect( subject.related_objects.delete object3 ).to eq []
       end
-      end
 
       it 'should return empty array when other related objects and changes are in memory' do
-      skip( "pending resolution of AF 864") do
         subject.related_objects << object1
         subject.related_objects << object2
         subject.related_objects << object4
         subject.related_objects << object5
-        expect( subject.related_objects.delete, object3 ).to eq []
-      end
+        expect( subject.related_objects.delete object3 ).to eq []
       end
 
       it 'should return empty array when changes are saved' do
-      skip( "pending resolution of AF 864") do
         subject.related_objects << object1
         subject.related_objects << object2
         subject.related_objects << object4
         subject.related_objects << object5
         subject.save
-        expect( subject.reload.related_objects.delete, object3 ).to eq []
-      end
+        expect( subject.reload.related_objects.delete object3 ).to eq []
       end
     end
   end
@@ -554,10 +544,8 @@ describe Hydra::PCDM::Object do
       end
 
       it 'should remove first occurrence when changes in memory' do
-      skip( "pending resolution of AF-agg 46 and PCDM 102") do
-        expect( subject.child_objects.delete object2 ).to eq object2
-        expect( subject.child_objects ).to eq [object1,object3,object2,object3]
-      end
+        expect( subject.child_objects.delete object2 ).to eq [object2]
+        expect( subject.child_objects ).to eq [object1,object3,object3]
       end
 
       it 'should remove last occurrence when changes in memory' do
@@ -588,23 +576,17 @@ describe Hydra::PCDM::Object do
 
     context 'when object is missing' do
       it 'and 0 objects in object should return empty array' do
-      skip( "pending resolution of AF-agg 55 and AF 864") do
         expect( subject.child_objects.delete object1 ).to eq []
-      end
       end
 
       it 'and multiple objects in object should return empty array when changes are in memory' do
-      skip( "pending resolution of AF-agg 55 and AF 864") do
         subject.child_objects += [object1, object2]
         expect( subject.child_objects.delete object3 ).to eq []
-      end
       end
 
       it 'should return empty array when changes are saved' do
-      skip( "pending resolution of AF-agg 55 and AF 864") do
         subject.child_objects += [object1, object2]
         expect( subject.child_objects.delete object3 ).to eq []
-      end
       end
     end
   end
