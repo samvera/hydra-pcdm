@@ -10,6 +10,7 @@ module Hydra::PCDM
 
     def self.call( parent_collection )
       raise ArgumentError, "parent_collection must be a pcdm collection" unless Hydra::PCDM.collection? parent_collection
+      warn "[DEPRECATION] `Hydra::PCDM::GetRelatedObjectsFromCollection` is deprecated.  Please use syntax `related_objects = parent_collection.related_objects` instead.  This has a target date for removal of 07-31-2015"
       parent_collection.related_objects.to_a
     end
 
