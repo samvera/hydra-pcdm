@@ -53,4 +53,20 @@ describe Hydra::PCDM::File do
     end
   end
 
+  describe "with a file that has no type" do
+    subject { file.metadata_node.get_values(:type) }
+    let(:pcdm_file)   { RDFVocabularies::PCDMTerms.File }
+    let(:custom_type) { ::RDF::URI.new("http://example.com/MyType") }
+
+    it "should add a type that already exists" do
+      subject << pcdm_file
+      expect(subject).to eq [pcdm_file]
+    end
+
+    it "should add a custom type" do
+      subject << custom_type
+      expect(subject).to include custom_type
+    end
+  end
+
 end
