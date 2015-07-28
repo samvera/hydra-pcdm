@@ -350,27 +350,19 @@ describe Hydra::PCDM::Object do
         let(:error_message) { 'child_related_object must be a pcdm object' }
 
         it 'should NOT aggregate Hydra::PCDM::Collection in objects aggregation' do
-          skip 'pending resolution of Hydra::PCDM issue #153' do
-            expect{ @object101.related_objects << @collection101 }.to raise_error(ArgumentError,error_message)
-          end
+          expect{ @object101.related_objects << @collection101 }.to raise_error(ActiveFedora::AssociationTypeMismatch,/Hydra::PCDM::Collection:.*> is not a PCDM object./)
         end
 
         it 'should NOT aggregate Hydra::PCDM::Files in objects aggregation' do
-          skip 'pending resolution of Hydra::PCDM issue #153' do
-            expect{ @object101.related_objects << @file1 }.to raise_error(ArgumentError,error_message)
-          end
+          expect{ @object101.related_objects << @file1 }.to raise_error(ActiveFedora::AssociationTypeMismatch,/ActiveFedora::Base.* expected, got NilClass.*/)
         end
 
         it 'should NOT aggregate non-PCDM objects in objects aggregation' do
-          skip 'pending resolution of Hydra::PCDM issue #153' do
-            expect{ @object101.related_objects << @non_PCDM_object }.to raise_error(ArgumentError,error_message)
-          end
+          expect{ @object101.related_objects << @non_PCDM_object }.to raise_error(ActiveFedora::AssociationTypeMismatch,/ActiveFedora::Base.* expected, got String.*/)
         end
 
         it 'should NOT aggregate AF::Base objects in objects aggregation' do
-          skip 'pending resolution of Hydra::PCDM issue #153' do
-            expect{ @object101.related_objects << @af_base_object }.to raise_error(ArgumentError,error_message)
-          end
+          expect{ @object101.related_objects << @af_base_object }.to raise_error(ActiveFedora::AssociationTypeMismatch,/ActiveFedora::Base:.*> is not a PCDM object./)
         end
       end
 
