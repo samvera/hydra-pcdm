@@ -462,9 +462,7 @@ describe Hydra::PCDM::Collection do
 
       context 'with unacceptable related objects' do
         it 'should NOT aggregate Hydra::PCDM::Collection in objects aggregation' do
-          skip 'pending resolution of Hydra::PCDM issue #153' do
-            expect{ collection2.related_objects << collection1 }.to raise_error(ArgumentError)
-          end
+          expect{ collection2.related_objects << collection1 }.to raise_error(ActiveFedora::AssociationTypeMismatch,/Hydra::PCDM::Collection:.* is not a PCDM object/)
         end
 
         it 'should NOT aggregate Hydra::PCDM::Files in objects aggregation' do
@@ -476,9 +474,7 @@ describe Hydra::PCDM::Collection do
         end
 
         it 'should NOT aggregate AF::Base objects in objects aggregation' do
-          skip 'pending resolution of Hydra::PCDM issue #153' do
-            expect{ collection2.related_objects << @af_base_object }.to raise_error(ArgumentError)
-          end
+          expect{ collection2.related_objects << @af_base_object }.to raise_error(ActiveFedora::AssociationTypeMismatch,/ActiveFedora::Base:.*> is not a PCDM object/)
         end
       end
 
@@ -604,33 +600,6 @@ describe Hydra::PCDM::Collection do
       @file101         = Hydra::PCDM::File.new
       @non_PCDM_object = "I'm not a PCDM object"
       @af_base_object  = ActiveFedora::Base.new
-    end
-    context 'that are unacceptable child objects' do
-      let(:error_message) { 'child_related_object must be a pcdm object' }
-
-      it 'should NOT remove Hydra::PCDM::Collections from objects aggregation' do
-        skip 'pending resolution of Hydra::PCDM issue #153' do
-          expect{ collection1.related_objects.delete collection2 }.to raise_error(ArgumentError,error_message)
-        end
-      end
-
-      it 'should NOT remove Hydra::PCDM::Files from objects aggregation' do
-        skip 'pending resolution of Hydra::PCDM issue #153' do
-          expect{ collection1.related_objects.delete @file101 }.to raise_error(ArgumentError,error_message)
-        end
-      end
-
-      it 'should NOT remove non-PCDM objects from objects aggregation' do
-        skip 'pending resolution of Hydra::PCDM issue #153' do
-          expect{ collection1.related_objects.delete @non_PCDM_object }.to raise_error(ArgumentError,error_message)
-        end
-      end
-
-      it 'should NOT remove AF::Base objects from objects aggregation' do
-        skip 'pending resolution of Hydra::PCDM issue #153' do
-          expect{ collection1.related_objects.delete @af_base_object }.to raise_error(ArgumentError,error_message)
-        end
-      end
     end
 
     context 'that are unacceptable parent collections' do
