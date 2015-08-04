@@ -44,21 +44,6 @@ module Hydra::PCDM
       aggregated_by.select(&:pcdm_object?)
     end
 
-    include ChildObjects
-
-    def object_ancestor? objects
-      warn "[DEPRECATION] `object_ancestor?` is deprecated.  Please use `AncestorChecker.new(parent_object).ancestor?(child_object)` for each object instead.  This has a target date for removal of 07-31-2015"
-      objects.each do |obj|
-        return true if AncestorChecker.new(self).ancestor?(obj)
-      end
-      false
-    end
-
-    def ancestor? object
-      warn "[DEPRECATION] `ancestor?` is deprecated.  Please use `AncestorChecker.new(parent_object).ancestor?(child_object)` instead.  This has a target date for removal of 07-31-2015"
-      AncestorChecker.new(self).ancestor?(object)
-    end
-
     def contains= files
       # check that file is an instance of Hydra::PCDM::File
       raise ArgumentError, "each file must be a pcdm file" unless
