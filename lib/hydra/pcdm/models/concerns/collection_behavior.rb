@@ -37,21 +37,6 @@ module Hydra::PCDM
     def pcdm_collection?
       true
     end
-
-    include ChildObjects
-
-     def collection_ancestor? collections
-      warn "[DEPRECATION] `collection_ancestor?` is deprecated.  Please use `AncestorChecker.new(parent_collection).ancestor?(child_collection)` for each collection instead.  This has a target date for removal of 07-31-2015"
-      collections.each do |col|
-        return true if AncestorChecker.new(self).ancestor?(col)
-      end
-      false
-    end
-
-    def ancestor? collection
-      warn "[DEPRECATION] `collection_ancestor?` is deprecated.  Please use `AncestorChecker.new(parent_collection).ancestor?(child_collection)` instead.  This has a target date for removal of 07-31-2015"
-      AncestorChecker.new(self).ancestor?(collection)
-    end
   end
 end
 
