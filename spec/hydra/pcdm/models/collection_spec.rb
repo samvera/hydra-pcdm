@@ -86,19 +86,19 @@ describe Hydra::PCDM::Collection do
         let(:error_message2) { /undefined method `pcdm_collection\?' for .*/ }
   
         it 'should NOT aggregate Hydra::PCDM::Objects in collections aggregation' do
-          expect{ collection1.child_collections << @object101 }.to raise_error(error_type1,error_message1)
+          expect { collection1.child_collections << @object101 }.to raise_error(error_type1,error_message1)
         end
   
         it 'should NOT aggregate Hydra::PCDM::Files in collections aggregation' do
-          expect{ collection1.child_collections << @file101 }.to raise_error(error_type2,error_message2)
+          expect { collection1.child_collections << @file101 }.to raise_error(error_type2,error_message2)
         end
   
         it 'should NOT aggregate non-PCDM objects in collections aggregation' do
-          expect{ collection1.child_collections << @non_PCDM_object }.to raise_error(error_type2,error_message2)
+          expect { collection1.child_collections << @non_PCDM_object }.to raise_error(error_type2,error_message2)
         end
   
         it 'should NOT aggregate AF::Base objects in collections aggregation' do
-          expect{ collection1.child_collections << @af_base_object }.to raise_error(error_type2,error_message2)
+          expect { collection1.child_collections << @af_base_object }.to raise_error(error_type2,error_message2)
         end
       end
     end
@@ -109,7 +109,7 @@ describe Hydra::PCDM::Collection do
   
       context "when the source collection is the same" do
         it "raises an error" do
-          expect{ subject.child_collections << subject }.to raise_error(error_type, error_message)
+          expect { subject.child_collections << subject }.to raise_error(error_type, error_message)
         end
       end
   
@@ -118,7 +118,7 @@ describe Hydra::PCDM::Collection do
       end
   
       it "raises and error" do
-        expect{ collection1.child_collections << subject }.to raise_error(error_type, error_message)
+        expect { collection1.child_collections << subject }.to raise_error(error_type, error_message)
       end
   
       context "with more ancestors" do
@@ -127,7 +127,7 @@ describe Hydra::PCDM::Collection do
         end
   
         it "raises an error" do
-          expect{ collection2.child_collections << subject }.to raise_error(error_type, error_message)
+          expect { collection2.child_collections << subject }.to raise_error(error_type, error_message)
         end
   
         context "with a more complicated example" do
@@ -136,8 +136,8 @@ describe Hydra::PCDM::Collection do
           end
   
           it "raises errors" do
-            expect{ collection3.child_collections << subject }.to raise_error(error_type, error_message)
-            expect{ collection3.child_collections << collection1 }.to raise_error(error_type, error_message)
+            expect { collection3.child_collections << subject }.to raise_error(error_type, error_message)
+            expect { collection3.child_collections << collection1 }.to raise_error(error_type, error_message)
           end
         end
       end
@@ -282,19 +282,19 @@ describe Hydra::PCDM::Collection do
         let(:error_message2) { /undefined method `pcdm_object\?' for .*/ }
 
         it 'should NOT aggregate Hydra::PCDM::Collection in objects aggregation' do
-          expect{ collection1.child_objects << collection2 }.to raise_error(error_type1,error_message1)
+          expect { collection1.child_objects << collection2 }.to raise_error(error_type1,error_message1)
         end
 
         it 'should NOT aggregate Hydra::PCDM::Files in objects aggregation' do
-          expect{ collection1.child_objects << @file101 }.to raise_error(error_type2,error_message2)
+          expect { collection1.child_objects << @file101 }.to raise_error(error_type2,error_message2)
         end
 
         it 'should NOT aggregate non-PCDM objects in objects aggregation' do
-          expect{ collection1.child_objects << @non_PCDM_object }.to raise_error(error_type2,error_message2)
+          expect { collection1.child_objects << @non_PCDM_object }.to raise_error(error_type2,error_message2)
         end
 
         it 'should NOT aggregate AF::Base objects in objects aggregation' do
-          expect{ collection1.child_objects << @af_base_object }.to raise_error(error_type2,error_message2)
+          expect { collection1.child_objects << @af_base_object }.to raise_error(error_type2,error_message2)
         end
       end
     end
@@ -462,45 +462,45 @@ describe Hydra::PCDM::Collection do
 
       context 'with unacceptable related objects' do
         it 'should NOT aggregate Hydra::PCDM::Collection in objects aggregation' do
-          expect{ collection2.related_objects << collection1 }.to raise_error(ActiveFedora::AssociationTypeMismatch,/Hydra::PCDM::Collection:.* is not a PCDM object/)
+          expect { collection2.related_objects << collection1 }.to raise_error(ActiveFedora::AssociationTypeMismatch,/Hydra::PCDM::Collection:.* is not a PCDM object/)
         end
 
         it 'should NOT aggregate Hydra::PCDM::Files in objects aggregation' do
-          expect{ collection2.related_objects << @file101 }.to raise_error(ActiveFedora::AssociationTypeMismatch,/ActiveFedora::Base\(#\d+\) expected, got Hydra::PCDM::File\(#\d+\)/)
+          expect { collection2.related_objects << @file101 }.to raise_error(ActiveFedora::AssociationTypeMismatch,/ActiveFedora::Base\(#\d+\) expected, got Hydra::PCDM::File\(#\d+\)/)
         end
 
         it 'should NOT aggregate non-PCDM objects in objects aggregation' do
-          expect{ collection2.related_objects << @non_PCDM_object }.to raise_error(ActiveFedora::AssociationTypeMismatch,/ActiveFedora::Base\(#\d+\) expected, got String\(#\d+\)/)
+          expect { collection2.related_objects << @non_PCDM_object }.to raise_error(ActiveFedora::AssociationTypeMismatch,/ActiveFedora::Base\(#\d+\) expected, got String\(#\d+\)/)
         end
 
         it 'should NOT aggregate AF::Base objects in objects aggregation' do
-          expect{ collection2.related_objects << @af_base_object }.to raise_error(ActiveFedora::AssociationTypeMismatch,/ActiveFedora::Base:.*> is not a PCDM object/)
+          expect { collection2.related_objects << @af_base_object }.to raise_error(ActiveFedora::AssociationTypeMismatch,/ActiveFedora::Base:.*> is not a PCDM object/)
         end
       end
 
       context 'with unacceptable parent object' do
         it 'should NOT accept Hydra::PCDM::Files as parent object' do
-          expect{ @file1.related_objects << object1 }.to raise_error(NoMethodError)
+          expect { @file1.related_objects << object1 }.to raise_error(NoMethodError)
         end
 
         it 'should NOT accept non-PCDM objects as parent object' do
-          expect{ @non_PCDM_object.related_objects << object1 }.to raise_error(NoMethodError)
+          expect { @non_PCDM_object.related_objects << object1 }.to raise_error(NoMethodError)
         end
 
         it 'should NOT accept AF::Base objects as parent object' do
-          expect{ @af_base_object.related_objects << object1 }.to raise_error(NoMethodError)
+          expect { @af_base_object.related_objects << object1 }.to raise_error(NoMethodError)
         end
 
         it 'Hydra::PCDM::File should NOT have related files' do
-          expect{ @file1.related_objects }.to raise_error(NoMethodError)
+          expect { @file1.related_objects }.to raise_error(NoMethodError)
         end
 
         it 'Non-PCDM objects should should NOT have related objects' do
-          expect{ @non_PCDM_object.related_objects }.to raise_error(NoMethodError)
+          expect { @non_PCDM_object.related_objects }.to raise_error(NoMethodError)
         end
 
         it 'AF::Base should NOT have related_objects' do
-          expect{ @af_base_object.related_objects }.to raise_error(NoMethodError)
+          expect { @af_base_object.related_objects }.to raise_error(NoMethodError)
         end
       end
     end
@@ -604,15 +604,15 @@ describe Hydra::PCDM::Collection do
 
     context 'that are unacceptable parent collections' do
       it 'should NOT accept Hydra::PCDM::Files as parent collection' do
-        expect{ @file101.related_objects.delete object1 }.to raise_error(NoMethodError)
+        expect { @file101.related_objects.delete object1 }.to raise_error(NoMethodError)
       end
 
       it 'should NOT accept non-PCDM objects as parent collection' do
-        expect{ @non_PCDM_object.related_objects.delete object1 }.to raise_error(NoMethodError)
+        expect { @non_PCDM_object.related_objects.delete object1 }.to raise_error(NoMethodError)
       end
 
       it 'should NOT accept AF::Base objects as parent collection' do
-        expect{ @af_base_object.related_objects.delete object1 }.to raise_error(NoMethodError)
+        expect { @af_base_object.related_objects.delete object1 }.to raise_error(NoMethodError)
       end
     end
   end

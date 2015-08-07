@@ -49,7 +49,7 @@ describe Hydra::PCDM::File do
       # complains that it's a server managed property. This test 
       # is mostly to document this situation.
       file.file_hash = "the-hash"
-      expect{file.save}.to raise_error(Ldp::BadRequest)
+      expect { file.save }.to raise_error(Ldp::BadRequest)
     end
   end
 
