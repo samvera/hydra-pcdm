@@ -1,8 +1,8 @@
 module Hydra::PCDM::Validators
   class PCDMValidator
-    def self.validate!(reflection, record)
+    def self.validate!(_reflection, record)
       if !record.try(:pcdm_object?) && !record.try(:pcdm_collection?)
-        raise ActiveFedora::AssociationTypeMismatch.new "#{record} is not a PCDM object or collection."
+        fail ActiveFedora::AssociationTypeMismatch, "#{record} is not a PCDM object or collection."
       end
     end
   end

@@ -6,8 +6,8 @@ module Hydra::PCDM
       configure type: RDFVocabularies::PCDMTerms.File
       property :label, predicate: ::RDF::RDFS.label
 
-      property :file_name, predicate: EBUCoreVocabularies::EBUCoreTerms.filename 
-      property :file_size, predicate: EBUCoreVocabularies::EBUCoreTerms.fileSize 
+      property :file_name, predicate: EBUCoreVocabularies::EBUCoreTerms.filename
+      property :file_size, predicate: EBUCoreVocabularies::EBUCoreTerms.fileSize
       property :date_created, predicate: EBUCoreVocabularies::EBUCoreTerms.dateCreated
       property :has_mime_type, predicate: EBUCoreVocabularies::EBUCoreTerms.hasMimeType
       property :date_modified, predicate: EBUCoreVocabularies::EBUCoreTerms.dateModified
