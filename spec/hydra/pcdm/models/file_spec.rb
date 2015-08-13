@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Hydra::PCDM::File do
-  let(:file) { Hydra::PCDM::File.new }
-  let(:reloaded) { Hydra::PCDM::File.new(file.uri) }
+  let(:file) { described_class.new }
+  let(:reloaded) { described_class.new(file.uri) }
 
   describe 'when saving' do
     it 'sets an RDF type' do
@@ -26,7 +26,7 @@ describe Hydra::PCDM::File do
     let(:date_created) { Date.parse 'Fri, 08 May 2015 08:00:00 -0400 (EDT)' }
     let(:date_modified) { Date.parse 'Sat, 09 May 2015 09:00:00 -0400 (EDT)' }
     let(:content) { 'hello world' }
-    let(:file) { Hydra::PCDM::File.new.tap { |ds| ds.content = content } }
+    let(:file) { described_class.new.tap { |ds| ds.content = content } }
     it 'saves technical metadata' do
       file.file_name = 'picture.jpg'
       file.file_size = content.length.to_s

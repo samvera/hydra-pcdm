@@ -99,9 +99,9 @@ describe Hydra::PCDM::Object do
     context 'with unacceptable child objects' do
       before(:all) do
         @collection101   = Hydra::PCDM::Collection.new
-        @object101       = Hydra::PCDM::Object.new
+        @object101       = described_class.new
         @file101         = Hydra::PCDM::File.new
-        @non_PCDM_object = "I'm not a PCDM object"
+        @non_pcdm_object = "I'm not a PCDM object"
         @af_base_object  = ActiveFedora::Base.new
       end
 
@@ -123,9 +123,9 @@ describe Hydra::PCDM::Object do
       end
 
       it 'NOT aggregate non-PCDM objects in objects aggregation' do
-        expect { @object101.child_objects << @non_PCDM_object }.to raise_error(error_type2, error_message2)
-        expect { @object101.child_objects = [@non_PCDM_object] }.to raise_error(error_type2, error_message2)
-        expect { @object101.child_objects += [@non_PCDM_object] }.to raise_error(error_type2, error_message2)
+        expect { @object101.child_objects << @non_pcdm_object }.to raise_error(error_type2, error_message2)
+        expect { @object101.child_objects = [@non_pcdm_object] }.to raise_error(error_type2, error_message2)
+        expect { @object101.child_objects += [@non_pcdm_object] }.to raise_error(error_type2, error_message2)
       end
 
       it 'NOT aggregate AF::Base objects in objects aggregation' do
@@ -218,9 +218,9 @@ describe Hydra::PCDM::Object do
     context 'with unacceptable child objects' do
       before(:all) do
         @collection101   = Hydra::PCDM::Collection.new
-        @object101       = Hydra::PCDM::Object.new
+        @object101       = described_class.new
         @file101         = Hydra::PCDM::File.new
-        @non_PCDM_object = "I'm not a PCDM object"
+        @non_pcdm_object = "I'm not a PCDM object"
         @af_base_object  = ActiveFedora::Base.new
       end
 
@@ -245,9 +245,9 @@ describe Hydra::PCDM::Object do
       end
 
       it 'NOT aggregate non-PCDM objects in members aggregation' do
-        expect { @object101.members << @non_PCDM_object }.to raise_error(error_type3, error_message3)
-        expect { @object101.members = [@non_PCDM_object] }.to raise_error(error_type3, error_message3)
-        expect { @object101.members += [@non_PCDM_object] }.to raise_error(error_type3, error_message3)
+        expect { @object101.members << @non_pcdm_object }.to raise_error(error_type3, error_message3)
+        expect { @object101.members = [@non_pcdm_object] }.to raise_error(error_type3, error_message3)
+        expect { @object101.members += [@non_pcdm_object] }.to raise_error(error_type3, error_message3)
       end
 
       it 'NOT aggregate non-PCDM AF::Base objects in members aggregation' do
@@ -264,8 +264,8 @@ describe Hydra::PCDM::Object do
       # All of the tests in this context are describing idempotent behavior, so isolation between examples isn't necessary.
       @collection1 = Hydra::PCDM::Collection.new
       @collection2 = Hydra::PCDM::Collection.new
-      @parent_object = Hydra::PCDM::Object.new
-      @object = Hydra::PCDM::Object.new
+      @parent_object = described_class.new
+      @object = described_class.new
       @collection1.members = [@object]
       @collection2.members = [@object]
       @parent_object.members = [@object]
@@ -305,9 +305,9 @@ describe Hydra::PCDM::Object do
 
   describe 'Related objects' do
     context 'with acceptable objects' do
-      let(:object1) { Hydra::PCDM::Object.new }
-      let(:object2) { Hydra::PCDM::Object.new }
-      let(:object3) { Hydra::PCDM::Object.new }
+      let(:object1) { described_class.new }
+      let(:object2) { described_class.new }
+      let(:object3) { described_class.new }
       let(:file1)   { Hydra::PCDM::File.new }
 
       it 'return empty array when no related object' do
@@ -340,9 +340,9 @@ describe Hydra::PCDM::Object do
     context 'with unacceptable inputs' do
       before(:all) do
         @collection101   = Hydra::PCDM::Collection.new
-        @object101       = Hydra::PCDM::Object.new
+        @object101       = described_class.new
         @file101         = Hydra::PCDM::File.new
-        @non_PCDM_object = "I'm not a PCDM object"
+        @non_pcdm_object = "I'm not a PCDM object"
         @af_base_object  = ActiveFedora::Base.new
       end
       context 'with unacceptable related objects' do
@@ -357,7 +357,7 @@ describe Hydra::PCDM::Object do
         end
 
         it 'NOT aggregate non-PCDM objects in objects aggregation' do
-          expect { @object101.related_objects << @non_PCDM_object }.to raise_error(ActiveFedora::AssociationTypeMismatch, /ActiveFedora::Base.* expected, got String.*/)
+          expect { @object101.related_objects << @non_pcdm_object }.to raise_error(ActiveFedora::AssociationTypeMismatch, /ActiveFedora::Base.* expected, got String.*/)
         end
 
         it 'NOT aggregate AF::Base objects in objects aggregation' do
@@ -371,7 +371,7 @@ describe Hydra::PCDM::Object do
         end
 
         it 'NOT accept non-PCDM objects as parent object' do
-          expect { @non_PCDM_object.related_objects << @object101 }.to raise_error(NoMethodError)
+          expect { @non_pcdm_object.related_objects << @object101 }.to raise_error(NoMethodError)
         end
 
         it 'NOT accept AF::Base objects as parent object' do
@@ -383,7 +383,7 @@ describe Hydra::PCDM::Object do
         end
 
         it 'NOT accept non-PCDM objects as parent object' do
-          expect { @non_PCDM_object.related_objects }.to raise_error(NoMethodError)
+          expect { @non_pcdm_object.related_objects }.to raise_error(NoMethodError)
         end
 
         it 'NOT accept AF::Base objects as parent object' do
@@ -394,13 +394,13 @@ describe Hydra::PCDM::Object do
   end
 
   describe 'removing related objects' do
-    subject { Hydra::PCDM::Object.new }
+    subject { described_class.new }
 
-    let(:object1) { Hydra::PCDM::Object.new }
-    let(:object2) { Hydra::PCDM::Object.new }
-    let(:object3) { Hydra::PCDM::Object.new }
-    let(:object4) { Hydra::PCDM::Object.new }
-    let(:object5) { Hydra::PCDM::Object.new }
+    let(:object1) { described_class.new }
+    let(:object2) { described_class.new }
+    let(:object3) { described_class.new }
+    let(:object4) { described_class.new }
+    let(:object5) { described_class.new }
 
     let(:file1) { Hydra::PCDM::File.new }
     let(:file2) { Hydra::PCDM::File.new }
@@ -483,10 +483,10 @@ describe Hydra::PCDM::Object do
   end
 
   describe 'removing child objects' do
-    subject { Hydra::PCDM::Object.new }
-    let(:object1) { Hydra::PCDM::Object.new }
-    let(:object2) { Hydra::PCDM::Object.new }
-    let(:object3) { Hydra::PCDM::Object.new }
+    subject { described_class.new }
+    let(:object1) { described_class.new }
+    let(:object2) { described_class.new }
+    let(:object3) { described_class.new }
 
     context 'when it is the only object' do
       before do

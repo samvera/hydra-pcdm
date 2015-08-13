@@ -8,43 +8,43 @@ describe Hydra::PCDM do
   describe 'Validations' do
     describe '#collection?' do
       it 'return true for a pcdm collection' do
-        expect(Hydra::PCDM.collection? coll1).to be true
+        expect(described_class.collection? coll1).to be true
       end
 
       it 'return false for a pcdm object' do
-        expect(Hydra::PCDM.collection? obj1).to be false
+        expect(described_class.collection? obj1).to be false
       end
 
       it 'return false for a pcdm file' do
-        expect(Hydra::PCDM.collection? file1).to be false
+        expect(described_class.collection? file1).to be false
       end
     end
 
     describe '#object?' do
       it 'return false for a pcdm collection' do
-        expect(Hydra::PCDM.object? coll1).to be false
+        expect(described_class.object? coll1).to be false
       end
 
       it 'return true for a pcdm object' do
-        expect(Hydra::PCDM.object? obj1).to be true
+        expect(described_class.object? obj1).to be true
       end
 
       it 'return false for a pcdm file' do
-        expect(Hydra::PCDM.object? file1).to be false
+        expect(described_class.object? file1).to be false
       end
     end
 
     describe '#file?' do
       it 'return false for a pcdm collection' do
-        expect(Hydra::PCDM.file? coll1).to be false
+        expect(described_class.file? coll1).to be false
       end
 
       it 'return false for a pcdm object' do
-        expect(Hydra::PCDM.file? obj1).to be false
+        expect(described_class.file? obj1).to be false
       end
 
       it 'return true for a pcdm file' do
-        expect(Hydra::PCDM.file? file1).to be true
+        expect(described_class.file? file1).to be true
       end
     end
   end
