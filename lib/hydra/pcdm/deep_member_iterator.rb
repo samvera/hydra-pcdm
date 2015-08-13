@@ -1,5 +1,5 @@
 module Hydra::PCDM
-  ## 
+  ##
   # Iterates over a record's members and all of their members in a breadth-first
   # search.
   class DeepMemberIterator
