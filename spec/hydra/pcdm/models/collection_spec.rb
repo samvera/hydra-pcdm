@@ -84,19 +84,19 @@ describe Hydra::PCDM::Collection do
         let(:error_type2)    { NoMethodError }
         let(:error_message2) { /undefined method `pcdm_collection\?' for .*/ }
 
-        it 'NOTs aggregate Hydra::PCDM::Objects in collections aggregation' do
+        it 'raises an error when trying to aggregate Hydra::PCDM::Objects in collections aggregation' do
           expect { collection1.child_collections << @object101 }.to raise_error(error_type1, error_message1)
         end
 
-        it 'NOTs aggregate Hydra::PCDM::Files in collections aggregation' do
+        it 'raises an error when trying to aggregate Hydra::PCDM::Files in collections aggregation' do
           expect { collection1.child_collections << @file101 }.to raise_error(error_type2, error_message2)
         end
 
-        it 'NOTs aggregate non-PCDM objects in collections aggregation' do
+        it 'raises an error when trying to aggregate non-PCDM objects in collections aggregation' do
           expect { collection1.child_collections << @non_pcdm_object }.to raise_error(error_type2, error_message2)
         end
 
-        it 'NOTs aggregate AF::Base objects in collections aggregation' do
+        it 'raises an error when trying to aggregate AF::Base objects in collections aggregation' do
           expect { collection1.child_collections << @af_base_object }.to raise_error(error_type2, error_message2)
         end
       end
@@ -278,19 +278,19 @@ describe Hydra::PCDM::Collection do
         let(:error_type2)    { NoMethodError }
         let(:error_message2) { /undefined method `pcdm_object\?' for .*/ }
 
-        it 'NOTs aggregate Hydra::PCDM::Collection in objects aggregation' do
+        it 'raises an error when trying to aggregate Hydra::PCDM::Collection in objects aggregation' do
           expect { collection1.child_objects << collection2 }.to raise_error(error_type1, error_message1)
         end
 
-        it 'NOTs aggregate Hydra::PCDM::Files in objects aggregation' do
+        it 'raises an error when trying to aggregate Hydra::PCDM::Files in objects aggregation' do
           expect { collection1.child_objects << @file101 }.to raise_error(error_type2, error_message2)
         end
 
-        it 'NOTs aggregate non-PCDM objects in objects aggregation' do
+        it 'raises an error when trying to aggregate non-PCDM objects in objects aggregation' do
           expect { collection1.child_objects << @non_pcdm_object }.to raise_error(error_type2, error_message2)
         end
 
-        it 'NOTs aggregate AF::Base objects in objects aggregation' do
+        it 'raises an error when trying to aggregate AF::Base objects in objects aggregation' do
           expect { collection1.child_objects << @af_base_object }.to raise_error(error_type2, error_message2)
         end
       end
@@ -457,33 +457,33 @@ describe Hydra::PCDM::Collection do
       end
 
       context 'with unacceptable related objects' do
-        it 'NOTs aggregate Hydra::PCDM::Collection in objects aggregation' do
+        it 'raises an error when trying to aggregate Hydra::PCDM::Collection in objects aggregation' do
           expect { collection2.related_objects << collection1 }.to raise_error(ActiveFedora::AssociationTypeMismatch, /Hydra::PCDM::Collection:.* is not a PCDM object/)
         end
 
-        it 'NOTs aggregate Hydra::PCDM::Files in objects aggregation' do
+        it 'raises an error when trying to aggregate Hydra::PCDM::Files in objects aggregation' do
           expect { collection2.related_objects << @file101 }.to raise_error(ActiveFedora::AssociationTypeMismatch, /ActiveFedora::Base\(#\d+\) expected, got Hydra::PCDM::File\(#\d+\)/)
         end
 
-        it 'NOTs aggregate non-PCDM objects in objects aggregation' do
+        it 'raises an error when trying to aggregate non-PCDM objects in objects aggregation' do
           expect { collection2.related_objects << @non_pcdm_object }.to raise_error(ActiveFedora::AssociationTypeMismatch, /ActiveFedora::Base\(#\d+\) expected, got String\(#\d+\)/)
         end
 
-        it 'NOTs aggregate AF::Base objects in objects aggregation' do
+        it 'raises an error when trying to aggregate AF::Base objects in objects aggregation' do
           expect { collection2.related_objects << @af_base_object }.to raise_error(ActiveFedora::AssociationTypeMismatch, /ActiveFedora::Base:.*> is not a PCDM object/)
         end
       end
 
       context 'with unacceptable parent object' do
-        it 'NOTs accept Hydra::PCDM::Files as parent object' do
+        it 'raises an error when trying to accept Hydra::PCDM::Files as parent object' do
           expect { @file1.related_objects << object1 }.to raise_error(NoMethodError)
         end
 
-        it 'NOTs accept non-PCDM objects as parent object' do
+        it 'raises an error when trying to accept non-PCDM objects as parent object' do
           expect { @non_pcdm_object.related_objects << object1 }.to raise_error(NoMethodError)
         end
 
-        it 'NOTs accept AF::Base objects as parent object' do
+        it 'raises an error when trying to accept AF::Base objects as parent object' do
           expect { @af_base_object.related_objects << object1 }.to raise_error(NoMethodError)
         end
 
@@ -599,15 +599,15 @@ describe Hydra::PCDM::Collection do
     end
 
     context 'that are unacceptable parent collections' do
-      it 'NOTs accept Hydra::PCDM::Files as parent collection' do
+      it 'raises an error when trying to accept Hydra::PCDM::Files as parent collection' do
         expect { @file101.related_objects.delete object1 }.to raise_error(NoMethodError)
       end
 
-      it 'NOTs accept non-PCDM objects as parent collection' do
+      it 'raises an error when trying to accept non-PCDM objects as parent collection' do
         expect { @non_pcdm_object.related_objects.delete object1 }.to raise_error(NoMethodError)
       end
 
-      it 'NOTs accept AF::Base objects as parent collection' do
+      it 'raises an error when trying to accept AF::Base objects as parent collection' do
         expect { @af_base_object.related_objects.delete object1 }.to raise_error(NoMethodError)
       end
     end
@@ -659,7 +659,7 @@ describe Hydra::PCDM::Collection do
     end
 
     context 'should only contain members of the correct type' do
-      it 'onlies return collections' do
+      it 'returns only collections' do
         subject.child_collections << collection1
         subject.members << collection2
         subject.child_objects << object1
