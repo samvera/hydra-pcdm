@@ -1,14 +1,11 @@
 source 'https://rubygems.org'
 
-unless ENV['CI']
-  gem 'pry'
-  gem 'pry-byebug'
-end
-
-group :development do
+group :development, :test do
   gem 'rubocop', require: false
   gem 'haml-lint', require: false
-gem 'rubocop-rspec', require: false
+  gem 'rubocop-rspec', require: false
+  gem 'pry' unless ENV['CI']
+  gem 'pry-byebug' unless ENV['CI']
 end
 
 # Specify your gem's dependencies in hydra-pcdm.gemspec
