@@ -1,0 +1,29 @@
+require: rubocop-rspec
+
+AllCops:
+  DisplayCopNames: true
+  Include:
+    - '**/Rakefile'
+
+Metrics/LineLength:
+  Enabled: false
+
+Style/CollectionMethods:
+  PreferredMethods:
+    collect: 'map'
+    collect!: 'map!'
+    inject: 'reduce'
+    detect: 'find'
+    find_all: 'select'
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+RSpec/FilePath:
+  Enabled: false
+
+RSpec/InstanceVariable:
+  Enabled: false

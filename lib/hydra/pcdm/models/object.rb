@@ -3,4 +3,3 @@ module Hydra::PCDM
     include Hydra::PCDM::ObjectBehavior
   end
 end
-
