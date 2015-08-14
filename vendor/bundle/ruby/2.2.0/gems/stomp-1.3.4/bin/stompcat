@@ -1,0 +1,75 @@
+#!/usr/bin/env ruby
+#
+#   Copyright 2006 LogicBlaze Inc.
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+begin; require 'rubygems'; rescue; end
+require 'stomp'
+
+#
+# This simple script is inspired by the netcat utility.  It allows you to receive
+# data from a stomp destination and output it.
+#
+# Usage: stompcat (destination-name)
+#
+# Example: stompcat /topic/foo
+#   Would display output that arrives at the /topic/foo stomp destination
+#
+begin
+
+ if ARGV[0] == '-h' || ARGV[0] == '--help'
+    $stdout.puts
+    $stdout.puts 'Usage: stompcat DESTINATION'
+    $stdout.puts
+    $stdout.puts 'Receives data from a stomp destination and outputs it to STDOUT'
+    $stdout.puts
+    $stdout.puts 'Example: stompcat /topic/foo'
+    $stdout.puts
+    $stdout.puts 'Defaults:'
+    $stdout.puts "DESTINATION\t/topic/default"
+    $stdout.puts "STOMP_HOST\tlocalhost"
+    $stdout.puts "STOMP_PORT\t61613"
+    $stdout.puts "STOMP_USER\t"
+    $stdout.puts "STOMP_PASSWORD\t"
+    $stdout.puts
+    $stdout.puts 'You can override the host, port, user, or password through environment variables'
+    exit 0
+  end
+
+  @port = 61613
+  @host = "localhost"
+  @user = ENV["STOMP_USER"];
+  @password = ENV["STOMP_PASSWORD"]
+
+  @host = ENV["STOMP_HOST"] if ENV["STOMP_HOST"] != nil
+  @port = ENV["STOMP_PORT"] if ENV["STOMP_PORT"] != nil
+
+  @destination = "/topic/default"
+  @destination = $*[0] if $*[0] != nil
+
+  $stderr.print "Connecting to stomp://#{@host}:#{@port} as #{@user}\n"
+  @conn = Stomp::Connection.open(@user, @password, @host, @port, true)
+  $stderr.print "Getting output from #{@destination}\n"
+
+  @conn.subscribe(@destination, { :ack =>"client" })
+  while true
+      @msg = @conn.receive
+      $stdout.print @msg.body
+      $stdout.flush
+      @conn.ack @msg.headers["message-id"]
+  end
+
+rescue
+end
+

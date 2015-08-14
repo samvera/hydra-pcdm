@@ -1,0 +1,28 @@
+module ActiveFedora::Associations::Builder
+  class SingularAssociation < Association #:nodoc:
+    self.valid_options += [:dependent, :inverse_of]
+
+    def self.constructable?
+      true
+    end
+
+    def self.define_accessors(model, reflection)
+      super
+      define_constructors(model.generated_association_methods, reflection.name)  if constructable?
+    end
+
+    def self.define_constructors(mixin, name)
+      mixin.redefine_method("build_#{name}") do |*params|
+        association(name).build(*params)
+      end
+
+      mixin.redefine_method("create_#{name}") do |*params|
+        association(name).create(*params)
+      end
+
+      mixin.redefine_method("create_#{name}!") do |*params|
+        association(name).create!(*params)
+      end
+    end
+  end
+end
