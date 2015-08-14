@@ -1,5 +1,4 @@
 module Hydra::PCDM
-
   # behavior:
   #   1) Hydra::PCDM::Object can aggregate (pcdm:hasMember) Hydra::PCDM::Object
   #   2) Hydra::PCDM::Object can aggregate (ore:aggregates) Hydra::PCDM::Object  (Object related to the Object)
@@ -17,7 +16,7 @@ module Hydra::PCDM
       include ::Hydra::PCDM::PcdmBehavior
 
       directly_contains :files, has_member_relation: RDFVocabularies::PCDMTerms.hasFile,
-        class_name: "Hydra::PCDM::File"
+                                class_name: 'Hydra::PCDM::File'
     end
 
     module ClassMethods
@@ -44,9 +43,9 @@ module Hydra::PCDM
       aggregated_by.select(&:pcdm_object?)
     end
 
-    def contains= files
+    def contains=(files)
       # check that file is an instance of Hydra::PCDM::File
-      raise ArgumentError, "each file must be a pcdm file" unless
+      fail ArgumentError, 'each file must be a pcdm file' unless
           files.all? { |f| Hydra::PCDM.file? f }
       super(files)
     end
@@ -55,8 +54,8 @@ module Hydra::PCDM
     # @param [RDF::URI] uri for the desired Type
     # @example
     #   filter_files_by_type(::RDF::URI("http://pcdm.org/ExtractedText"))
-    def filter_files_by_type uri
-      self.files.reject do |file|
+    def filter_files_by_type(uri)
+      files.reject do |file|
         !file.metadata_node.type.include?(uri)
       end
     end
@@ -65,10 +64,10 @@ module Hydra::PCDM
     # @param [RDF::URI] uri for the desired Type
     # @example
     #   file_of_type(::RDF::URI("http://pcdm.org/ExtractedText"))
-    def file_of_type uri
-      matching_files =  filter_files_by_type(uri)
-      if  matching_files.empty?
-        file = self.files.build
+    def file_of_type(uri)
+      matching_files = filter_files_by_type(uri)
+      if matching_files.empty?
+        file = files.build
         Hydra::PCDM::AddTypeToFile.call(file, uri)
       else
         return matching_files.first
@@ -76,4 +75,3 @@ module Hydra::PCDM
     end
   end
 end
-

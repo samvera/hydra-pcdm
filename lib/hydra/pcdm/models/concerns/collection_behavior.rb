@@ -1,5 +1,4 @@
 module Hydra::PCDM
-
   # behavior:
   #   1) Hydra::PCDM::Collection can aggregate (pcdm:hasMember)  Hydra::PCDM::Collection (no infinite loop, e.g., A -> B -> C -> A)
   #   2) Hydra::PCDM::Collection can aggregate (pcdm:hasMember)  Hydra::PCDM::Object
@@ -25,7 +24,7 @@ module Hydra::PCDM
       def indexer
         Hydra::PCDM::CollectionIndexer
       end
-      
+
       def type_validator
       end
     end
@@ -39,4 +38,3 @@ module Hydra::PCDM
     end
   end
 end
-
