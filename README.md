@@ -1,68 +1,60 @@
 # Hydra::PCDM
+
+[![Version](https://badge.fury.io/rb/hydra-pcdm.png)](http://badge.fury.io/rb/hydra-pcdm)
 [![Build Status](https://travis-ci.org/projecthydra-labs/hydra-pcdm.svg?branch=master)](https://travis-ci.org/projecthydra-labs/hydra-pcdm)
 [![Coverage Status](https://coveralls.io/repos/projecthydra-labs/hydra-pcdm/badge.svg?branch=master)](https://coveralls.io/r/projecthydra-labs/hydra-pcdm?branch=master)
+[![Code Climate](https://codeclimate.com/github/projecthydra-labs/hydra-pcdm/badges/gpa.svg)](https://codeclimate.com/github/projecthydra-labs/hydra-pcdm)
+[![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
+[![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./CONTRIBUTING.md)
+[![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/hydra-pcdm)
+[![Stories in Ready](https://badge.waffle.io/projecthydra-labs/hydra-works.png?source=projecthydra-labs%2Fhydra-pcdm&label=ready&title=Ready)](https://waffle.io/projecthydra-labs/hydra-works?source=projecthydra-labs%2Fhydra-pcdm)
 
-Hydra implementation of Portland Common Data Models (PCDM)
+Hydra implementation of the Portland Common Data Model (PCDM)
 
 ## Installation
 
 Add these lines to your application's Gemfile:
 
 ```ruby
-  gem 'active-fedora', github: 'projecthydra/active_fedora' # hydra-pcdm requires an unreleased version of ActiveFedora
-  gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm'
+  gem 'active-fedora', '~> 9.3'
+  gem 'hydra-pcdm', '~> 0.1'
 ```
-
-Substitute another branch name for 'master' to test out a branch under development.    
-<!-- Temporarily comment out until gem is published.
-    gem 'hydra-pcdm' 
--->
 
 And then execute:
-```
-    $ bundle
-```
-<!-- Temporarily comment out until gem is published.
-Or install it yourself as:
+
+    $ bundle install
+
+Or install it yourself:
 
     $ gem install hydra-pcdm
--->
 
 ## Access Controls
-We are using [Web ACL](http://www.w3.org/wiki/WebAccessControl) as implemented by [hydra-access](https://github.com/projecthydra/hydra-head/tree/master/hydra-access-controls) controls
 
-## PCDM Model
+We are using [Web ACL](http://www.w3.org/wiki/WebAccessControl) as implemented in [hydra-access-controls](https://github.com/projecthydra/hydra-head/tree/master/hydra-access-controls).
 
-Reference:  [Portland Common Data Model](https://github.com/duraspace/pcdm/wiki)
+## Portland Common Data Model
 
+Reference: [Portland Common Data Model](https://github.com/duraspace/pcdm/wiki)
 
 ### Model Definition
 
 ![PCDM Model Definition](https://raw.githubusercontent.com/wiki/duraspace/pcdm/images/coll-object-file.png)
 
-
-### Example
-
-To test the model and provide clarity we have included a sample mode that exercises the interfaces provided by the gem.
-The sample model may change over time to reflect the state of the gam and what it supports.  
-
-![Sandwich Objet Model](https://docs.google.com/drawings/d/1wI4H3AH9pdIPllKIMO356c1cFHUN57azDlgIqMVODSw/pub?w=1369&h=727)
-
 ## Usage
 
-Hydra-pcdm provides three classes:
+Hydra::PCDM provides three core classes:
+
 ```
 Hydra::PCDM::Object
 Hydra::PCDM::Collection
 Hydra::PCDM::File
 ```
 
-A `Hydra::PCDM::File` is a NonRDFSource &emdash; a bitstream.  You can use this to store content. A PCDM::File is contained by a PCDM::Object. A `File` has some attached technical metadata, but no descriptive metadata.  A `Hydra::PCDM::Object` contains files and other objects and may have descriptive metadata.  A `Hydra::PCDM::Collection` can contain other `Collection`s or `Object`s but not `File`s.  A `Collection` also may have descriptive metadata.
+A `Hydra::PCDM::File` is a NonRDFSource (in [LDP](http://www.w3.org/TR/ldp/) parlance) &emdash; a bitstream. You can use this to store content. A PCDM::File is contained by a PCDM::Object. A `File` may have some attached technical metadata, but no descriptive metadata. A `Hydra::PCDM::Object` may contain `File`s, may have descriptive metadata, and may declare other `Object`s as members (for complex object hierarchies). A `Hydra::PCDM::Collection` may contain other `Collection`s or `Object`s but may not directly contain `File`s. A `Collection` may also have descriptive metadata.
 
-Typically usage involves extending the behavior provided by this gem. In your application you can write something like this:
+Typically, usage involves extending the behavior provided by this gem. In your application you can write something like this:
 
 ```ruby
-
 class Book < ActiveFedora::Base
   include Hydra::PCDM::ObjectBehavior
 end
@@ -71,17 +63,18 @@ class Collection < ActiveFedora::Base
   include Hydra::PCDM::CollectionBehavior
 end
 
-c1 = Collection.create
-b1 = Book.create
+collection = Collection.create
+book = Book.create
 
-c1.members = [b1]
-# c1.members << b1 # This should work in the future
-c1.save
+collection.members = [book]
+# or: collection.members << book
+collection.save
 
-f1 = b1.files.build
-f1.content = "The quick brown fox jumped over the lazy dog."
-b1.save
+file = book.files.build
+file.content = "The quick brown fox jumped over the lazy dog."
+book.save
 ```
 
-## How to contribute
+## Contributing
+
 If you'd like to contribute to this effort, please check out the [Contributing Guide](CONTRIBUTING.md)
