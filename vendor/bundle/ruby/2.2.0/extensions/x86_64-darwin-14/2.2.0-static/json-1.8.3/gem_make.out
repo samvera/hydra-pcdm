@@ -1,9 +1,0 @@
-/Users/nabeela/.rbenv/versions/2.2.2/bin/ruby -r ./siteconf20150814-22400-15omal6.rb extconf.rb
-creating Makefile
-
-make "DESTDIR=" clean
-
-make "DESTDIR="
-make: Nothing to be done for `all'.
-
-make "DESTDIR=" install

@@ -1,7 +1,0 @@
-development:
-  url: http://development.com/fedora
-test:
-  url: http://test.com/fedora
-production:
-  url: http://production.com/fedora
-    
