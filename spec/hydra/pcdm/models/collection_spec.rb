@@ -31,6 +31,16 @@ describe Hydra::PCDM::Collection do
       end
     end
 
+    describe '#parent_collection_ids' do
+      it 'returns the IDs of the parent' do
+        subject.members << object1
+        subject.members << collection1
+        subject.save
+        expect(object1.parent_collection_ids).to eq [subject.id]
+        expect(collection1.parent_collection_ids).to eq [subject.id]
+      end
+    end
+
     describe 'aggregates collections that implement Hydra::PCDM' do
       before do
         class Kollection < ActiveFedora::Base

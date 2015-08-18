@@ -29,5 +29,9 @@ module Hydra::PCDM
     def parent_collections
       aggregated_by.select(&:pcdm_collection?)
     end
+
+    def parent_collection_ids
+      parent_collections.map(&:id)
+    end
   end
 end
