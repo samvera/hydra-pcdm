@@ -43,13 +43,6 @@ module Hydra::PCDM
       aggregated_by.select(&:pcdm_object?)
     end
 
-    def contains=(files)
-      # check that file is an instance of Hydra::PCDM::File
-      fail ArgumentError, 'each file must be a pcdm file' unless
-          files.all? { |f| Hydra::PCDM.file? f }
-      super(files)
-    end
-
     # Returns directly contained files that have the requested RDF Type
     # @param [RDF::URI] uri for the desired Type
     # @example
