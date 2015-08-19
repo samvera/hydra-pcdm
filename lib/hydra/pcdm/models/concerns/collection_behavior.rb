@@ -14,7 +14,7 @@ module Hydra::PCDM
     extend ActiveSupport::Concern
 
     included do
-      type RDFVocabularies::PCDMTerms.Collection
+      type Vocab::PCDMTerms.Collection
       include ::Hydra::PCDM::PcdmBehavior
 
       filters_association :members, as: :child_collections, condition: :pcdm_collection?

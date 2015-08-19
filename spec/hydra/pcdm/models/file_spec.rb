@@ -8,7 +8,7 @@ describe Hydra::PCDM::File do
     it 'sets an RDF type' do
       file.content = 'stuff'
       expect(file.save).to be true
-      expect(reloaded.metadata_node.query(predicate: RDF.type, object: RDFVocabularies::PCDMTerms.File).map(&:object)).to eq [RDFVocabularies::PCDMTerms.File]
+      expect(reloaded.metadata_node.query(predicate: RDF.type, object: Hydra::PCDM::Vocab::PCDMTerms.File).map(&:object)).to eq [Hydra::PCDM::Vocab::PCDMTerms.File]
     end
   end
 
@@ -54,7 +54,7 @@ describe Hydra::PCDM::File do
 
   describe 'with a file that has no type' do
     subject { file.metadata_node.get_values(:type) }
-    let(:pcdm_file)   { RDFVocabularies::PCDMTerms.File }
+    let(:pcdm_file)   { Hydra::PCDM::Vocab::PCDMTerms.File }
     let(:custom_type) { ::RDF::URI.new('http://example.com/MyType') }
 
     it 'add a type that already exists' do

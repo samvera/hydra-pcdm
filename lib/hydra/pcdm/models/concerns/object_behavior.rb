@@ -12,10 +12,10 @@ module Hydra::PCDM
     extend ActiveSupport::Concern
 
     included do
-      type RDFVocabularies::PCDMTerms.Object
+      type Vocab::PCDMTerms.Object
       include ::Hydra::PCDM::PcdmBehavior
 
-      directly_contains :files, has_member_relation: RDFVocabularies::PCDMTerms.hasFile,
+      directly_contains :files, has_member_relation: Vocab::PCDMTerms.hasFile,
                                 class_name: 'Hydra::PCDM::File'
     end
 
