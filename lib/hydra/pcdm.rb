@@ -6,10 +6,13 @@ module Hydra
   module PCDM
     extend ActiveSupport::Autoload
 
-    # vocabularies
-    autoload :RDFVocabularies,        'hydra/pcdm/vocab/pcdm_terms'
-    autoload :EBUCoreVocabularies,    'hydra/pcdm/vocab/ebucore_terms'
-    autoload :SweetjplVocabularies,   'hydra/pcdm/vocab/sweetjpl_terms'
+    module Vocab
+      extend ActiveSupport::Autoload
+      eager_autoload do
+        autoload :PCDMTerms
+        autoload :SweetJPLTerms
+      end
+    end
 
     # models
     autoload_under 'models' do
@@ -42,17 +45,17 @@ module Hydra
     # model validations
     def self.collection?(collection)
       return false unless collection.respond_to? :type
-      Array(collection.type).include? RDFVocabularies::PCDMTerms.Collection
+      Array(collection.type).include? Vocab::PCDMTerms.Collection
     end
 
     def self.object?(object)
       return false unless object.respond_to? :type
-      Array(object.type).include? RDFVocabularies::PCDMTerms.Object
+      Array(object.type).include? Vocab::PCDMTerms.Object
     end
 
     def self.file?(file)
       return false unless file.respond_to? :metadata_node
-      Array(file.metadata_node.type).include? RDFVocabularies::PCDMTerms.File
+      Array(file.metadata_node.type).include? Vocab::PCDMTerms.File
     end
   end
 end

@@ -587,7 +587,7 @@ describe Hydra::PCDM::Object do
     it 'have a files relation' do
       reflection = subject.reflections[:files]
       expect(reflection.macro).to eq :directly_contains
-      expect(reflection.options[:has_member_relation]).to eq RDFVocabularies::PCDMTerms.hasFile
+      expect(reflection.options[:has_member_relation]).to eq Hydra::PCDM::Vocab::PCDMTerms.hasFile
       expect(reflection.options[:class_name].to_s).to eq 'Hydra::PCDM::File'
     end
   end
