@@ -33,5 +33,13 @@ module Hydra::PCDM
     def parent_collection_ids
       parent_collections.map(&:id)
     end
+
+    def ancestor?(record)
+      ancestor_checker.ancestor?(record)
+    end
+
+    def ancestor_checker
+      @ancestor_checker ||= ::Hydra::PCDM::AncestorChecker.new(self)
+    end
   end
 end
