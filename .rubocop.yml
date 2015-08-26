@@ -22,6 +22,15 @@ Style/ClassAndModuleChildren:
 Style/Documentation:
   Enabled: false
 
+RSpec/ExampleWording:
+  CustomTransform:
+    be: is
+    have: has
+    not: does not
+    NOT: does NOT
+  IgnoredWords:
+    - only
+
 RSpec/FilePath:
   Enabled: false
 
