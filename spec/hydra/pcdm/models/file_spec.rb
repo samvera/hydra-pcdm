@@ -28,19 +28,21 @@ describe Hydra::PCDM::File do
     let(:content) { 'hello world' }
     let(:file) { described_class.new.tap { |ds| ds.content = content } }
     it 'saves technical metadata' do
-      file.file_name = 'picture.jpg'
-      file.file_size = content.length.to_s
-      file.date_created = date_created
-      file.has_mime_type = 'application/jpg'
-      file.date_modified = date_modified
-      file.byte_order = 'little-endian'
-      expect(file.save).to be true
-      expect(reloaded.file_name).to eq ['picture.jpg']
-      expect(reloaded.file_size).to eq [content.length.to_s]
-      expect(reloaded.has_mime_type).to eq ['application/jpg']
-      expect(reloaded.date_created).to eq [date_created]
-      expect(reloaded.date_modified).to eq [date_modified]
-      expect(reloaded.byte_order).to eq ['little-endian']
+      skip('pending resolution of PCDM 182') do
+        file.file_name = 'picture.jpg'
+        file.file_size = content.length.to_s
+        file.date_created = date_created
+        file.has_mime_type = 'application/jpg'
+        file.date_modified = date_modified
+        file.byte_order = 'little-endian'
+        expect(file.save).to be true
+        expect(reloaded.file_name).to eq ['picture.jpg']
+        expect(reloaded.file_size).to eq [content.length.to_s]
+        expect(reloaded.has_mime_type).to eq ['application/jpg']
+        expect(reloaded.date_created).to eq [date_created]
+        expect(reloaded.date_modified).to eq [date_modified]
+        expect(reloaded.byte_order).to eq ['little-endian']
+      end
     end
 
     it 'does not save server managed properties' do
@@ -48,7 +50,7 @@ describe Hydra::PCDM::File do
       # complains that it's a server managed property. This test
       # is mostly to document this situation.
       file.file_hash = 'the-hash'
-      expect { file.save }.to raise_error(Ldp::BadRequest)
+      expect { file.save }.to raise_error(Ldp::Conflict, %r{Could not remove triple containing predicate http://www.loc.gov/premis/rdf/v1#hasMessageDigest to node .*})
     end
   end
 
