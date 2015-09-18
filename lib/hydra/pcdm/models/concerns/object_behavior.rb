@@ -39,8 +39,13 @@ module Hydra::PCDM
       false
     end
 
-    def parent_objects
+    def in_objects
       aggregated_by.select(&:pcdm_object?)
+    end
+
+    def parent_objects
+      warn '[DEPRECATION] `parent_objects` is deprecated in Hydra::PCDM.  Please use `in_objects` instead.  This has a target date for removal of 10-31-2015'
+      in_objects
     end
 
     # Returns directly contained files that have the requested RDF Type
