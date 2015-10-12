@@ -5,7 +5,6 @@ module Hydra::PCDM
       aggregates :members, predicate: Vocab::PCDMTerms.hasMember,
                            class_name: 'ActiveFedora::Base',
                            type_validator: type_validator
-      filters_association :members, as: :objects, condition: :pcdm_object?
       indirectly_contains :related_objects, has_member_relation: RDF::Vocab::ORE.aggregates,
                                             inserted_content_relation: RDF::Vocab::ORE.proxyFor, class_name: 'ActiveFedora::Base',
                                             through: 'ActiveFedora::Aggregation::Proxy', foreign_key: :target,
@@ -24,6 +23,14 @@ module Hydra::PCDM
 
     def member_of
       aggregated_by
+    end
+
+    def objects
+      members.select(&:pcdm_object?)
+    end
+
+    def object_ids
+      objects.map(&:id)
     end
 
     def parents

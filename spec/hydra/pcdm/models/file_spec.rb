@@ -50,7 +50,7 @@ describe Hydra::PCDM::File do
       # complains that it's a server managed property. This test
       # is mostly to document this situation.
       file.file_hash = 'the-hash'
-      expect { file.save }.to raise_error(Ldp::Conflict, %r{Could not remove triple containing predicate http://www.loc.gov/premis/rdf/v1#hasMessageDigest to node .*})
+      expect { file.save }.to raise_error(Ldp::BadRequest, %r{Could not persist triple containing predicate http://www.loc.gov/premis/rdf/v1#hasMessageDigest to node .*})
     end
   end
 

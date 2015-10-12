@@ -13,14 +13,6 @@ describe Hydra::PCDM::Collection do
   describe 'adding collections' do
     describe 'with acceptable inputs' do
       subject { described_class.new }
-      it 'adds collections, sub-collections, and repeating collections' do
-        subject.collections << collection1      # first add
-        subject.collections << collection2      # second add to same collection
-        subject.collections << collection1      # repeat a collection
-        collection1.collections << collection3  # add sub-collection
-        expect(subject.collections).to eq [collection1, collection2, collection1]
-        expect(collection1.collections).to eq [collection3]
-      end
       it 'adds an object to collection with collections and objects' do
         subject.members << collection1
         subject.members << collection2
@@ -53,12 +45,12 @@ describe Hydra::PCDM::Collection do
       let(:kollection1) { Kollection.new }
 
       it 'accepts implementing collection as a child' do
-        subject.collections << kollection1
+        subject.members << kollection1
         expect(subject.collections).to eq [kollection1]
       end
 
       it 'accepts implementing collection as a parent' do
-        kollection1.collections << collection1
+        kollection1.members << collection1
         expect(kollection1.collections).to eq [collection1]
       end
     end
@@ -72,45 +64,13 @@ describe Hydra::PCDM::Collection do
       let(:cullection1) { Cullection.new }
 
       it 'accepts extending collection as a child' do
-        subject.collections << cullection1
+        subject.members << cullection1
         expect(subject.collections).to eq [cullection1]
       end
 
       it 'accepts extending collection as a parent' do
-        cullection1.collections << collection1
+        cullection1.members << collection1
         expect(cullection1.collections).to eq [collection1]
-      end
-    end
-
-    describe 'with unacceptable input types' do
-      before(:all) do
-        @object101       = Hydra::PCDM::Object.new
-        @file101         = Hydra::PCDM::File.new
-        @non_pcdm_object = "I'm not a PCDM object"
-        @af_base_object  = ActiveFedora::Base.new
-      end
-
-      context 'that are unacceptable child collections' do
-        let(:error_type1)    { ArgumentError }
-        let(:error_message1) { 'Hydra::PCDM::Object with ID:  was expected to pcdm_collection?, but it was false' }
-        let(:error_type2)    { NoMethodError }
-        let(:error_message2) { /undefined method `pcdm_collection\?' for .*/ }
-
-        it 'raises an error when trying to aggregate Hydra::PCDM::Objects in collections aggregation' do
-          expect { collection1.collections << @object101 }.to raise_error(error_type1, error_message1)
-        end
-
-        it 'raises an error when trying to aggregate Hydra::PCDM::Files in collections aggregation' do
-          expect { collection1.collections << @file101 }.to raise_error(error_type2, error_message2)
-        end
-
-        it 'raises an error when trying to aggregate non-PCDM objects in collections aggregation' do
-          expect { collection1.collections << @non_pcdm_object }.to raise_error(error_type2, error_message2)
-        end
-
-        it 'raises an error when trying to aggregate AF::Base objects in collections aggregation' do
-          expect { collection1.collections << @af_base_object }.to raise_error(error_type2, error_message2)
-        end
       end
     end
 
@@ -120,35 +80,35 @@ describe Hydra::PCDM::Collection do
 
       context 'when the source collection is the same' do
         it 'raises an error' do
-          expect { subject.collections << subject }.to raise_error(error_type, error_message)
+          expect { subject.members << subject }.to raise_error(error_type, error_message)
         end
       end
 
       before do
-        subject.collections << collection1
+        subject.members << collection1
       end
 
       it 'raises and error' do
-        expect { collection1.collections << subject }.to raise_error(error_type, error_message)
+        expect { collection1.members << subject }.to raise_error(error_type, error_message)
       end
 
       context 'with more ancestors' do
         before do
-          collection1.collections << collection2
+          collection1.members << collection2
         end
 
         it 'raises an error' do
-          expect { collection2.collections << subject }.to raise_error(error_type, error_message)
+          expect { collection2.members << subject }.to raise_error(error_type, error_message)
         end
 
         context 'with a more complicated example' do
           before do
-            collection2.collections << collection3
+            collection2.members << collection3
           end
 
           it 'raises errors' do
-            expect { collection3.collections << subject }.to raise_error(error_type, error_message)
-            expect { collection3.collections << collection1 }.to raise_error(error_type, error_message)
+            expect { collection3.members << subject }.to raise_error(error_type, error_message)
+            expect { collection3.members << collection1 }.to raise_error(error_type, error_message)
           end
         end
       end
@@ -231,18 +191,18 @@ describe Hydra::PCDM::Collection do
   describe 'adding objects' do
     context 'with acceptable inputs' do
       it 'adds objects, sub-collections, and repeating collections' do
-        subject.objects << object1      # first add
-        subject.objects << object2      # second add to same collection
-        subject.objects << object1      # repeat an object
-        expect(subject.objects).to eq [object1, object2, object1]
+        subject.members << object1      # first add
+        subject.members << object2      # second add to same collection
+        subject.members << object1      # repeat an object
+        expect(subject.members).to eq [object1, object2, object1]
       end
 
       context 'with collections and objects' do
         it 'adds an object to collection with collections and objects' do
-          subject.objects << object1
-          subject.collections << collection1
-          subject.collections << collection2
-          subject.objects << object2
+          subject.members << object1
+          subject.members << collection1
+          subject.members << collection2
+          subject.members << object2
           expect(subject.objects).to eq [object1, object2]
         end
       end
@@ -257,7 +217,7 @@ describe Hydra::PCDM::Collection do
         let(:ahbject1) { Ahbject.new }
 
         it 'accepts implementing object as a child' do
-          subject.objects << ahbject1
+          subject.members << ahbject1
           expect(subject.objects).to eq [ahbject1]
         end
       end
@@ -271,164 +231,9 @@ describe Hydra::PCDM::Collection do
         let(:awbject1) { Awbject.new }
 
         it 'accepts extending object as a child' do
-          subject.objects << awbject1
+          subject.members << awbject1
           expect(subject.objects).to eq [awbject1]
         end
-      end
-    end
-
-    context 'with unacceptable inputs' do
-      before(:all) do
-        @file101         = Hydra::PCDM::File.new
-        @non_pcdm_object = "I'm not a PCDM object"
-        @af_base_object  = ActiveFedora::Base.new
-      end
-
-      context 'with unacceptable objects' do
-        let(:error_type1)    { ArgumentError }
-        let(:error_message1) { 'Hydra::PCDM::Collection with ID:  was expected to pcdm_object?, but it was false' }
-        let(:error_type2)    { NoMethodError }
-        let(:error_message2) { /undefined method `pcdm_object\?' for .*/ }
-
-        it 'raises an error when trying to aggregate Hydra::PCDM::Collection in objects aggregation' do
-          expect { collection1.objects << collection2 }.to raise_error(error_type1, error_message1)
-        end
-
-        it 'raises an error when trying to aggregate Hydra::PCDM::Files in objects aggregation' do
-          expect { collection1.objects << @file101 }.to raise_error(error_type2, error_message2)
-        end
-
-        it 'raises an error when trying to aggregate non-PCDM objects in objects aggregation' do
-          expect { collection1.objects << @non_pcdm_object }.to raise_error(error_type2, error_message2)
-        end
-
-        it 'raises an error when trying to aggregate AF::Base objects in objects aggregation' do
-          expect { collection1.objects << @af_base_object }.to raise_error(error_type2, error_message2)
-        end
-      end
-    end
-  end
-
-  describe 'removing objects' do
-    context 'when it is the only object' do
-      before do
-        subject.objects << object1
-        expect(subject.objects).to eq [object1]
-      end
-
-      it 'removes object while changes are in memory' do
-        expect(subject.objects.delete object1).to eq [object1]
-        expect(subject.objects).to eq []
-      end
-
-      it 'removes object only when collections and all changes are in memory' do
-        subject.collections << collection1
-        subject.collections << collection2
-        expect(subject.objects.delete object1).to eq [object1]
-        expect(subject.objects).to eq []
-        expect(subject.collections).to eq [collection1, collection2]
-      end
-    end
-
-    context 'when multiple objects' do
-      let(:object3) { Hydra::PCDM::Object.new }
-
-      before do
-        subject.objects << object1
-        subject.objects << object2
-        subject.objects << object3
-        expect(subject.objects).to eq [object1, object2, object3]
-      end
-
-      it 'removes first object when changes are in memory' do
-        expect(subject.objects.delete object1).to eq [object1]
-        expect(subject.objects).to eq [object2, object3]
-      end
-
-      it 'removes middle object when changes are in memory' do
-        expect(subject.objects.delete object2).to eq [object2]
-        expect(subject.objects).to eq [object1, object3]
-      end
-
-      it 'removes last object when changes are in memory' do
-        expect(subject.objects.delete object3).to eq [object3]
-        expect(subject.objects).to eq [object1, object2]
-      end
-      it 'removes middle object when changes are saved' do
-        expect(subject.objects.delete object2).to eq [object2]
-        expect(subject.objects).to eq [object1, object3]
-        subject.save
-        expect(subject.reload.objects).to eq [object1, object3]
-      end
-    end
-
-    context 'when object repeats' do
-      let(:object3) { Hydra::PCDM::Object.new }
-      let(:object4) { Hydra::PCDM::Object.new }
-      let(:object5) { Hydra::PCDM::Object.new }
-
-      before do
-        subject.objects << object1
-        subject.objects << object2
-        subject.objects << object3
-        subject.objects << object2
-        subject.objects << object4
-        subject.objects << object2
-        subject.objects << object5
-        expect(subject.objects).to eq [object1, object2, object3, object2, object4, object2, object5]
-      end
-
-      # TODO: pending implementation of multiple objects
-
-      it 'removes first occurrence when changes in memory' do
-        expect(subject.objects.delete object2).to eq [object2]
-        expect(subject.objects).to eq [object1, object3, object4, object5]
-      end
-
-      it 'removes last occurrence when changes in memory' do
-        skip('pending resolution of AF-agg 46 and PCDM 102') do
-          expect(subject.objects.delete object2, -1).to eq object2
-          expect(subject.objects).to eq [object1, object2, object3, object2, object4, object5]
-        end
-      end
-
-      it 'removes nth occurrence when changes in memory' do
-        skip('pending resolution of AF-agg 46 and PCDM 102') do
-          expect(subject.objects.delete object2, 2).to eq object2
-          expect(subject.objects).to eq [object1, object2, object3, object4, object2, object5]
-        end
-      end
-      it 'removes nth occurrence when changes are saved' do
-        skip('pending resolution of AF-agg 46 and PCDM 102') do
-          expect(subject.objects).to eq [object1, object2, object3, object2, object4, object2, object5]
-          subject.save
-          expect(subject.reload.objects).to eq [object1, object2, object3, object2, object4, object2, object5]
-
-          expect(subject.objects.delete object2, 2).to eq object2
-          subject.save
-          expect(subject.reload.objects).to eq [object1, object2, object3, object4, object2, object5]
-        end
-      end
-    end
-
-    context 'when object is missing' do
-      let(:object3) { Hydra::PCDM::Object.new }
-
-      it 'and 0 objects in collection should return empty array' do
-        expect(subject.objects.delete object1).to eq []
-      end
-
-      it 'and multiple objects in collection should return empty array when changes are in memory' do
-        subject.objects << object1
-        subject.objects << object2
-        expect(subject.objects.delete object3).to eq []
-      end
-
-      it 'returns empty array when changes are saved' do
-        subject.objects << object1
-        subject.objects << object2
-        subject.save
-        expect(subject.reload.objects.delete object3).to eq []
       end
     end
   end
@@ -529,10 +334,10 @@ describe Hydra::PCDM::Collection do
       end
 
       it 'removes related object only when objects & collections and all changes are in memory' do
-        subject.collections << collection1
-        subject.collections << collection2
-        subject.objects << object3
-        subject.objects << object2
+        subject.members << collection1
+        subject.members << collection2
+        subject.members << object3
+        subject.members << object2
         expect(subject.related_objects.delete object1).to eq [object1]
         expect(subject.related_objects).to eq []
         expect(subject.collections).to eq [collection1, collection2]
@@ -625,65 +430,11 @@ describe Hydra::PCDM::Collection do
     end
   end
 
-  describe '#collections=' do
-    it 'aggregates collections' do
-      collection1.collections = [collection2, collection3]
-      expect(collection1.collections).to eq [collection2, collection3]
-    end
-  end
-
-  describe '#collections<<' do
-    before do
-      collection1.collections = [collection2]
-    end
-    it 'aggregates collections' do
-      collection1.collections << collection3
-      expect(collection1.collections).to eq [collection2, collection3]
-    end
-  end
-
-  describe '#collections+=' do
-    before do
-      collection1.collections = [collection2]
-    end
-    it 'aggregates collections' do
-      collection1.collections += [collection3, collection4]
-      expect(collection1.collections).to eq [collection2, collection3, collection4]
-    end
-  end
-
-  describe '#objects=' do
-    it 'aggregates objects' do
-      collection1.objects = [object1, object2]
-      expect(collection1.objects).to eq [object1, object2]
-    end
-  end
-
-  describe '#objects<<' do
-    before do
-      collection1.objects = [object1]
-    end
-    it 'appends object to aggregated objects' do
-      collection1.objects << object2
-      expect(collection1.objects).to eq [object1, object2]
-    end
-  end
-
-  describe '#objects+=' do
-    before do
-      collection1.objects = [object1]
-    end
-    it 'appends object to aggregated objects' do
-      collection1.objects += [object2, object3]
-      expect(collection1.objects).to eq [object1, object2, object3]
-    end
-  end
-
   describe '#collection_ids' do
     let(:child1) { described_class.new(id: '1') }
     let(:child2) { described_class.new(id: '2') }
     let(:object) { described_class.new }
-    before { object.collections = [child1, child2] }
+    before { object.members = [child1, child2] }
 
     subject { object.collection_ids }
 
@@ -712,9 +463,9 @@ describe Hydra::PCDM::Collection do
 
     context 'should only contain members of the correct type' do
       it 'returns only collections' do
-        subject.collections << collection1
+        subject.members << collection1
         subject.members << collection2
-        subject.objects << object1
+        subject.members << object1
         subject.members << object2
         expect(subject.collections).to eq [collection1, collection2]
         expect(subject.objects).to eq [object1, object2]
@@ -730,8 +481,8 @@ describe Hydra::PCDM::Collection do
       @collection1 = described_class.new
       @collection2 = described_class.new
       @collection =  described_class.new
-      @collection1.collections << @collection
-      @collection2.collections << @collection
+      @collection1.members << @collection
+      @collection2.members << @collection
       allow(@collection).to receive(:id).and_return('banana')
       proxies = [
         build_proxy(container: @collection1),
@@ -798,21 +549,6 @@ describe Hydra::PCDM::Collection do
 
       subject { Foo.indexer }
       it { is_expected.to eq IndexingStuff::AltIndexer }
-    end
-  end
-
-  describe 'make sure deprecated methods still work' do
-    it 'deprecated methods should pass' do
-      expect(collection1.child_collections = [collection2]).to eq [collection2]
-      expect(collection1.child_collections << collection3).to eq [collection2, collection3]
-      expect(collection1.child_collections += [collection4]).to eq [collection2, collection3, collection4]
-      expect(collection1.child_objects = [object1]).to eq [object1]
-      expect(collection1.child_objects << object2).to eq [object1, object2]
-      expect(collection1.child_objects += [object3]).to eq [object1, object2, object3]
-      collection1.save # required until issue AF-Agg-75 is fixed
-      expect(collection2.parent_collections).to eq [collection1]
-      expect(collection2.parents).to eq [collection1]
-      expect(collection2.parent_collection_ids).to eq [collection1.id]
     end
   end
 end
