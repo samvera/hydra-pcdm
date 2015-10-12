@@ -461,4 +461,20 @@ describe Hydra::PCDM::Object do
       it { is_expected.to eq IndexingStuff::AltIndexer }
     end
   end
+
+  describe 'make sure deprecated methods still work' do
+    let(:object1) { described_class.new }
+    let(:object2) { described_class.new }
+    let(:object3) { described_class.new }
+    let(:object4) { described_class.new }
+
+    it 'deprecated methods should pass' do
+      expect(object1.members = [object2]).to eq [object2]
+      expect(object1.members << object3).to eq [object2, object3]
+      expect(object1.members += [object4]).to eq [object2, object3, object4]
+      object1.save # required until issue AF-Agg-75 is fixed
+      expect(object2.parent_objects).to eq [object1]
+      expect(object2.parents).to eq [object1]
+    end
+  end
 end

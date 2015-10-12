@@ -69,11 +69,6 @@ module Hydra::PCDM
       objects
     end
 
-    def child_objects=(new_objects)
-      warn '[DEPRECATION] `child_objects=` is deprecated in Hydra::PCDM.  Please use `objects=` instead.  This has a target date for removal of 10-31-2015'
-      self.objects = new_objects
-    end
-
     def child_object_ids
       warn '[DEPRECATION] `child_object_ids` is deprecated in Hydra::PCDM.  Please use `object_ids` instead.  This has a target date for removal of 10-31-2015'
       object_ids

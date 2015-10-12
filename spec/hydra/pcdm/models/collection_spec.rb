@@ -74,6 +74,36 @@ describe Hydra::PCDM::Collection do
       end
     end
 
+    describe 'with unacceptable input types' do
+      before(:all) do
+        @object101       = Hydra::PCDM::Object.new
+        @file101         = Hydra::PCDM::File.new
+        @non_pcdm_object = "I'm not a PCDM object"
+        @af_base_object  = ActiveFedora::Base.new
+      end
+
+      context 'that are unacceptable child collections' do
+        let(:error_type1)    { ActiveFedora::AssociationTypeMismatch }
+        let(:error_message1) { /ActiveFedora::Base\(#\d+\) expected, got String\(#[\d]+\)/ }
+        let(:error_type2)    { ActiveFedora::AssociationTypeMismatch }
+        let(:error_message2) { /(<ActiveFedora::Base:[\d\s\w]{16}>|\s*) is not a PCDM object or collection./ }
+        let(:error_type3)    { ActiveFedora::AssociationTypeMismatch }
+        let(:error_message3) { /ActiveFedora::Base\(#\d+\) expected, got Hydra::PCDM::File\(#[\d]+\)/ }
+
+        it 'raises an error when trying to aggregate Hydra::PCDM::Files in members aggregation' do
+          expect { collection1.members << @file101 }.to raise_error(error_type3, error_message3)
+        end
+
+        it 'raises an error when trying to aggregate non-PCDM objects in members aggregation' do
+          expect { collection1.members << @non_pcdm_object }.to raise_error(error_type1, error_message1)
+        end
+
+        it 'raises an error when trying to aggregate AF::Base objects in members aggregation' do
+          expect { collection1.members << @af_base_object }.to raise_error(error_type2, error_message2)
+        end
+      end
+    end
+
     describe 'adding collections that are ancestors' do
       let(:error_type)    { ArgumentError }
       let(:error_message) { 'Hydra::PCDM::Collection with ID:  failed to pass AncestorChecker validation' }
@@ -549,6 +579,25 @@ describe Hydra::PCDM::Collection do
 
       subject { Foo.indexer }
       it { is_expected.to eq IndexingStuff::AltIndexer }
+    end
+  end
+
+  describe 'make sure deprecated methods still work' do
+    it 'deprecated methods should pass' do
+      expect(collection1.members = [collection2]).to eq [collection2]
+      expect(collection1.members << collection3).to eq [collection2, collection3]
+      expect(collection1.members += [collection4]).to eq [collection2, collection3, collection4]
+      expect(collection1.members << [object1]).to eq [collection2, collection3, collection4, object1]
+      expect(collection1.members << object2).to eq [collection2, collection3, collection4, object1, object2]
+      expect(collection1.members += [object3]).to eq [collection2, collection3, collection4, object1, object2, object3]
+      collection1.save # required until issue AF-Agg-75 is fixed
+      expect(collection2.parent_collections).to eq [collection1]
+      expect(collection2.parents).to eq [collection1]
+      expect(collection2.parent_collection_ids).to eq [collection1.id]
+      expect(collection1.child_objects).to eq [object1, object2, object3]
+      expect(collection1.child_object_ids).to eq [object1.id, object2.id, object3.id]
+      expect(collection1.child_collections).to eq [collection2, collection3, collection4]
+      expect(collection1.child_collection_ids).to eq [collection2.id, collection3.id, collection4.id]
     end
   end
 end
