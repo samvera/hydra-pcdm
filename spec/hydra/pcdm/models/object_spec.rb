@@ -7,7 +7,7 @@ describe Hydra::PCDM::Object do
     let(:object) { described_class.new }
     before { object.members = [child1, child2] }
 
-    subject { object.object_ids.to_a }
+    subject { object.object_ids }
 
     it { is_expected.to eq %w(1 2) }
   end

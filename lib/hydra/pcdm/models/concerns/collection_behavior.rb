@@ -32,7 +32,7 @@ module Hydra::PCDM
     end
 
     def collection_ids
-      collections.map(&:id).to_a
+      collections.map(&:id)
     end
 
     def pcdm_object?
