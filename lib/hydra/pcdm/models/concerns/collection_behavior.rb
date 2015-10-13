@@ -16,8 +16,6 @@ module Hydra::PCDM
     included do
       type Vocab::PCDMTerms.Collection
       include ::Hydra::PCDM::PcdmBehavior
-
-      filters_association :members, as: :collections, condition: :pcdm_collection?
     end
 
     module ClassMethods
@@ -27,6 +25,14 @@ module Hydra::PCDM
 
       def type_validator
       end
+    end
+
+    def collections
+      members.select(&:pcdm_collection?)
+    end
+
+    def collection_ids
+      collections.map(&:id)
     end
 
     def pcdm_object?
@@ -40,11 +46,6 @@ module Hydra::PCDM
     def child_collections
       warn '[DEPRECATION] `child_collections` is deprecated in Hydra::PCDM.  Please use `collections` instead.  This has a target date for removal of 10-31-2015'
       collections
-    end
-
-    def child_collections=(new_collections)
-      warn '[DEPRECATION] `child_collections=` is deprecated in Hydra::PCDM.  Please use `collections=` instead.  This has a target date for removal of 10-31-2015'
-      self.collections = new_collections
     end
 
     def child_collection_ids

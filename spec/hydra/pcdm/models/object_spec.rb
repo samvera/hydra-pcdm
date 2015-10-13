@@ -5,135 +5,11 @@ describe Hydra::PCDM::Object do
     let(:child1) { described_class.new(id: '1') }
     let(:child2) { described_class.new(id: '2') }
     let(:object) { described_class.new }
-    before { object.objects = [child1, child2] }
+    before { object.members = [child1, child2] }
 
     subject { object.object_ids }
 
     it { is_expected.to eq %w(1 2) }
-  end
-
-  describe '#objects=, +=, <<' do
-    context 'with acceptable child objects' do
-      let(:object1) { described_class.new }
-      let(:object2) { described_class.new }
-      let(:object3) { described_class.new }
-      let(:object4) { described_class.new }
-      let(:object5) { described_class.new }
-
-      it 'empty when no objects have been added' do
-        expect(subject.objects).to eq []
-      end
-
-      it 'add objects' do
-        subject.objects = [object1, object2]
-        subject.objects << object3
-        subject.objects += [object4, object5]
-        expect(subject.objects).to eq [object1, object2, object3, object4, object5]
-      end
-
-      it 'allow sub-objects' do
-        subject.objects = [object1, object2]
-        object1.objects = [object3]
-        expect(subject.objects).to eq [object1, object2]
-        expect(object1.objects).to eq [object3]
-      end
-
-      it 'allow repeating objects' do
-        subject.objects = [object1, object2]
-        subject.objects << object1
-        expect(subject.objects).to eq [object1, object2, object1]
-      end
-
-      describe 'adding objects that are ancestors' do
-        let(:error_type)    { ArgumentError }
-        let(:error_message) { 'Hydra::PCDM::Object with ID:  failed to pass AncestorChecker validation' }
-
-        context 'when the source object is the same' do
-          it 'raises an error' do
-            expect { object1.objects = [object1] }.to raise_error(error_type, error_message)
-            expect { object1.objects += [object1] }.to raise_error(error_type, error_message)
-            expect { object1.objects << [object1] }.to raise_error(error_type, error_message)
-          end
-        end
-
-        before do
-          object1.objects = [object2]
-        end
-
-        it 'raises an error' do
-          expect { object2.objects += [object1] }.to raise_error(error_type, error_message)
-          expect { object2.objects << [object1] }.to raise_error(error_type, error_message)
-          expect { object2.objects = [object1] }.to raise_error(error_type, error_message)
-        end
-
-        context 'with more ancestors' do
-          before do
-            object2.objects = [object3]
-          end
-
-          it 'raises an error' do
-            expect { object3.objects << [object1] }.to raise_error(error_type, error_message)
-            expect { object3.objects = [object1] }.to raise_error(error_type, error_message)
-            expect { object3.objects += [object1] }.to raise_error(error_type, error_message)
-          end
-
-          context 'with a more complicated example' do
-            before do
-              object3.objects = [object4, object5]
-            end
-
-            it 'raises errors' do
-              expect { object4.objects = [object1] }.to raise_error(error_type, error_message)
-              expect { object4.objects += [object1] }.to raise_error(error_type, error_message)
-              expect { object4.objects << [object1] }.to raise_error(error_type, error_message)
-
-              expect { object4.objects = [object2] }.to raise_error(error_type, error_message)
-              expect { object4.objects += [object2] }.to raise_error(error_type, error_message)
-              expect { object4.objects << [object2] }.to raise_error(error_type, error_message)
-            end
-          end
-        end
-      end
-    end
-
-    context 'with unacceptable child objects' do
-      before(:all) do
-        @collection101   = Hydra::PCDM::Collection.new
-        @object101       = described_class.new
-        @file101         = Hydra::PCDM::File.new
-        @non_pcdm_object = "I'm not a PCDM object"
-        @af_base_object  = ActiveFedora::Base.new
-      end
-
-      let(:error_type1)    { ArgumentError }
-      let(:error_message1) { 'Hydra::PCDM::Collection with ID:  was expected to pcdm_object?, but it was false' }
-      let(:error_type2)    { NoMethodError }
-      let(:error_message2) { /undefined method `pcdm_object\?' for .*/ }
-
-      it 'NOT aggregate Hydra::PCDM::Collection in objects aggregation' do
-        expect { @object101.objects = [@collection101] }.to raise_error(error_type1, error_message1)
-        expect { @object101.objects += [@collection101] }.to raise_error(error_type1, error_message1)
-        expect { @object101.objects << @collection101 }.to raise_error(error_type1, error_message1)
-      end
-
-      it 'NOT aggregate Hydra::PCDM::Files in objects aggregation' do
-        expect { @object101.objects += [@file1] }.to raise_error(error_type2, error_message2)
-        expect { @object101.objects << @file1 }.to raise_error(error_type2, error_message2)
-        expect { @object101.objects = [@file1] }.to raise_error(error_type2, error_message2)
-      end
-
-      it 'NOT aggregate non-PCDM objects in objects aggregation' do
-        expect { @object101.objects << @non_pcdm_object }.to raise_error(error_type2, error_message2)
-        expect { @object101.objects = [@non_pcdm_object] }.to raise_error(error_type2, error_message2)
-        expect { @object101.objects += [@non_pcdm_object] }.to raise_error(error_type2, error_message2)
-      end
-
-      it 'NOT aggregate AF::Base objects in objects aggregation' do
-        expect { @object101.objects = [@af_base_object] }.to raise_error(error_type2, error_message2)
-        expect { @object101.objects += [@af_base_object] }.to raise_error(error_type2, error_message2)
-        expect { @object101.objects << @af_base_object }.to raise_error(error_type2, error_message2)
-      end
-    end
   end
 
   describe '#members=, +=, <<' do
@@ -482,106 +358,6 @@ describe Hydra::PCDM::Object do
     end
   end
 
-  describe 'removing child objects' do
-    subject { described_class.new }
-    let(:object1) { described_class.new }
-    let(:object2) { described_class.new }
-    let(:object3) { described_class.new }
-
-    context 'when it is the only object' do
-      before do
-        subject.objects += [object1]
-        expect(subject.objects).to eq [object1]
-      end
-
-      it 'remove object while changes are in memory' do
-        expect(subject.objects.delete object1).to eq [object1]
-        expect(subject.objects).to eq []
-      end
-    end
-
-    context 'when multiple objects' do
-      before do
-        subject.objects += [object1, object2, object3]
-        expect(subject.objects).to eq [object1, object2, object3]
-      end
-
-      it 'remove first object when changes are in memory' do
-        expect(subject.objects.delete object1).to eq [object1]
-        expect(subject.objects).to eq [object2, object3]
-      end
-
-      it 'remove last object when changes are in memory' do
-        expect(subject.objects.delete object3).to eq [object3]
-        expect(subject.objects).to eq [object1, object2]
-      end
-
-      it 'remove middle object when changes are in memory' do
-        expect(subject.objects.delete object2).to eq [object2]
-        expect(subject.objects).to eq [object1, object3]
-      end
-
-      it 'remove middle object when changes are saved' do
-        subject.save
-        expect(subject.objects).to eq [object1, object2, object3]
-        expect(subject.objects.delete object2).to eq [object2]
-        expect(subject.objects).to eq [object1, object3]
-      end
-    end
-    context 'when object repeats' do
-      before do
-        subject.objects += [object1, object2, object3, object2, object3]
-        expect(subject.objects).to eq [object1, object2, object3, object2, object3]
-      end
-
-      it 'remove first occurrence when changes in memory' do
-        expect(subject.objects.delete object2).to eq [object2]
-        expect(subject.objects).to eq [object1, object3, object3]
-      end
-
-      it 'remove last occurrence when changes in memory' do
-        skip('pending resolution of AF-agg 46 and PCDM 102') do
-          expect(subject.objects.delete object2, -1).to eq object2
-          expect(subject.objects).to eq [object1, object2, object3, object3]
-        end
-      end
-
-      it 'remove nth occurrence when changes in memory' do
-        skip('pending resolution of AF-agg 46 and PCDM 102') do
-          expect(subject.objects.delete object2, 2).to eq object2
-          expect(subject.objects).to eq [object1, object2, object3, object3]
-        end
-      end
-
-      it 'remove nth occurrence when changes are saved' do
-        skip('pending resolution of AF-agg 46 and PCDM 102') do
-          expect(subject.objects).to eq [object1, object2, object3, object2, object3]
-          expect(subject.objects).to eq [object1, object2, object3, object2, object3]
-
-          expect(subject.objects.delete object2, 2).to eq object2
-          subject.save
-          expect(subject.objects).to eq [object1, object2, object3, object2, object3]
-        end
-      end
-    end
-
-    context 'when object is missing' do
-      it 'and 0 objects in object return empty array' do
-        expect(subject.objects.delete object1).to eq []
-      end
-
-      it 'and multiple objects in object return empty array when changes are in memory' do
-        subject.objects += [object1, object2]
-        expect(subject.objects.delete object3).to eq []
-      end
-
-      it 'return empty array when changes are saved' do
-        subject.objects += [object1, object2]
-        expect(subject.objects.delete object3).to eq []
-      end
-    end
-  end
-
   describe '#files' do
     subject { described_class.new }
     it 'have a files relation' do
@@ -693,9 +469,9 @@ describe Hydra::PCDM::Object do
     let(:object4) { described_class.new }
 
     it 'deprecated methods should pass' do
-      expect(object1.child_objects = [object2]).to eq [object2]
-      expect(object1.child_objects << object3).to eq [object2, object3]
-      expect(object1.child_objects += [object4]).to eq [object2, object3, object4]
+      expect(object1.members = [object2]).to eq [object2]
+      expect(object1.members << object3).to eq [object2, object3]
+      expect(object1.members += [object4]).to eq [object2, object3, object4]
       object1.save # required until issue AF-Agg-75 is fixed
       expect(object2.parent_objects).to eq [object1]
       expect(object2.parents).to eq [object1]
