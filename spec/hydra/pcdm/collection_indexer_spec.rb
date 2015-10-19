@@ -9,7 +9,7 @@ describe Hydra::PCDM::CollectionIndexer do
 
   before do
     allow(collection).to receive(:ordered_collection_ids).and_return(collection_ids)
-    allow(collection).to receive(:object_ids).and_return(object_ids)
+    allow(collection).to receive(:ordered_object_ids).and_return(object_ids)
     allow(collection).to receive(:member_ids).and_return(member_ids)
   end
 

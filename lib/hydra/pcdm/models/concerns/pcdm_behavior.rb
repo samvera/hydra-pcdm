@@ -32,11 +32,19 @@ module Hydra::PCDM
     end
 
     def objects
-      ordered_members.to_a.select(&:pcdm_object?)
+      members.select(&:pcdm_object?)
     end
 
     def object_ids
-      objects.map(&:id)
+      members.select(&:pcdm_object?).map(&:id)
+    end
+
+    def ordered_objects
+      ordered_members.to_a.select(&:pcdm_object?)
+    end
+
+    def ordered_object_ids
+      ordered_objects.map(&:id)
     end
 
     def parents
@@ -72,7 +80,7 @@ module Hydra::PCDM
 
     def child_objects
       warn '[DEPRECATION] `child_objects` is deprecated in Hydra::PCDM.  Please use `objects` instead.  This has a target date for removal of 10-31-2015'
-      objects
+      ordered_objects
     end
 
     def child_object_ids

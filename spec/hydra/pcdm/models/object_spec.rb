@@ -10,7 +10,7 @@ describe Hydra::PCDM::Object do
       object.ordered_members << child2
     end
 
-    subject { object.object_ids }
+    subject { object.ordered_object_ids }
 
     it { is_expected.to eq %w(1 2) }
   end

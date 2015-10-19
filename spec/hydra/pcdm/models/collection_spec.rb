@@ -10,8 +10,8 @@ describe Hydra::PCDM::Collection do
   let(:object2) { Hydra::PCDM::Object.new }
   let(:object3) { Hydra::PCDM::Object.new }
 
-  describe "#collections" do
-    it "returns non-ordered collections" do
+  describe '#collections' do
+    it 'returns non-ordered collections' do
       collection1.members += [collection2, collection3]
       collection1.ordered_members << collection4
 
@@ -20,12 +20,31 @@ describe Hydra::PCDM::Collection do
     end
   end
 
-  describe "#collection_ids" do
-    it "returns IDs of non-ordered collections" do
+  describe '#collection_ids' do
+    it 'returns IDs of non-ordered collections' do
       collection1.members += [collection2, collection3]
       collection1.ordered_members << collection4
 
       expect(collection1.collection_ids).to eq [collection2.id, collection3.id, collection4.id]
+    end
+  end
+
+  describe '#objects' do
+    it 'returns non-ordered objects' do
+      collection1.members += [object1, object2]
+      collection1.ordered_members << object3
+
+      expect(collection1.objects).to eq [object1, object2, object3]
+      expect(collection1.ordered_objects).to eq [object3]
+    end
+  end
+
+  describe '#object_ids' do
+    it 'returns IDs of non-ordered objects' do
+      collection1.members += [object1, object2]
+      collection1.ordered_members << object3
+
+      expect(collection1.object_ids).to eq [object1.id, object2.id, object3.id]
     end
   end
 
@@ -40,7 +59,7 @@ describe Hydra::PCDM::Collection do
         subject.ordered_members << collection3
         expect(subject.ordered_members).to eq [collection1, collection2, object1, object2, collection3]
         expect(subject.ordered_collections).to eq [collection1, collection2, collection3]
-        expect(subject.objects).to eq [object1, object2]
+        expect(subject.ordered_objects).to eq [object1, object2]
       end
     end
 
@@ -183,7 +202,7 @@ describe Hydra::PCDM::Collection do
         subject.ordered_members << object2
         subject.ordered_member_proxies.delete_at(0)
         expect(subject.ordered_collections).to eq []
-        expect(subject.objects).to eq [object1, object2]
+        expect(subject.ordered_objects).to eq [object1, object2]
       end
     end
 
@@ -252,7 +271,7 @@ describe Hydra::PCDM::Collection do
           subject.ordered_members << collection1
           subject.ordered_members << collection2
           subject.ordered_members << object2
-          expect(subject.objects).to eq [object1, object2]
+          expect(subject.ordered_objects).to eq [object1, object2]
         end
       end
 
@@ -267,7 +286,7 @@ describe Hydra::PCDM::Collection do
 
         it 'accepts implementing object as a child' do
           subject.ordered_members << ahbject1
-          expect(subject.objects).to eq [ahbject1]
+          expect(subject.ordered_objects).to eq [ahbject1]
         end
       end
 
@@ -281,7 +300,7 @@ describe Hydra::PCDM::Collection do
 
         it 'accepts extending object as a child' do
           subject.ordered_members << awbject1
-          expect(subject.objects).to eq [awbject1]
+          expect(subject.ordered_objects).to eq [awbject1]
         end
       end
     end
@@ -390,7 +409,7 @@ describe Hydra::PCDM::Collection do
         expect(subject.related_objects.delete object1).to eq [object1]
         expect(subject.related_objects).to eq []
         expect(subject.ordered_collections).to eq [collection1, collection2]
-        expect(subject.objects).to eq [object3, object2]
+        expect(subject.ordered_objects).to eq [object3, object2]
       end
     end
 
@@ -495,7 +514,7 @@ describe Hydra::PCDM::Collection do
 
     it 'returns empty array when no members' do
       expect(subject.ordered_collections).to eq []
-      expect(subject.objects).to eq []
+      expect(subject.ordered_objects).to eq []
     end
 
     it 'collections should return empty array when only objects are aggregated' do
@@ -507,7 +526,7 @@ describe Hydra::PCDM::Collection do
     it 'objects should return empty array when only collections are aggregated' do
       subject.ordered_members << collection1
       subject.ordered_members << collection2
-      expect(subject.objects).to eq []
+      expect(subject.ordered_objects).to eq []
     end
 
     context 'should only contain members of the correct type' do
@@ -517,7 +536,7 @@ describe Hydra::PCDM::Collection do
         subject.ordered_members << object1
         subject.ordered_members << object2
         expect(subject.ordered_collections).to eq [collection1, collection2]
-        expect(subject.objects).to eq [object1, object2]
+        expect(subject.ordered_objects).to eq [object1, object2]
         expect(subject.ordered_members).to eq [collection1, collection2, object1, object2]
       end
     end
