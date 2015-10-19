@@ -10,6 +10,25 @@ describe Hydra::PCDM::Collection do
   let(:object2) { Hydra::PCDM::Object.new }
   let(:object3) { Hydra::PCDM::Object.new }
 
+  describe "#collections" do
+    it "returns non-ordered collections" do
+      collection1.members += [collection2, collection3]
+      collection1.ordered_members << collection4
+
+      expect(collection1.collections).to eq [collection2, collection3, collection4]
+      expect(collection1.ordered_collections).to eq [collection4]
+    end
+  end
+
+  describe "#collection_ids" do
+    it "returns IDs of non-ordered collections" do
+      collection1.members += [collection2, collection3]
+      collection1.ordered_members << collection4
+
+      expect(collection1.collection_ids).to eq [collection2.id, collection3.id, collection4.id]
+    end
+  end
+
   describe 'adding collections' do
     describe 'with acceptable inputs' do
       subject { described_class.new }
@@ -20,7 +39,7 @@ describe Hydra::PCDM::Collection do
         subject.ordered_members << object2
         subject.ordered_members << collection3
         expect(subject.ordered_members).to eq [collection1, collection2, object1, object2, collection3]
-        expect(subject.collections).to eq [collection1, collection2, collection3]
+        expect(subject.ordered_collections).to eq [collection1, collection2, collection3]
         expect(subject.objects).to eq [object1, object2]
       end
     end
@@ -46,12 +65,12 @@ describe Hydra::PCDM::Collection do
 
       it 'accepts implementing collection as a child' do
         subject.ordered_members << kollection1
-        expect(subject.collections).to eq [kollection1]
+        expect(subject.ordered_collections).to eq [kollection1]
       end
 
       it 'accepts implementing collection as a parent' do
         kollection1.ordered_members << collection1
-        expect(kollection1.collections).to eq [collection1]
+        expect(kollection1.ordered_collections).to eq [collection1]
       end
     end
 
@@ -65,12 +84,12 @@ describe Hydra::PCDM::Collection do
 
       it 'accepts extending collection as a child' do
         subject.ordered_members << cullection1
-        expect(subject.collections).to eq [cullection1]
+        expect(subject.ordered_collections).to eq [cullection1]
       end
 
       it 'accepts extending collection as a parent' do
         cullection1.ordered_members << collection1
-        expect(cullection1.collections).to eq [collection1]
+        expect(cullection1.ordered_collections).to eq [collection1]
       end
     end
 
@@ -151,19 +170,19 @@ describe Hydra::PCDM::Collection do
     context 'when it is the only collection' do
       before do
         subject.ordered_members << collection1
-        expect(subject.collections).to eq [collection1]
+        expect(subject.ordered_collections).to eq [collection1]
       end
 
       it 'removes collection while changes are in memory' do
         subject.ordered_member_proxies.delete_at(0)
-        expect(subject.collections).to eq []
+        expect(subject.ordered_collections).to eq []
       end
 
       it 'removes collection only when objects and all changes are in memory' do
         subject.ordered_members << object1
         subject.ordered_members << object2
         subject.ordered_member_proxies.delete_at(0)
-        expect(subject.collections).to eq []
+        expect(subject.ordered_collections).to eq []
         expect(subject.objects).to eq [object1, object2]
       end
     end
@@ -173,29 +192,29 @@ describe Hydra::PCDM::Collection do
         subject.ordered_members << collection1
         subject.ordered_members << collection2
         subject.ordered_members << collection3
-        expect(subject.collections).to eq [collection1, collection2, collection3]
+        expect(subject.ordered_collections).to eq [collection1, collection2, collection3]
       end
 
       it 'removes first collection when changes are in memory' do
         subject.ordered_member_proxies.delete_at(0)
-        expect(subject.collections).to eq [collection2, collection3]
+        expect(subject.ordered_collections).to eq [collection2, collection3]
       end
 
       it 'removes last collection when changes are in memory' do
         subject.ordered_member_proxies.delete_at(2)
-        expect(subject.collections).to eq [collection1, collection2]
+        expect(subject.ordered_collections).to eq [collection1, collection2]
       end
 
       it 'removes middle collection when changes are in memory' do
         subject.ordered_member_proxies.delete_at(1)
-        expect(subject.collections).to eq [collection1, collection3]
+        expect(subject.ordered_collections).to eq [collection1, collection3]
       end
 
       it 'removes middle collection when changes are saved' do
-        expect(subject.collections).to eq [collection1, collection2, collection3]
+        expect(subject.ordered_collections).to eq [collection1, collection2, collection3]
         subject.save
         subject.ordered_member_proxies.delete_at(1)
-        expect(subject.collections).to eq [collection1, collection3]
+        expect(subject.ordered_collections).to eq [collection1, collection3]
       end
     end
     context 'when collection is missing' do
@@ -370,7 +389,7 @@ describe Hydra::PCDM::Collection do
         subject.ordered_members << object2
         expect(subject.related_objects.delete object1).to eq [object1]
         expect(subject.related_objects).to eq []
-        expect(subject.collections).to eq [collection1, collection2]
+        expect(subject.ordered_collections).to eq [collection1, collection2]
         expect(subject.objects).to eq [object3, object2]
       end
     end
@@ -460,13 +479,13 @@ describe Hydra::PCDM::Collection do
     end
   end
 
-  describe '#collection_ids' do
+  describe '#ordered_collection_ids' do
     let(:child1) { described_class.new(id: '1') }
     let(:child2) { described_class.new(id: '2') }
     let(:object) { described_class.new }
     before { object.ordered_members = [child1, child2] }
 
-    subject { object.collection_ids }
+    subject { object.ordered_collection_ids }
 
     it { is_expected.to eq %w(1 2) }
   end
@@ -475,14 +494,14 @@ describe Hydra::PCDM::Collection do
     subject { described_class.new }
 
     it 'returns empty array when no members' do
-      expect(subject.collections).to eq []
+      expect(subject.ordered_collections).to eq []
       expect(subject.objects).to eq []
     end
 
     it 'collections should return empty array when only objects are aggregated' do
       subject.ordered_members << object1
       subject.ordered_members << object2
-      expect(subject.collections).to eq []
+      expect(subject.ordered_collections).to eq []
     end
 
     it 'objects should return empty array when only collections are aggregated' do
@@ -497,7 +516,7 @@ describe Hydra::PCDM::Collection do
         subject.ordered_members << collection2
         subject.ordered_members << object1
         subject.ordered_members << object2
-        expect(subject.collections).to eq [collection1, collection2]
+        expect(subject.ordered_collections).to eq [collection1, collection2]
         expect(subject.objects).to eq [object1, object2]
         expect(subject.ordered_members).to eq [collection1, collection2, object1, object2]
       end

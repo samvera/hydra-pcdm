@@ -28,11 +28,19 @@ module Hydra::PCDM
     end
 
     def collections
-      ordered_members.to_a.select(&:pcdm_collection?)
+      members.select(&:pcdm_collection?)
     end
 
     def collection_ids
-      collections.map(&:id)
+      members.select(&:pcdm_collection?).map(&:id)
+    end
+
+    def ordered_collections
+      ordered_members.to_a.select(&:pcdm_collection?)
+    end
+
+    def ordered_collection_ids
+      ordered_collections.map(&:id)
     end
 
     def pcdm_object?
@@ -45,12 +53,12 @@ module Hydra::PCDM
 
     def child_collections
       warn '[DEPRECATION] `child_collections` is deprecated in Hydra::PCDM.  Please use `collections` instead.  This has a target date for removal of 10-31-2015'
-      collections
+      ordered_collections
     end
 
     def child_collection_ids
       warn '[DEPRECATION] `child_collection_ids` is deprecated in Hydra::PCDM.  Please use `collection_ids` instead.  This has a target date for removal of 10-31-2015'
-      collection_ids
+      ordered_collection_ids
     end
   end
 end
