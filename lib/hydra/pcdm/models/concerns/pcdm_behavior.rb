@@ -3,10 +3,10 @@ module Hydra::PCDM
     extend ActiveSupport::Concern
     included do
       ordered_aggregation :members,
-        has_member_relation: Vocab::PCDMTerms.hasMember,
-        class_name: 'ActiveFedora::Base',
-        type_validator: type_validator,
-        through: :list_source
+                          has_member_relation: Vocab::PCDMTerms.hasMember,
+                          class_name: 'ActiveFedora::Base',
+                          type_validator: type_validator,
+                          through: :list_source
       indirectly_contains :related_objects, has_member_relation: RDF::Vocab::ORE.aggregates,
                                             inserted_content_relation: RDF::Vocab::ORE.proxyFor, class_name: 'ActiveFedora::Base',
                                             through: 'ActiveFedora::Aggregation::Proxy', foreign_key: :target,
@@ -32,7 +32,7 @@ module Hydra::PCDM
     end
 
     def objects
-      members.select(&:pcdm_object?)
+      ordered_members.to_a.select(&:pcdm_object?)
     end
 
     def object_ids
@@ -45,7 +45,7 @@ module Hydra::PCDM
     end
 
     def in_collections
-      ordered_by.select(&:pcdm_collection?)
+      ordered_by.select(&:pcdm_collection?).to_a
     end
 
     def parent_collections

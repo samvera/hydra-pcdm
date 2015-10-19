@@ -28,7 +28,7 @@ module Hydra::PCDM
     end
 
     def collections
-      members.select(&:pcdm_collection?)
+      ordered_members.to_a.select(&:pcdm_collection?)
     end
 
     def collection_ids
