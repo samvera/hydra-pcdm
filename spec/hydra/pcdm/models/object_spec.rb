@@ -5,7 +5,10 @@ describe Hydra::PCDM::Object do
     let(:child1) { described_class.new(id: '1') }
     let(:child2) { described_class.new(id: '2') }
     let(:object) { described_class.new }
-    before { object.members = [child1, child2] }
+    before do
+      object.ordered_members << child1
+      object.ordered_members << child2
+    end
 
     subject { object.object_ids }
 
@@ -21,22 +24,22 @@ describe Hydra::PCDM::Object do
       let(:object5) { described_class.new }
 
       it 'add objects' do
-        subject.members = [object1, object2]
-        subject.members << object3
-        subject.members += [object4, object5]
-        expect(subject.members).to eq [object1, object2, object3, object4, object5]
+        subject.ordered_members = [object1, object2]
+        subject.ordered_members << object3
+        subject.ordered_members += [object4, object5]
+        expect(subject.ordered_members).to eq [object1, object2, object3, object4, object5]
       end
 
       it 'allow sub-objects' do
-        subject.members = [object1, object2]
-        object1.members = [object3]
-        expect(subject.members).to eq [object1, object2]
-        expect(object1.members).to eq [object3]
+        subject.ordered_members = [object1, object2]
+        object1.ordered_members = [object3]
+        expect(subject.ordered_members).to eq [object1, object2]
+        expect(object1.ordered_members).to eq [object3]
       end
 
       it 'allow repeating objects' do
-        subject.members = [object1, object2, object1]
-        expect(subject.members).to eq [object1, object2, object1]
+        subject.ordered_members = [object1, object2, object1]
+        expect(subject.ordered_members).to eq [object1, object2, object1]
       end
 
       describe 'adding objects that are ancestors' do
@@ -45,46 +48,46 @@ describe Hydra::PCDM::Object do
 
         context 'when the source object is the same' do
           it 'raises an error' do
-            expect { object1.members = [object1] }.to raise_error(error_type, error_message)
-            expect { object1.members += [object1] }.to raise_error(error_type, error_message)
-            expect { object1.members << [object1] }.to raise_error(error_type, error_message)
+            expect { object1.ordered_members = [object1] }.to raise_error(error_type, error_message)
+            expect { object1.ordered_members += [object1] }.to raise_error(error_type, error_message)
+            expect { object1.ordered_members << [object1] }.to raise_error(error_type, error_message)
           end
         end
 
         before do
-          object1.members = [object2]
+          object1.ordered_members = [object2]
         end
 
         it 'raises an error' do
-          expect { object2.members += [object1] }.to raise_error(error_type, error_message)
-          expect { object2.members << [object1] }.to raise_error(error_type, error_message)
-          expect { object2.members = [object1] }.to raise_error(error_type, error_message)
+          expect { object2.ordered_members += [object1] }.to raise_error(error_type, error_message)
+          expect { object2.ordered_members << [object1] }.to raise_error(error_type, error_message)
+          expect { object2.ordered_members = [object1] }.to raise_error(error_type, error_message)
         end
 
         context 'with more ancestors' do
           before do
-            object2.members = [object3]
+            object2.ordered_members = [object3]
           end
 
           it 'raises an error' do
-            expect { object3.members << [object1] }.to raise_error(error_type, error_message)
-            expect { object3.members = [object1] }.to raise_error(error_type, error_message)
-            expect { object3.members += [object1] }.to raise_error(error_type, error_message)
+            expect { object3.ordered_members << [object1] }.to raise_error(error_type, error_message)
+            expect { object3.ordered_members = [object1] }.to raise_error(error_type, error_message)
+            expect { object3.ordered_members += [object1] }.to raise_error(error_type, error_message)
           end
 
           context 'with a more complicated example' do
             before do
-              object3.members = [object4, object5]
+              object3.ordered_members = [object4, object5]
             end
 
             it 'raises errors' do
-              expect { object4.members = [object1] }.to raise_error(error_type, error_message)
-              expect { object4.members += [object1] }.to raise_error(error_type, error_message)
-              expect { object4.members << [object1] }.to raise_error(error_type, error_message)
+              expect { object4.ordered_members = [object1] }.to raise_error(error_type, error_message)
+              expect { object4.ordered_members += [object1] }.to raise_error(error_type, error_message)
+              expect { object4.ordered_members << [object1] }.to raise_error(error_type, error_message)
 
-              expect { object4.members = [object2] }.to raise_error(error_type, error_message)
-              expect { object4.members += [object2] }.to raise_error(error_type, error_message)
-              expect { object4.members << [object2] }.to raise_error(error_type, error_message)
+              expect { object4.ordered_members = [object2] }.to raise_error(error_type, error_message)
+              expect { object4.ordered_members += [object2] }.to raise_error(error_type, error_message)
+              expect { object4.ordered_members << [object2] }.to raise_error(error_type, error_message)
             end
           end
         end
@@ -110,26 +113,26 @@ describe Hydra::PCDM::Object do
       let(:error_message3) { /ActiveFedora::Base\(#\d+\) expected, got String\(#[\d]+\)/ }
 
       it 'NOT aggregate Hydra::PCDM::Collection in members aggregation' do
-        expect { @object101.members = [@collection101] }.to raise_error(error_type1, error_message1)
-        expect { @object101.members += [@collection101] }.to raise_error(error_type1, error_message1)
-        expect { @object101.members << @collection101 }.to raise_error(error_type1, error_message1)
+        expect { @object101.ordered_members = [@collection101] }.to raise_error(error_type1, error_message1)
+        expect { @object101.ordered_members += [@collection101] }.to raise_error(error_type1, error_message1)
+        expect { @object101.ordered_members << @collection101 }.to raise_error(error_type1, error_message1)
       end
       it 'NOT aggregate Hydra::PCDM::Files in members aggregation' do
-        expect { @object101.members += [@file1] }.to raise_error(error_type2, error_message2)
-        expect { @object101.members << @file1 }.to raise_error(error_type2, error_message2)
-        expect { @object101.members = [@file1] }.to raise_error(error_type2, error_message2)
+        expect { @object101.ordered_members += [@file1] }.to raise_error(error_type2, error_message2)
+        expect { @object101.ordered_members << @file1 }.to raise_error(error_type2, error_message2)
+        expect { @object101.ordered_members = [@file1] }.to raise_error(error_type2, error_message2)
       end
 
       it 'NOT aggregate non-PCDM objects in members aggregation' do
-        expect { @object101.members << @non_pcdm_object }.to raise_error(error_type3, error_message3)
-        expect { @object101.members = [@non_pcdm_object] }.to raise_error(error_type3, error_message3)
-        expect { @object101.members += [@non_pcdm_object] }.to raise_error(error_type3, error_message3)
+        expect { @object101.ordered_members << @non_pcdm_object }.to raise_error(error_type3, error_message3)
+        expect { @object101.ordered_members = [@non_pcdm_object] }.to raise_error(error_type3, error_message3)
+        expect { @object101.ordered_members += [@non_pcdm_object] }.to raise_error(error_type3, error_message3)
       end
 
       it 'NOT aggregate non-PCDM AF::Base objects in members aggregation' do
-        expect { @object101.members = [@af_base_object] }.to raise_error(error_type1, error_message1)
-        expect { @object101.members += [@af_base_object] }.to raise_error(error_type1, error_message1)
-        expect { @object101.members << @af_base_object }.to raise_error(error_type1, error_message1)
+        expect { @object101.ordered_members = [@af_base_object] }.to raise_error(error_type1, error_message1)
+        expect { @object101.ordered_members += [@af_base_object] }.to raise_error(error_type1, error_message1)
+        expect { @object101.ordered_members << @af_base_object }.to raise_error(error_type1, error_message1)
       end
     end
   end
@@ -142,16 +145,12 @@ describe Hydra::PCDM::Object do
       @collection2 = Hydra::PCDM::Collection.new
       @parent_object = described_class.new
       @object = described_class.new
-      @collection1.members = [@object]
-      @collection2.members = [@object]
-      @parent_object.members = [@object]
-      allow(@object).to receive(:id).and_return('banana')
-      proxies = [
-        build_proxy(container: @collection1),
-        build_proxy(container: @collection2),
-        build_proxy(container: @parent_object)
-      ]
-      allow(ActiveFedora::Aggregation::Proxy).to receive(:where).with(proxyFor_ssim: @object.id).and_return(proxies)
+      @collection1.ordered_members = [@object]
+      @collection2.ordered_members = [@object]
+      @parent_object.ordered_members = [@object]
+      @parent_object.save
+      @collection1.save
+      @collection2.save
     end
 
     describe 'member_of' do
@@ -469,9 +468,9 @@ describe Hydra::PCDM::Object do
     let(:object4) { described_class.new }
 
     it 'deprecated methods should pass' do
-      expect(object1.members = [object2]).to eq [object2]
-      expect(object1.members << object3).to eq [object2, object3]
-      expect(object1.members += [object4]).to eq [object2, object3, object4]
+      expect(object1.ordered_members = [object2]).to eq [object2]
+      expect(object1.ordered_members << object3).to eq [object2, object3]
+      expect(object1.ordered_members += [object4]).to eq [object2, object3, object4]
       object1.save # required until issue AF-Agg-75 is fixed
       expect(object2.parent_objects).to eq [object1]
       expect(object2.parents).to eq [object1]

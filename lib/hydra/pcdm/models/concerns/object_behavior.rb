@@ -40,7 +40,7 @@ module Hydra::PCDM
     end
 
     def in_objects
-      aggregated_by.select(&:pcdm_object?)
+      ordered_by.select(&:pcdm_object?).to_a
     end
 
     def parent_objects
