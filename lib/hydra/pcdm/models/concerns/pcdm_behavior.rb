@@ -2,9 +2,11 @@ module Hydra::PCDM
   module PcdmBehavior
     extend ActiveSupport::Concern
     included do
-      aggregates :members, predicate: Vocab::PCDMTerms.hasMember,
-                           class_name: 'ActiveFedora::Base',
-                           type_validator: type_validator
+      ordered_aggregation :members,
+                          has_member_relation: Vocab::PCDMTerms.hasMember,
+                          class_name: 'ActiveFedora::Base',
+                          type_validator: type_validator,
+                          through: :list_source
       indirectly_contains :related_objects, has_member_relation: RDF::Vocab::ORE.aggregates,
                                             inserted_content_relation: RDF::Vocab::ORE.proxyFor, class_name: 'ActiveFedora::Base',
                                             through: 'ActiveFedora::Aggregation::Proxy', foreign_key: :target,
@@ -22,7 +24,11 @@ module Hydra::PCDM
     end
 
     def member_of
-      aggregated_by
+      ordered_by
+    end
+
+    def member_ids
+      ordered_member_proxies.map(&:target_id)
     end
 
     def objects
@@ -30,16 +36,24 @@ module Hydra::PCDM
     end
 
     def object_ids
-      objects.map(&:id)
+      members.select(&:pcdm_object?).map(&:id)
+    end
+
+    def ordered_objects
+      ordered_members.to_a.select(&:pcdm_object?)
+    end
+
+    def ordered_object_ids
+      ordered_objects.map(&:id)
     end
 
     def parents
       warn '[DEPRECATION] `parents` is deprecated in Hydra::PCDM.  Please use `member_of` instead.  This has a target date for removal of 10-31-2015'
-      member_of
+      member_of.to_a
     end
 
     def in_collections
-      aggregated_by.select(&:pcdm_collection?)
+      ordered_by.select(&:pcdm_collection?).to_a
     end
 
     def parent_collections
@@ -66,7 +80,7 @@ module Hydra::PCDM
 
     def child_objects
       warn '[DEPRECATION] `child_objects` is deprecated in Hydra::PCDM.  Please use `objects` instead.  This has a target date for removal of 10-31-2015'
-      objects
+      ordered_objects
     end
 
     def child_object_ids

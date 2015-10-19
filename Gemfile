@@ -8,5 +8,7 @@ group :development, :test do
   gem 'pry-byebug' unless ENV['CI']
 end
 
+gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation'
+
 # Specify your gem's dependencies in hydra-pcdm.gemspec
 gemspec

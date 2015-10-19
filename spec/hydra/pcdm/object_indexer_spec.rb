@@ -7,7 +7,7 @@ describe Hydra::PCDM::ObjectIndexer do
   let(:indexer)       { described_class.new(object) }
 
   before do
-    allow(object).to receive(:object_ids).and_return([child_object1.id, child_object2.id])
+    allow(object).to receive(:ordered_object_ids).and_return([child_object1.id, child_object2.id])
   end
 
   describe '#generate_solr_document' do
