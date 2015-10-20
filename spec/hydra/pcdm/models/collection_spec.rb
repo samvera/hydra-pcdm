@@ -549,16 +549,17 @@ describe Hydra::PCDM::Collection do
       @collection1 = described_class.new
       @collection2 = described_class.new
       @collection =  described_class.new
-      @collection1.ordered_members << @collection
-      @collection2.ordered_members << @collection
-      @collection1.save
-      @collection2.save
+      @collection1.members << @collection
+      @collection2.members << @collection
+      @collection.save
+      @collection1.save!
+      @collection2.save!
     end
 
     describe 'member_of' do
       subject { @collection.member_of }
       it 'finds all nodes that aggregate the object with hasMember' do
-        expect(subject).to include(@collection1, @collection2)
+        expect(subject.to_a).to include(@collection1, @collection2)
         expect(subject.count).to eq 2
       end
     end

@@ -24,10 +24,14 @@ module Hydra::PCDM
     end
 
     def member_of
-      ordered_by
+      ActiveFedora::Base.where(member_ids_ssim: id)
     end
 
     def member_ids
+      members.map(&:id)
+    end
+
+    def ordered_member_ids
       ordered_member_proxies.map(&:target_id)
     end
 
@@ -48,12 +52,12 @@ module Hydra::PCDM
     end
 
     def parents
-      warn '[DEPRECATION] `parents` is deprecated in Hydra::PCDM.  Please use `member_of` instead.  This has a target date for removal of 10-31-2015'
-      member_of.to_a
+      warn '[DEPRECATION] `parents` is deprecated in Hydra::PCDM.  Please use `ordered_by` instead.  This has a target date for removal of 10-31-2015'
+      ordered_by.to_a
     end
 
     def in_collections
-      ordered_by.select(&:pcdm_collection?).to_a
+      member_of.select(&:pcdm_collection?).to_a
     end
 
     def parent_collections
