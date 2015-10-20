@@ -15,6 +15,15 @@ describe Hydra::PCDM::Object do
     it { is_expected.to eq %w(1 2) }
   end
 
+  describe '#ordered_member_ids' do
+    it 'returns IDs of all ordered members' do
+      o = described_class.new
+      subject.ordered_members << o
+
+      expect(subject.ordered_member_ids).to eq [o.id]
+    end
+  end
+
   describe '#members=, +=, <<' do
     context 'with acceptable child objects' do
       let(:object1) { described_class.new }
@@ -144,7 +153,7 @@ describe Hydra::PCDM::Object do
       @collection1 = Hydra::PCDM::Collection.new
       @collection2 = Hydra::PCDM::Collection.new
       @parent_object = described_class.new
-      @object = described_class.new
+      @object = described_class.create
       @collection1.ordered_members = [@object]
       @collection2.ordered_members = [@object]
       @parent_object.ordered_members = [@object]
