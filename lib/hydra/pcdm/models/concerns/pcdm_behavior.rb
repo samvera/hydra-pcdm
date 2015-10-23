@@ -27,10 +27,6 @@ module Hydra::PCDM
       ActiveFedora::Base.where(member_ids_ssim: id)
     end
 
-    def member_ids
-      members.map(&:id)
-    end
-
     def ordered_member_ids
       ordered_member_proxies.map(&:target_id)
     end

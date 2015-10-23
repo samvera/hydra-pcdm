@@ -9,6 +9,7 @@ group :development, :test do
 end
 
 gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation'
+gem 'active-fedora', github: 'projecthydra/active_fedora', branch: 'indirect_ids_reader'
 
 # Specify your gem's dependencies in hydra-pcdm.gemspec
 gemspec
