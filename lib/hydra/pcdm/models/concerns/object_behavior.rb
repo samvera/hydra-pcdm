@@ -64,12 +64,8 @@ module Hydra::PCDM
     #   file_of_type(::RDF::URI("http://pcdm.org/ExtractedText"))
     def file_of_type(uri)
       matching_files = filter_files_by_type(uri)
-      if matching_files.empty?
-        file = files.build
-        Hydra::PCDM::AddTypeToFile.call(file, uri)
-      else
-        return matching_files.first
-      end
+      return matching_files.first unless matching_files.empty?
+      Hydra::PCDM::AddTypeToFile.call(files.build, uri)
     end
   end
 end

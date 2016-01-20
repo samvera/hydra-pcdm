@@ -204,11 +204,11 @@ describe Hydra::PCDM::Object do
       end
     end
 
-    context "when the object is not saved" do
+    context 'when the object is not saved' do
       let(:object) { described_class.new }
 
-      context "and other objects exist in the repo" do
-        before {  Hydra::PCDM::Collection.create }
+      context 'and other objects exist in the repo' do
+        before { Hydra::PCDM::Collection.create }
         it 'is empty' do
           expect(subject).to be_empty
         end
@@ -232,9 +232,7 @@ describe Hydra::PCDM::Object do
         subject.related_objects << object2      # second add to same object
         subject.save
         related_objects = subject.reload.related_objects
-        expect(related_objects.include? object1).to be true
-        expect(related_objects.include? object2).to be true
-        expect(related_objects.size).to eq 2
+        expect(related_objects).to match_array [object1, object2]
       end
 
       it 'not repeat objects in the related object set' do
@@ -243,9 +241,7 @@ describe Hydra::PCDM::Object do
           subject.related_objects << object2      # second add to same object
           subject.related_objects << object1      # repeat an object replaces the object
           related_objects = subject.related_objects
-          expect(related_objects.include? object1).to be true
-          expect(related_objects.include? object2).to be true
-          expect(related_objects.size).to eq 2
+          expect(related_objects).to match_array [object1, object2]
         end
       end
     end
@@ -325,7 +321,7 @@ describe Hydra::PCDM::Object do
       end
 
       it 'remove related object while changes are in memory' do
-        expect(subject.related_objects.delete object1).to eq [object1]
+        expect(subject.related_objects.delete(object1)).to eq [object1]
         expect(subject.related_objects).to eq []
       end
     end
@@ -341,23 +337,23 @@ describe Hydra::PCDM::Object do
       end
 
       it 'remove first related object when changes are in memory' do
-        expect(subject.related_objects.delete object1).to eq [object1]
+        expect(subject.related_objects.delete(object1)).to eq [object1]
         expect(subject.related_objects).to eq [object2, object3, object4, object5]
       end
 
       it 'remove last related object when changes are in memory' do
-        expect(subject.related_objects.delete object5).to eq [object5]
+        expect(subject.related_objects.delete(object5)).to eq [object5]
         expect(subject.related_objects).to eq [object1, object2, object3, object4]
       end
 
       it 'remove middle related object when changes are in memory' do
-        expect(subject.related_objects.delete object3).to eq [object3]
+        expect(subject.related_objects.delete(object3)).to eq [object3]
         expect(subject.related_objects).to eq [object1, object2, object4, object5]
       end
 
       it 'remove middle related object when changes are saved' do
         expect(subject.related_objects).to eq [object1, object2, object3, object4, object5]
-        expect(subject.related_objects.delete object3).to eq [object3]
+        expect(subject.related_objects.delete(object3)).to eq [object3]
         subject.save
         expect(subject.reload.related_objects).to eq [object1, object2, object4, object5]
       end
@@ -365,15 +361,7 @@ describe Hydra::PCDM::Object do
 
     context 'when related object is missing' do
       it 'return empty array when 0 related objects and 0 objects' do
-        expect(subject.related_objects.delete object1).to eq []
-      end
-
-      it 'return empty array when other related objects and changes in memory' do
-        subject.related_objects << object1
-        subject.related_objects << object2
-        subject.related_objects << object4
-        subject.related_objects << object5
-        expect(subject.related_objects.delete object3).to eq []
+        expect(subject.related_objects.delete(object1)).to eq []
       end
 
       it 'return empty array when other related objects and changes are in memory' do
@@ -381,7 +369,7 @@ describe Hydra::PCDM::Object do
         subject.related_objects << object2
         subject.related_objects << object4
         subject.related_objects << object5
-        expect(subject.related_objects.delete object3).to eq []
+        expect(subject.related_objects.delete(object3)).to eq []
       end
 
       it 'return empty array when changes are saved' do
@@ -390,7 +378,7 @@ describe Hydra::PCDM::Object do
         subject.related_objects << object4
         subject.related_objects << object5
         subject.save
-        expect(subject.reload.related_objects.delete object3).to eq []
+        expect(subject.reload.related_objects.delete(object3)).to eq []
       end
     end
   end
@@ -506,7 +494,7 @@ describe Hydra::PCDM::Object do
     let(:object4) { described_class.new }
 
     it 'deprecated methods should pass' do
-      expect(object1.ordered_members = [object2]).to eq [object2]
+      object1.ordered_members = [object2]
       expect(object1.ordered_members << object3).to eq [object2, object3]
       expect(object1.ordered_members += [object4]).to eq [object2, object3, object4]
       object1.save # required until issue AF-Agg-75 is fixed

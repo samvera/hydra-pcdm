@@ -238,20 +238,20 @@ describe Hydra::PCDM::Collection do
     end
     context 'when collection is missing' do
       it 'and 0 sub-collections should return empty array' do
-        expect(subject.members.delete collection1).to eq []
+        expect(subject.members.delete(collection1)).to eq []
       end
 
       it 'and multiple sub-collections should return empty array when changes are in memory' do
         subject.ordered_members << collection1
         subject.ordered_members << collection3
-        expect(subject.members.delete collection2).to eq []
+        expect(subject.members.delete(collection2)).to eq []
       end
 
       it 'returns empty array when changes are saved' do
         subject.ordered_members << collection1
         subject.ordered_members << collection3
         subject.save
-        expect(subject.members.delete collection2).to eq []
+        expect(subject.members.delete(collection2)).to eq []
       end
     end
   end
@@ -313,9 +313,7 @@ describe Hydra::PCDM::Collection do
         collection1.related_objects << object2      # second add to same collection
         collection1.save
         related_objects = collection1.reload.related_objects
-        expect(related_objects.include? object1).to be true
-        expect(related_objects.include? object2).to be true
-        expect(related_objects.size).to eq 2
+        expect(related_objects).to match_array [object1, object2]
       end
 
       it 'is empty when no related objects' do
@@ -328,9 +326,7 @@ describe Hydra::PCDM::Collection do
           collection1.related_objects << object2      # second add to same collection
           collection1.related_objects << object1      # repeat an object replaces the object
           related_objects = collection1.related_objects
-          expect(related_objects.include? object1).to be true
-          expect(related_objects.include? object2).to be true
-          expect(related_objects.size).to eq 2
+          expect(related_objects).to match_array [object1, object2]
         end
       end
     end
@@ -397,7 +393,7 @@ describe Hydra::PCDM::Collection do
       end
 
       it 'removes related object while changes are in memory' do
-        expect(subject.related_objects.delete object1).to eq [object1]
+        expect(subject.related_objects.delete(object1)).to eq [object1]
         expect(subject.related_objects).to eq []
       end
 
@@ -406,7 +402,7 @@ describe Hydra::PCDM::Collection do
         subject.ordered_members << collection2
         subject.ordered_members << object3
         subject.ordered_members << object2
-        expect(subject.related_objects.delete object1).to eq [object1]
+        expect(subject.related_objects.delete(object1)).to eq [object1]
         expect(subject.related_objects).to eq []
         expect(subject.ordered_collections).to eq [collection1, collection2]
         expect(subject.ordered_objects).to eq [object3, object2]
@@ -424,23 +420,23 @@ describe Hydra::PCDM::Collection do
       end
 
       it 'removes first related object when changes are in memory' do
-        expect(subject.related_objects.delete object1).to eq [object1]
+        expect(subject.related_objects.delete(object1)).to eq [object1]
         expect(subject.related_objects).to eq [object2, object3]
       end
 
       it 'removes last related object when changes are in memory' do
-        expect(subject.related_objects.delete object3).to eq [object3]
+        expect(subject.related_objects.delete(object3)).to eq [object3]
         expect(subject.related_objects).to eq [object1, object2]
       end
 
       it 'removes middle related object when changes are in memory' do
-        expect(subject.related_objects.delete object2).to eq [object2]
+        expect(subject.related_objects.delete(object2)).to eq [object2]
         expect(subject.related_objects).to eq [object1, object3]
       end
 
       it 'removes middle related object when changes are saved' do
         expect(subject.related_objects).to eq [object1, object2, object3]
-        expect(subject.related_objects.delete object2).to eq [object2]
+        expect(subject.related_objects.delete(object2)).to eq [object2]
         subject.save
         expect(subject.reload.related_objects).to eq [object1, object3]
       end
@@ -450,7 +446,7 @@ describe Hydra::PCDM::Collection do
       let(:object3) { Hydra::PCDM::Object.new }
 
       it 'returns empty array when 0 related objects and 0 collections and objects' do
-        expect(subject.related_objects.delete object1).to eq []
+        expect(subject.related_objects.delete(object1)).to eq []
       end
 
       it 'returns empty array when 0 related objects, but has collections and objects and changes in memory' do
@@ -458,20 +454,20 @@ describe Hydra::PCDM::Collection do
         subject.ordered_members << collection2
         subject.ordered_members << object1
         subject.ordered_members << object2
-        expect(subject.related_objects.delete object1).to eq []
+        expect(subject.related_objects.delete(object1)).to eq []
       end
 
       it 'returns empty array when other related objects and changes are in memory' do
         subject.related_objects << object1
         subject.related_objects << object3
-        expect(subject.related_objects.delete object2).to eq []
+        expect(subject.related_objects.delete(object2)).to eq []
       end
 
       it 'returns empty array when changes are saved' do
         subject.related_objects << object1
         subject.related_objects << object3
         subject.save
-        expect(subject.reload.related_objects.delete object2).to eq []
+        expect(subject.reload.related_objects.delete(object2)).to eq []
       end
     end
   end
@@ -616,7 +612,7 @@ describe Hydra::PCDM::Collection do
 
   describe 'make sure deprecated methods still work' do
     it 'deprecated methods should pass' do
-      expect(collection1.ordered_members = [collection2]).to eq [collection2]
+      collection1.ordered_members = [collection2]
       expect(collection1.ordered_members << collection3).to eq [collection2, collection3]
       expect(collection1.ordered_members += [collection4]).to eq [collection2, collection3, collection4]
       expect(collection1.ordered_members << object1).to eq [collection2, collection3, collection4, object1]
