@@ -24,6 +24,7 @@ module Hydra::PCDM
     end
 
     def member_of
+      return [] if id.nil?
       ActiveFedora::Base.where(member_ids_ssim: id)
     end
 

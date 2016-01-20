@@ -146,44 +146,73 @@ describe Hydra::PCDM::Object do
     end
   end
 
-  context 'when aggregated by other objects' do
+  describe 'in_objects' do
+    let(:object) { described_class.create }
+    subject { object.in_objects }
+    let(:collection) { Hydra::PCDM::Collection.new }
+    let(:parent_object) { described_class.new }
     before do
-      # Using before(:all) and instance variable because regular :let syntax had a significant impact on performance
-      # All of the tests in this context are describing idempotent behavior, so isolation between examples isn't necessary.
-      @collection1 = Hydra::PCDM::Collection.new
-      @collection2 = Hydra::PCDM::Collection.new
-      @parent_object = described_class.new
-      @object = described_class.create
-      @collection1.ordered_members = [@object]
-      @collection2.ordered_members = [@object]
-      @parent_object.ordered_members = [@object]
-      @parent_object.save
-      @collection1.save
-      @collection2.save
+      collection.ordered_members = [object]
+      parent_object.ordered_members = [object]
+      parent_object.save
+      collection.save
     end
 
-    describe 'member_of' do
-      subject { @object.member_of }
-      it 'finds all nodes that aggregate the object with hasMember' do
-        expect(subject).to include(@collection1, @collection2, @parent_object)
+    it 'finds objects that aggregate the object' do
+      expect(subject).to eq [parent_object]
+    end
+  end
+
+  describe 'in_collections' do
+    let(:object) { described_class.create }
+    subject { object.in_collections }
+    let(:object) { described_class.create }
+    let(:collection1) { Hydra::PCDM::Collection.new }
+    let(:collection2) { Hydra::PCDM::Collection.new }
+    let(:parent_object) { described_class.new }
+    before do
+      collection1.ordered_members = [object]
+      collection2.ordered_members = [object]
+      parent_object.ordered_members = [object]
+      parent_object.save
+      collection1.save
+      collection2.save
+    end
+
+    it 'finds collections that aggregate the object' do
+      expect(subject).to match_array [collection1, collection2]
+      expect(subject.count).to eq 2
+    end
+  end
+
+  describe 'member_of' do
+    subject { object.member_of }
+
+    context 'when it is aggregated by other objects' do
+      let(:object) { described_class.create }
+      let(:collection) { Hydra::PCDM::Collection.new }
+      let(:parent_object) { described_class.new }
+      before do
+        collection.ordered_members = [object]
+        parent_object.ordered_members = [object]
+        parent_object.save
+        collection.save
+      end
+
+      it 'finds all nodes that aggregate the object' do
+        expect(subject).to include(collection, parent_object)
       end
     end
 
-    describe 'in_objects' do
-      subject { @object.in_objects }
-      it 'finds objects that aggregate the object with hasMember' do
-        expect(subject).to eq [@parent_object]
+    context "when the object is not saved" do
+      let(:object) { described_class.new }
+
+      context "and other objects exist in the repo" do
+        before {  Hydra::PCDM::Collection.create }
+        it 'is empty' do
+          expect(subject).to be_empty
+        end
       end
-    end
-    describe 'in_collections' do
-      subject { @object.in_collections }
-      it 'finds collections that aggregate the object with hasMember' do
-        expect(subject).to include(@collection1, @collection2)
-        expect(subject.count).to eq 2
-      end
-    end
-    def build_proxy(container:)
-      instance_double(ActiveFedora::Aggregation::Proxy, container: container)
     end
   end
 
@@ -222,7 +251,7 @@ describe Hydra::PCDM::Object do
     end
 
     context 'with unacceptable inputs' do
-      before(:all) do
+      before do
         @collection101   = Hydra::PCDM::Collection.new
         @object101       = described_class.new
         @file101         = Hydra::PCDM::File.new
