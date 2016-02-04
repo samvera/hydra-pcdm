@@ -151,37 +151,67 @@ describe Hydra::PCDM::Object do
     subject { object.in_objects }
     let(:collection) { Hydra::PCDM::Collection.new }
     let(:parent_object) { described_class.new }
-    before do
-      collection.ordered_members = [object]
-      parent_object.ordered_members = [object]
-      parent_object.save
-      collection.save
-    end
+    context 'using ordered_members' do
+      before do
+        collection.ordered_members = [object]
+        parent_object.ordered_members = [object]
+        parent_object.save
+        collection.save
+      end
 
-    it 'finds objects that aggregate the object' do
-      expect(subject).to eq [parent_object]
+      it 'finds objects that aggregate the object' do
+        expect(subject).to eq [parent_object]
+      end
+    end
+    context 'using members' do
+      before do
+        collection.members = [object]
+        parent_object.members = [object]
+        parent_object.save
+        collection.save
+      end
+
+      it 'finds objects that aggregate the object' do
+        expect(subject).to eq [parent_object]
+      end
     end
   end
 
   describe 'in_collections' do
-    let(:object) { described_class.create }
     subject { object.in_collections }
     let(:object) { described_class.create }
     let(:collection1) { Hydra::PCDM::Collection.new }
     let(:collection2) { Hydra::PCDM::Collection.new }
     let(:parent_object) { described_class.new }
-    before do
-      collection1.ordered_members = [object]
-      collection2.ordered_members = [object]
-      parent_object.ordered_members = [object]
-      parent_object.save
-      collection1.save
-      collection2.save
-    end
+    context 'using ordered_members' do
+      before do
+        collection1.ordered_members = [object]
+        collection2.ordered_members = [object]
+        parent_object.ordered_members = [object]
+        parent_object.save
+        collection1.save
+        collection2.save
+      end
 
-    it 'finds collections that aggregate the object' do
-      expect(subject).to match_array [collection1, collection2]
-      expect(subject.count).to eq 2
+      it 'finds collections that aggregate the object' do
+        expect(subject).to match_array [collection1, collection2]
+        expect(subject.count).to eq 2
+      end
+    end
+    context 'using members' do
+      before do
+        collection1.members = [object]
+        collection2.members = [object]
+        parent_object.members = [object]
+        parent_object.save
+        collection1.save
+        collection2.save
+      end
+
+      it 'finds collections that aggregate the object' do
+        expect(subject).to match_array [collection1, collection2]
+        expect(subject.count).to eq 2
+      end
     end
   end
 
@@ -484,22 +514,6 @@ describe Hydra::PCDM::Object do
 
       subject { Foo.indexer }
       it { is_expected.to eq IndexingStuff::AltIndexer }
-    end
-  end
-
-  describe 'make sure deprecated methods still work' do
-    let(:object1) { described_class.new }
-    let(:object2) { described_class.new }
-    let(:object3) { described_class.new }
-    let(:object4) { described_class.new }
-
-    it 'deprecated methods should pass' do
-      object1.ordered_members = [object2]
-      expect(object1.ordered_members << object3).to eq [object2, object3]
-      expect(object1.ordered_members += [object4]).to eq [object2, object3, object4]
-      object1.save # required until issue AF-Agg-75 is fixed
-      expect(object2.parent_objects).to eq [object1]
-      expect(object2.parents).to eq [object1]
     end
   end
 end

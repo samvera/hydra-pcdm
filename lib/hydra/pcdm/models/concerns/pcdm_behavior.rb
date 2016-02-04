@@ -48,27 +48,12 @@ module Hydra::PCDM
       ordered_objects.map(&:id)
     end
 
-    def parents
-      warn '[DEPRECATION] `parents` is deprecated in Hydra::PCDM.  Please use `ordered_by` instead.  This has a target date for removal of 10-31-2015'
-      ordered_by.to_a
-    end
-
     def in_collections
       member_of.select(&:pcdm_collection?).to_a
     end
 
-    def parent_collections
-      warn '[DEPRECATION] `parent_collections` is deprecated in Hydra::PCDM.  Please use `in_collections` instead.  This has a target date for removal of 10-31-2015'
-      in_collections
-    end
-
     def in_collection_ids
       in_collections.map(&:id)
-    end
-
-    def parent_collection_ids
-      warn '[DEPRECATION] `parent_collection_ids` is deprecated in Hydra::PCDM.  Please use `in_collection_ids` instead.  This has a target date for removal of 10-31-2015'
-      in_collection_ids
     end
 
     def ancestor?(record)
@@ -77,16 +62,6 @@ module Hydra::PCDM
 
     def ancestor_checker
       @ancestor_checker ||= ::Hydra::PCDM::AncestorChecker.new(self)
-    end
-
-    def child_objects
-      warn '[DEPRECATION] `child_objects` is deprecated in Hydra::PCDM.  Please use `objects` instead.  This has a target date for removal of 10-31-2015'
-      ordered_objects
-    end
-
-    def child_object_ids
-      warn '[DEPRECATION] `child_object_ids` is deprecated in Hydra::PCDM.  Please use `object_ids` instead.  This has a target date for removal of 10-31-2015'
-      object_ids
     end
   end
 end

@@ -50,15 +50,5 @@ module Hydra::PCDM
     def pcdm_collection?
       true
     end
-
-    def child_collections
-      warn '[DEPRECATION] `child_collections` is deprecated in Hydra::PCDM.  Please use `collections` instead.  This has a target date for removal of 10-31-2015'
-      ordered_collections
-    end
-
-    def child_collection_ids
-      warn '[DEPRECATION] `child_collection_ids` is deprecated in Hydra::PCDM.  Please use `collection_ids` instead.  This has a target date for removal of 10-31-2015'
-      ordered_collection_ids
-    end
   end
 end
