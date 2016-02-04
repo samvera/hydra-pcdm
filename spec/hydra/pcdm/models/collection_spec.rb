@@ -609,23 +609,4 @@ describe Hydra::PCDM::Collection do
       it { is_expected.to eq IndexingStuff::AltIndexer }
     end
   end
-
-  describe 'make sure deprecated methods still work' do
-    it 'deprecated methods should pass' do
-      collection1.ordered_members = [collection2]
-      expect(collection1.ordered_members << collection3).to eq [collection2, collection3]
-      expect(collection1.ordered_members += [collection4]).to eq [collection2, collection3, collection4]
-      expect(collection1.ordered_members << object1).to eq [collection2, collection3, collection4, object1]
-      expect(collection1.ordered_members << object2).to eq [collection2, collection3, collection4, object1, object2]
-      expect(collection1.ordered_members += [object3]).to eq [collection2, collection3, collection4, object1, object2, object3]
-      collection1.save # required until issue AF-Agg-75 is fixed
-      expect(collection2.parent_collections).to eq [collection1]
-      expect(collection2.parents).to eq [collection1]
-      expect(collection2.parent_collection_ids).to eq [collection1.id]
-      expect(collection1.child_objects).to eq [object1, object2, object3]
-      expect(collection1.child_object_ids).to eq [object1.id, object2.id, object3.id]
-      expect(collection1.child_collections).to eq [collection2, collection3, collection4]
-      expect(collection1.child_collection_ids).to eq [collection2.id, collection3.id, collection4.id]
-    end
-  end
 end
