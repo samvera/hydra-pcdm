@@ -66,8 +66,8 @@ end
 collection = Collection.create
 book = Book.create
 
-collection.members = [book]
-# or: collection.members << book
+collection.ordered_members << book
+# or: collection.ordered_members = [book]
 collection.save
 
 file = book.files.build
