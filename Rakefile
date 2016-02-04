@@ -24,7 +24,7 @@ task ci: ['jetty:clean'] do
   error = Jettywrapper.wrap(jetty_params) do
     Rake::Task['spec'].invoke
   end
-  fail "test failures: #{error}" if error
+  raise "test failures: #{error}" if error
 end
 
 task default: :ci
