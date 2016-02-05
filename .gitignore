@@ -23,4 +23,5 @@ mkmf.log
 .idea
 .ruby-gemset
 .ruby-version
+fcrepo4-data
 jetty
