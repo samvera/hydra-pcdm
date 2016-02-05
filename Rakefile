@@ -1,8 +1,9 @@
 require 'bundler/gem_tasks'
-require 'jettywrapper'
 require 'rspec/core'
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
+require 'fcrepo_wrapper'
+require 'solr_wrapper'
 
 desc 'Run style checker'
 RuboCop::RakeTask.new(:rubocop) do |task|
@@ -16,15 +17,17 @@ task :spec do
   RSpec::Core::RakeTask.new(:spec)
 end
 
-desc 'Spin up hydra-jetty and run specs'
-task ci: ['jetty:clean'] do
-  puts 'running continuous integration'
-  jetty_params = Jettywrapper.load_config
-  jetty_params[:startup_wait] = 90
-  error = Jettywrapper.wrap(jetty_params) do
-    Rake::Task['spec'].invoke
+desc 'Spin up Solr & Fedora and run the test suite'
+task :ci do
+  solr_params = { port: 8983, verbose: true, managed: true }
+  fcrepo_params = { port: 8984, verbose: true, managed: true }
+  SolrWrapper.wrap(solr_params) do |solr|
+    solr.with_collection(name: 'hydra-test', dir: File.join(File.expand_path('.', File.dirname(__FILE__)), 'solr', 'config')) do
+      FcrepoWrapper.wrap(fcrepo_params) do
+        Rake::Task['spec'].invoke
+      end
+    end
   end
-  raise "test failures: #{error}" if error
 end
 
 task default: :ci
