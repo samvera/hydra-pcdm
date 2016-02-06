@@ -3,7 +3,9 @@ require 'rspec/core'
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 require 'fcrepo_wrapper'
+require 'fcrepo_wrapper/rake_task'
 require 'solr_wrapper'
+require 'solr_wrapper/rake_task'
 
 desc 'Run style checker'
 RuboCop::RakeTask.new(:rubocop) do |task|
