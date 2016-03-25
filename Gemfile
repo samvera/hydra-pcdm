@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
 group :development, :test do
-  gem 'rubocop', require: false
   gem 'haml-lint', require: false
-  gem 'rubocop-rspec', require: false
+  gem 'rubocop', '~> 0.37.0', require: false
+  gem 'rubocop-rspec', '~> 1.3.1', require: false
   gem 'pry' unless ENV['CI']
   gem 'pry-byebug' unless ENV['CI']
 end
