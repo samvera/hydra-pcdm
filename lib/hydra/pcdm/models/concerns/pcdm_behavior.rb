@@ -37,7 +37,7 @@ module Hydra::PCDM
     end
 
     def object_ids
-      members.select(&:pcdm_object?).map(&:id)
+      objects.map(&:id)
     end
 
     def ordered_objects
