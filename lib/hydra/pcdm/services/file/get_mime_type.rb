@@ -1,5 +1,5 @@
 module Hydra::PCDM
-  class GetMimeTypeForFile
+  module GetMimeTypeForFile
     def self.call(path)
       raise ArgumentError, 'supplied argument should be a path to a file' unless path.is_a?(String)
       mime_types = ::MIME::Types.of(::File.basename(path))

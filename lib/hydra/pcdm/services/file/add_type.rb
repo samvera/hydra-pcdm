@@ -1,5 +1,5 @@
 module Hydra::PCDM
-  class AddTypeToFile
+  module AddTypeToFile
     # This adds an additional RDF type to an exsiting Hydra::PCDM::File
     #
     # @param [Hydra::PCDM::File] the file object you want to add it to
