@@ -17,9 +17,9 @@ describe Hydra::PCDM::CollectionIndexer do
     subject { indexer.generate_solr_document }
 
     it 'has fields' do
-      expect(subject['collection_ids_ssim']).to eq %w(123 456)
-      expect(subject['object_ids_ssim']).to eq ['789']
-      expect(subject['member_ids_ssim']).to eq %w(123 456 789)
+      expect(subject[Hydra::PCDM::Config.indexing_collection_ids_key]).to eq %w(123 456)
+      expect(subject[Hydra::PCDM::Config.indexing_object_ids_key]).to eq ['789']
+      expect(subject[Hydra::PCDM::Config.indexing_member_ids_key]).to eq %w(123 456 789)
     end
   end
 end

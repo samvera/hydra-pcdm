@@ -25,7 +25,7 @@ module Hydra::PCDM
 
     def member_of
       return [] if id.nil?
-      ActiveFedora::Base.where(member_ids_ssim: id)
+      ActiveFedora::Base.where(Config.indexing_member_ids_key => id)
     end
 
     def ordered_member_ids

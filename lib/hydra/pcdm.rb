@@ -14,6 +14,8 @@ module Hydra
       end
     end
 
+    autoload :Config
+
     # models
     autoload_under 'models' do
       autoload :Collection

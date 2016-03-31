@@ -14,7 +14,7 @@ describe Hydra::PCDM::ObjectIndexer do
     subject { indexer.generate_solr_document }
 
     it 'has fields' do
-      expect(subject['object_ids_ssim']).to eq %w(123 456)
+      expect(subject[Hydra::PCDM::Config.indexing_object_ids_key]).to eq %w(123 456)
     end
   end
 end
