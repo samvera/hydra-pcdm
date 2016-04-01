@@ -24,6 +24,7 @@ module Hydra::PCDM
       end
 
       def type_validator
+        Validators::PCDMCollectionValidator
       end
     end
 
