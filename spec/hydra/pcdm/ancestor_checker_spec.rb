@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe Hydra::PCDM::AncestorChecker do
   context '.call' do
-    subject { described_class.call(record: record, potential_ancestor: potential_ancestor) }
+    subject { described_class.call(record, potential_ancestor) }
     let(:record) { instance_double(Hydra::PCDM::Object) }
     let(:potential_ancestor) { nil }
 

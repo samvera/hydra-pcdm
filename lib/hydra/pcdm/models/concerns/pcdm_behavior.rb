@@ -57,7 +57,7 @@ module Hydra::PCDM
     end
 
     def ancestor?(potential_ancestor)
-      ::Hydra::PCDM::AncestorChecker.call(record: self, potential_ancestor: potential_ancestor)
+      ::Hydra::PCDM::AncestorChecker.call(self, potential_ancestor)
     end
   end
 end

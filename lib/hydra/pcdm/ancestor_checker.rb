@@ -6,11 +6,11 @@ module Hydra::PCDM
     # @option record [#pcdm_behavior?]
     # @option potential_ancestor [#pcdm_behavior?]
     # @return Boolean
-    def self.call(options = {})
-      record = options.fetch(:record)
-      potential_ancestor = options.fetch(:potential_ancestor)
+    def self.call(record, potential_ancestor)
       return true if record == potential_ancestor
-      Hydra::PCDM::DeepMemberIterator.new(potential_ancestor).include?(record)
+      return false unless potential_ancestor.respond_to?(:members)
+      return true if Array.wrap(potential_ancestor.members).detect { |member| call(record, member) }
+      false
     end
   end
 end
