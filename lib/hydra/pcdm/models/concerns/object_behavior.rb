@@ -25,7 +25,7 @@ module Hydra::PCDM
       end
 
       def type_validator
-        @type_validator ||= Validators::PCDMObjectValidator
+        Validators::PCDMObjectValidator
       end
     end
 
