@@ -1,29 +1,36 @@
 require 'spec_helper'
 
 RSpec.describe Hydra::PCDM::AncestorChecker do
-  subject { described_class.new(record) }
-
-  describe '#ancestor?' do
+  context '.call' do
+    subject { described_class.call(record: record, potential_ancestor: potential_ancestor) }
     let(:record) { instance_double(Hydra::PCDM::Object) }
-    let(:member) { record }
-    let(:result) { subject.ancestor?(member) }
+    let(:potential_ancestor) { nil }
 
-    context 'when the member is the record itself' do
-      it 'is true' do
-        expect(result).to eq true
-      end
+    context 'when the potential_ancestor is the record itself' do
+      let(:potential_ancestor) { record }
+      it { is_expected.to eq(true) }
     end
-    context 'when the member is not an ancestor' do
-      let(:member) { instance_double(Hydra::PCDM::Object, members: []) }
-      it 'is false' do
-        expect(result).to eq false
-      end
+
+    context 'when the potential_ancestor has no members' do
+      let(:potential_ancestor) { instance_double(Hydra::PCDM::Object, members: []) }
+      it { is_expected.to eq(false) }
     end
-    context 'when the member is an ancestor' do
-      let(:member) { instance_double(Hydra::PCDM::Object, members: [record]) }
-      it 'is true' do
-        expect(result).to eq true
-      end
+
+    context 'when the potential_ancestor includes the given record' do
+      let(:potential_ancestor) { instance_double(Hydra::PCDM::Object, members: [record]) }
+      it { is_expected.to eq(true) }
+    end
+
+    context 'when the potential_ancestor includes a descendant that includes the given record' do
+      let(:descendant) { instance_double(Hydra::PCDM::Object, members: [record]) }
+      let(:potential_ancestor) { instance_double(Hydra::PCDM::Object, members: [descendant]) }
+      it { is_expected.to eq(true) }
+    end
+
+    context 'when the potential_ancestor only includes descendants that do not include the given record' do
+      let(:descendant) { instance_double(Hydra::PCDM::Object, members: [:another]) }
+      let(:potential_ancestor) { instance_double(Hydra::PCDM::Object, members: [descendant]) }
+      it { is_expected.to eq(false) }
     end
   end
 end
