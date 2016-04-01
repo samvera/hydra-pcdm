@@ -56,12 +56,8 @@ module Hydra::PCDM
       in_collections.map(&:id)
     end
 
-    def ancestor?(record)
-      ancestor_checker.ancestor?(record)
-    end
-
-    def ancestor_checker
-      @ancestor_checker ||= ::Hydra::PCDM::AncestorChecker.new(self)
+    def ancestor?(potential_ancestor)
+      ::Hydra::PCDM::AncestorChecker.former_is_ancestor_of_latter?(potential_ancestor, self)
     end
   end
 end

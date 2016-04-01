@@ -1,18 +1,19 @@
 module Hydra::PCDM
   ##
   # Checks whether or not one object is an ancestor of another.
-  class AncestorChecker
-    attr_reader :record
-
-    # @param [ActiveFedora::Base] record The object which may have ancestors.
-    def initialize(record)
-      @record = record
+  module AncestorChecker
+    # @param options [Hash]
+    # @option record [#pcdm_behavior?]
+    # @option potential_ancestor [#pcdm_behavior?]
+    # @return Boolean
+    def self.former_is_ancestor_of_latter?(potential_ancestor, record)
+      return true if record == potential_ancestor
+      return false unless potential_ancestor.respond_to?(:members)
+      return true if Array.wrap(potential_ancestor.members).detect { |member| former_is_ancestor_of_latter?(member, record) }
+      false
     end
-
-    # @param [#members] potential_ancestor Object which may be the ancestor of
-    #   the initialized record.
-    def ancestor?(potential_ancestor)
-      record == potential_ancestor || Hydra::PCDM::DeepMemberIterator.new(potential_ancestor).include?(record)
+    class << self
+      alias call former_is_ancestor_of_latter?
     end
   end
 end

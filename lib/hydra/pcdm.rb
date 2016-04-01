@@ -35,9 +35,6 @@ module Hydra
     autoload :AddTypeToFile,                     'hydra/pcdm/services/file/add_type'
     autoload :GetMimeTypeForFile,                'hydra/pcdm/services/file/get_mime_type'
 
-    # Iterators
-    autoload :DeepMemberIterator,                'hydra/pcdm/deep_member_iterator'
-
     # Associations
     autoload :AncestorChecker,                   'hydra/pcdm/ancestor_checker'
     autoload :Validators,                        'hydra/pcdm/validators'
