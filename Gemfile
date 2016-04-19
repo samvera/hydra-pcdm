@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
 group :development, :test do
-  gem 'haml-lint', require: false
   gem 'rubocop', '~> 0.37.0', require: false
   gem 'rubocop-rspec', '~> 1.3.1', require: false
   gem 'pry' unless ENV['CI']
