@@ -1,6 +1,7 @@
 module Hydra::PCDM
   class File < ActiveFedora::File
     include ActiveFedora::WithMetadata
+    include ActiveFedora::Schema
 
     metadata do
       configure type: Vocab::PCDMTerms.File
