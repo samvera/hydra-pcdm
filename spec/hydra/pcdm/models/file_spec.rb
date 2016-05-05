@@ -69,4 +69,10 @@ describe Hydra::PCDM::File do
       expect(subject).to include custom_type
     end
   end
+
+  describe 'using schemas' do
+    it 'can apply user-defined schemas to the File' do
+      expect(described_class).to respond_to(:apply_schema)
+    end
+  end
 end
