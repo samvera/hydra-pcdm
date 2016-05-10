@@ -10,7 +10,6 @@ module Hydra
       extend ActiveSupport::Autoload
       eager_autoload do
         autoload :PCDMTerms
-        autoload :SweetJPLTerms
       end
     end
 

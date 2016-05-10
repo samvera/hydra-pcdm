@@ -70,9 +70,8 @@ describe Hydra::PCDM::File do
     end
   end
 
-  describe 'using schemas' do
-    it 'can apply user-defined schemas to the File' do
-      expect(described_class).to respond_to(:apply_schema)
-    end
+  describe '::metadata_class_factory' do
+    subject { described_class.metadata_class_factory }
+    it { is_expected.to eq(ActiveFedora::WithMetadata::DefaultMetadataClassFactory) }
   end
 end
