@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'active-fedora', '>= 9.11', '< 11'
+  spec.add_dependency 'active-fedora', '~> 10.0.0.beta2'
   spec.add_dependency 'mime-types', '>= 1'
 
   spec.add_development_dependency 'bundler', '~> 1.6'
