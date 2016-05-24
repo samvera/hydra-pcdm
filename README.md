@@ -1,13 +1,12 @@
 # Hydra::PCDM
 
 [![Version](https://badge.fury.io/rb/hydra-pcdm.png)](http://badge.fury.io/rb/hydra-pcdm)
-[![Build Status](https://travis-ci.org/projecthydra-labs/hydra-pcdm.svg?branch=master)](https://travis-ci.org/projecthydra-labs/hydra-pcdm)
-[![Coverage Status](https://coveralls.io/repos/projecthydra-labs/hydra-pcdm/badge.svg?branch=master)](https://coveralls.io/r/projecthydra-labs/hydra-pcdm?branch=master)
-[![Code Climate](https://codeclimate.com/github/projecthydra-labs/hydra-pcdm/badges/gpa.svg)](https://codeclimate.com/github/projecthydra-labs/hydra-pcdm)
+[![Build Status](https://travis-ci.org/projecthydra/hydra-pcdm.svg?branch=master)](https://travis-ci.org/projecthydra/hydra-pcdm)
+[![Coverage Status](https://coveralls.io/repos/projecthydra/hydra-pcdm/badge.svg?branch=master)](https://coveralls.io/r/projecthydra/hydra-pcdm?branch=master)
+[![Code Climate](https://codeclimate.com/github/projecthydra/hydra-pcdm/badges/gpa.svg)](https://codeclimate.com/github/projecthydra/hydra-pcdm)
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./CONTRIBUTING.md)
 [![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/hydra-pcdm)
-[![Stories in Ready](https://badge.waffle.io/projecthydra-labs/hydra-works.png?source=projecthydra-labs%2Fhydra-pcdm&label=ready&title=Ready)](https://waffle.io/projecthydra-labs/hydra-works?source=projecthydra-labs%2Fhydra-pcdm)
 
 Hydra implementation of the Portland Common Data Model (PCDM)
 
