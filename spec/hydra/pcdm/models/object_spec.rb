@@ -363,29 +363,29 @@ describe Hydra::PCDM::Object do
         subject.related_objects << object3
         subject.related_objects << object4
         subject.related_objects << object5
-        expect(subject.related_objects).to eq [object1, object2, object3, object4, object5]
+        expect(subject.related_objects).to match_array [object1, object2, object3, object4, object5]
       end
 
       it 'remove first related object when changes are in memory' do
         expect(subject.related_objects.delete(object1)).to eq [object1]
-        expect(subject.related_objects).to eq [object2, object3, object4, object5]
+        expect(subject.related_objects).to match_array [object2, object3, object4, object5]
       end
 
       it 'remove last related object when changes are in memory' do
         expect(subject.related_objects.delete(object5)).to eq [object5]
-        expect(subject.related_objects).to eq [object1, object2, object3, object4]
+        expect(subject.related_objects).to match_array [object1, object2, object3, object4]
       end
 
       it 'remove middle related object when changes are in memory' do
         expect(subject.related_objects.delete(object3)).to eq [object3]
-        expect(subject.related_objects).to eq [object1, object2, object4, object5]
+        expect(subject.related_objects).to match_array [object1, object2, object4, object5]
       end
 
       it 'remove middle related object when changes are saved' do
-        expect(subject.related_objects).to eq [object1, object2, object3, object4, object5]
+        expect(subject.related_objects).to contain_exactly object1, object2, object3, object4, object5
         expect(subject.related_objects.delete(object3)).to eq [object3]
         subject.save
-        expect(subject.reload.related_objects).to eq [object1, object2, object4, object5]
+        expect(subject.reload.related_objects).to contain_exactly object1, object2, object4, object5
       end
     end
 
@@ -446,7 +446,7 @@ describe Hydra::PCDM::Object do
           expect(object.filter_files_by_type(pcdm_thumbnail_uri)).to eq [thumbnail]
         end
         it 'only overrides the #files method when you specify :type' do
-          expect(object.files).to eq [file, thumbnail]
+          expect(object.files).to match_array [file, thumbnail]
         end
       end
       context 'when the object does NOT have any files with that type' do

@@ -15,7 +15,7 @@ describe Hydra::PCDM::Collection do
       collection1.members += [collection2, collection3]
       collection1.ordered_members << collection4
 
-      expect(collection1.collections).to eq [collection2, collection3, collection4]
+      expect(collection1.collections).to match_array [collection2, collection3, collection4]
       expect(collection1.ordered_collections).to eq [collection4]
     end
   end
@@ -25,7 +25,7 @@ describe Hydra::PCDM::Collection do
       collection1.members += [collection2, collection3]
       collection1.ordered_members << collection4
 
-      expect(collection1.collection_ids).to eq [collection2.id, collection3.id, collection4.id]
+      expect(collection1.collection_ids).to match_array [collection2.id, collection3.id, collection4.id]
     end
   end
 
@@ -34,7 +34,7 @@ describe Hydra::PCDM::Collection do
       collection1.members += [object1, object2]
       collection1.ordered_members << object3
 
-      expect(collection1.objects).to eq [object1, object2, object3]
+      expect(collection1.objects).to match_array [object1, object2, object3]
       expect(collection1.ordered_objects).to eq [object3]
     end
   end
@@ -44,7 +44,7 @@ describe Hydra::PCDM::Collection do
       collection1.members += [object1, object2]
       collection1.ordered_members << object3
 
-      expect(collection1.object_ids).to eq [object1.id, object2.id, object3.id]
+      expect(collection1.object_ids).to match_array [object1.id, object2.id, object3.id]
     end
   end
 
@@ -416,29 +416,29 @@ describe Hydra::PCDM::Collection do
         subject.related_objects << object1
         subject.related_objects << object2
         subject.related_objects << object3
-        expect(subject.related_objects).to eq [object1, object2, object3]
+        expect(subject.related_objects).to match_array [object1, object2, object3]
       end
 
       it 'removes first related object when changes are in memory' do
         expect(subject.related_objects.delete(object1)).to eq [object1]
-        expect(subject.related_objects).to eq [object2, object3]
+        expect(subject.related_objects).to match_array [object2, object3]
       end
 
       it 'removes last related object when changes are in memory' do
         expect(subject.related_objects.delete(object3)).to eq [object3]
-        expect(subject.related_objects).to eq [object1, object2]
+        expect(subject.related_objects).to match_array [object1, object2]
       end
 
       it 'removes middle related object when changes are in memory' do
         expect(subject.related_objects.delete(object2)).to eq [object2]
-        expect(subject.related_objects).to eq [object1, object3]
+        expect(subject.related_objects).to match_array [object1, object3]
       end
 
       it 'removes middle related object when changes are saved' do
-        expect(subject.related_objects).to eq [object1, object2, object3]
+        expect(subject.related_objects).to contain_exactly object1, object2, object3
         expect(subject.related_objects.delete(object2)).to eq [object2]
         subject.save
-        expect(subject.reload.related_objects).to eq [object1, object3]
+        expect(subject.reload.related_objects).to contain_exactly object1, object3
       end
     end
 
