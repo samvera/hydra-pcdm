@@ -17,6 +17,14 @@ module Hydra::PCDM
 
       directly_contains :files, has_member_relation: Vocab::PCDMTerms.hasFile,
                                 class_name: 'Hydra::PCDM::File'
+
+      indirectly_contains :member_of_collections,
+                          has_member_relation: Vocab::PCDMTerms.memberOf,
+                          inserted_content_relation: RDF::Vocab::ORE.proxyIn,
+                          class_name: 'ActiveFedora::Base',
+                          through: 'ActiveFedora::Aggregation::Proxy',
+                          foreign_key: :container,
+                          type_validator: Validators::PCDMCollectionValidator
     end
 
     module ClassMethods
@@ -41,6 +49,10 @@ module Hydra::PCDM
 
     def in_objects
       member_of.select(&:pcdm_object?).to_a
+    end
+
+    def member_of_collection_ids
+      member_of_collections.map(&:id)
     end
 
     # Returns directly contained files that have the requested RDF Type

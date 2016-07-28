@@ -516,4 +516,27 @@ describe Hydra::PCDM::Object do
       it { is_expected.to eq IndexingStuff::AltIndexer }
     end
   end
+
+  describe 'membership in collections' do
+    let(:collection1) { Hydra::PCDM::Collection.create }
+    let(:collection2) { Hydra::PCDM::Collection.create }
+
+    subject do
+      object = described_class.new
+      object.member_of_collections = [collection1, collection2]
+      object
+    end
+
+    describe '#member_of_collections' do
+      it 'contains collections the object is a member of' do
+        expect(subject.member_of_collections).to match_array [collection1, collection2]
+      end
+    end
+
+    describe '#member_of_collection_ids' do
+      it 'contains the ids of collections the object is a member of' do
+        expect(subject.member_of_collection_ids).to match_array [collection1.id, collection2.id]
+      end
+    end
+  end
 end
