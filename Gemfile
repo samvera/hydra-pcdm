@@ -7,7 +7,5 @@ group :development, :test do
   gem 'pry-byebug' unless ENV['CI']
 end
 
-gem 'active-fedora', github: 'projecthydra/active_fedora', branch: 'master'
-
 # Specify your gem's dependencies in hydra-pcdm.gemspec
 gemspec
