@@ -29,6 +29,7 @@ module Hydra
       autoload :PcdmBehavior
     end
 
+    autoload :PCDMIndexer
     autoload :CollectionIndexer
     autoload :ObjectIndexer
 

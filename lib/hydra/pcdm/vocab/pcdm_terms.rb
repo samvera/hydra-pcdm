@@ -49,13 +49,21 @@ module Hydra::PCDM
            type: 'rdfs:Class'.freeze
 
       # Property definitions
+      property :fileOf,
+               comment: %(Links from a File to its containing Object.).freeze,
+               domain: 'http://pcdm.org/models#File'.freeze,
+               label: 'is file of'.freeze,
+               range: 'http://pcdm.org/models#Object'.freeze,
+               'rdfs:isDefinedBy' => %(http://pcdm.org/models#).freeze,
+               subPropertyOf: 'http://www.openarchives.org/ore/terms/isAggregatedBy'.freeze,
+               type: 'rdf:Property'.freeze
       property :hasFile,
                comment: %(Links to a File contained by this Object.).freeze,
                domain: 'http://pcdm.org/models#Object'.freeze,
                label: 'has file'.freeze,
                range: 'http://pcdm.org/models#File'.freeze,
                'rdfs:isDefinedBy' => %(http://pcdm.org/models#).freeze,
-               subPropertyOf: 'http://www.w3.org/ns/ldp#contains'.freeze,
+               subPropertyOf: 'http://www.openarchives.org/ore/terms/aggregates'.freeze,
                type: 'rdf:Property'.freeze
       property :hasMember,
                comment: %(Links to a related Object. Typically used to link to component parts, such as a book linking to a page.).freeze,
@@ -65,13 +73,29 @@ module Hydra::PCDM
                'rdfs:isDefinedBy' => %(http://pcdm.org/models#).freeze,
                subPropertyOf: 'http://www.openarchives.org/ore/terms/aggregates'.freeze,
                type: 'rdf:Property'.freeze
-      property :hasRelatedFile,
-               comment: %(Links to a File which is related to this Object but doesn't directly describe or represent it, such as technical metadata about other files.).freeze,
-               domain: 'http://pcdm.org/models#Object'.freeze,
-               label: 'has related file'.freeze,
-               range: 'http://pcdm.org/models#File'.freeze,
+      property :hasRelatedObject,
+               comment: %(Links to a related Object that is not a component part, such as an object representing a donor agreement or policies that govern the resource.).freeze,
+               domain: 'http://www.openarchives.org/ore/terms/Aggregation'.freeze,
+               label: 'has related object'.freeze,
+               range: 'http://pcdm.org/models#Object'.freeze,
                'rdfs:isDefinedBy' => %(http://pcdm.org/models#).freeze,
-               subPropertyOf: 'http://www.w3.org/ns/ldp#contains'.freeze,
+               subPropertyOf: 'http://www.openarchives.org/ore/terms/aggregates'.freeze,
+               type: 'rdf:Property'.freeze
+      property :memberOf,
+               comment: %(Links from an Object or Collection to a containing Object or Collection.).freeze,
+               domain: 'http://www.openarchives.org/ore/terms/Aggregation'.freeze,
+               label: 'is member of'.freeze,
+               range: 'http://www.openarchives.org/ore/terms/Aggregation'.freeze,
+               'rdfs:isDefinedBy' => %(http://pcdm.org/models#).freeze,
+               subPropertyOf: 'http://www.openarchives.org/ore/terms/isAggregatedBy'.freeze,
+               type: 'rdf:Property'.freeze
+      property :relatedObjectOf,
+               comment: %(Links from an Object to a Object or Collection that it is related to.).freeze,
+               domain: 'http://pcdm.org/models#Object'.freeze,
+               label: 'is related object of'.freeze,
+               range: 'http://www.openarchives.org/ore/terms/Aggregation'.freeze,
+               'rdfs:isDefinedBy' => %(http://pcdm.org/models#).freeze,
+               subPropertyOf: 'http://www.openarchives.org/ore/terms/isAggregatedBy'.freeze,
                type: 'rdf:Property'.freeze
 
       # Extra definitions
