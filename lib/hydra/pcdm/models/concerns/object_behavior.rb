@@ -20,10 +20,10 @@ module Hydra::PCDM
 
       indirectly_contains :member_of_collections,
                           has_member_relation: Vocab::PCDMTerms.memberOf,
-                          inserted_content_relation: RDF::Vocab::ORE.proxyIn,
+                          inserted_content_relation: RDF::Vocab::ORE.proxyFor,
                           class_name: 'ActiveFedora::Base',
                           through: 'ActiveFedora::Aggregation::Proxy',
-                          foreign_key: :container,
+                          foreign_key: :proxy_for,
                           type_validator: Validators::PCDMCollectionValidator
     end
 
