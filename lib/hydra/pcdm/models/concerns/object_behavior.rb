@@ -23,7 +23,7 @@ module Hydra::PCDM
                           inserted_content_relation: RDF::Vocab::ORE.proxyFor,
                           class_name: 'ActiveFedora::Base',
                           through: 'ActiveFedora::Aggregation::Proxy',
-                          foreign_key: :proxy_for,
+                          foreign_key: :target,
                           type_validator: Validators::PCDMCollectionValidator
     end
 
