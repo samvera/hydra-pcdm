@@ -524,6 +524,7 @@ describe Hydra::PCDM::Object do
     subject do
       object = described_class.new
       object.member_of_collections = [collection1, collection2]
+      object.save
       object
     end
 
