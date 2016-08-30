@@ -26,3 +26,4 @@ mkmf.log
 fcrepo4-data
 fcrepo4-test-data
 jetty
+/spec/examples.txt
