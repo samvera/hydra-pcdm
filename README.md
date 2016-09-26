@@ -16,7 +16,7 @@ Add these lines to your application's Gemfile:
 
 ```ruby
   gem 'active-fedora', '~> 9.3'
-  gem 'hydra-pcdm', '~> 0.4'
+  gem 'hydra-pcdm', '~> 0.9'
 ```
 
 And then execute:
