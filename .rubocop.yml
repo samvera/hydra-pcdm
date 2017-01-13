@@ -36,3 +36,19 @@ RSpec/FilePath:
 
 RSpec/InstanceVariable:
   Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Exclude:
+    - spec/hydra/pcdm/collection_indexer_spec.rb
+    - spec/hydra/pcdm/object_indexer_spec.rb
+    - spec/hydra/pcdm/models/*
+
+RSpec/ExampleLength:
+  Exclude:
+    - spec/hydra/pcdm/models/*
+
+RSpec/NestedGroups:
+  Enabled: false

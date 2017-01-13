@@ -9,14 +9,16 @@ describe Hydra::PCDM::GetMimeTypeForFile do
   end
 
   context 'with a standard file type' do
+    subject    { described_class.call(path) }
     let(:path) { '/path/file.jpg' }
-    subject { described_class.call(path) }
+
     it { is_expected.to eql 'image/jpeg' }
   end
 
   context 'with an unknown file type' do
+    subject    { described_class.call(path) }
     let(:path) { '/path/file.jkl' }
-    subject { described_class.call(path) }
+
     it { is_expected.to eql 'application/octet-stream' }
   end
 end
