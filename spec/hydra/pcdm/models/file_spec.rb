@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Hydra::PCDM::File do
-  let(:file) { described_class.new }
+  let(:file)     { described_class.new }
   let(:reloaded) { described_class.new(file.uri) }
 
   describe 'when saving' do
@@ -27,22 +27,50 @@ describe Hydra::PCDM::File do
     let(:date_modified) { Date.parse 'Sat, 09 May 2015 09:00:00 -0400 (EDT)' }
     let(:content) { 'hello world' }
     let(:file) { described_class.new.tap { |ds| ds.content = content } }
-    it 'saves technical metadata' do
-      skip('pending resolution of PCDM 182') do
-        file.file_name = 'picture.jpg'
-        file.file_size = content.length.to_s
-        file.date_created = date_created
-        file.has_mime_type = 'application/jpg'
-        file.date_modified = date_modified
-        file.byte_order = 'little-endian'
-        expect(file.save).to be true
-        expect(reloaded.file_name).to eq ['picture.jpg']
-        expect(reloaded.file_size).to eq [content.length.to_s]
-        expect(reloaded.has_mime_type).to eq ['application/jpg']
-        expect(reloaded.date_created).to eq [date_created]
-        expect(reloaded.date_modified).to eq [date_modified]
-        expect(reloaded.byte_order).to eq ['little-endian']
-      end
+
+    it 'handles #file_name' do
+      name = 'picture.jpg'
+      file.file_name = name
+      file.save
+
+      expect(reloaded.file_name).to contain_exactly(name)
+    end
+
+    it 'handles #file_size' do
+      file.file_size = content.length.to_s
+      file.save
+
+      expect(reloaded.file_size).to contain_exactly(content.length.to_s)
+    end
+
+    it 'handles #date_created' do
+      file.date_created = date_created
+      file.save
+
+      expect(reloaded.date_created).to contain_exactly(date_created)
+    end
+
+    it 'handles #date_modified' do
+      file.date_modified = date_modified
+      file.save
+
+      expect(reloaded.date_modified).to contain_exactly(date_modified)
+    end
+
+    it 'handles #byte_order' do
+      order = 'little-endian'
+      file.byte_order = order
+      file.save
+
+      expect(reloaded.byte_order).to contain_exactly(order)
+    end
+
+    it 'handles #mime_type' do
+      ctype = 'application/jpg'
+      file.mime_type = ctype
+      file.save
+
+      expect(reloaded.mime_type).to eq ctype
     end
 
     it 'does not save server managed properties' do
