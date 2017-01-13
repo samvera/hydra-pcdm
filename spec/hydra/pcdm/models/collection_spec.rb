@@ -495,12 +495,12 @@ describe Hydra::PCDM::Collection do
   end
 
   describe '#ordered_collection_ids' do
+    subject      { object.ordered_collection_ids }
     let(:child1) { described_class.new(id: '1') }
     let(:child2) { described_class.new(id: '2') }
     let(:object) { described_class.new }
-    before { object.ordered_members = [child1, child2] }
 
-    subject { object.ordered_collection_ids }
+    before { object.ordered_members = [child1, child2] }
 
     it { is_expected.to eq %w(1 2) }
   end

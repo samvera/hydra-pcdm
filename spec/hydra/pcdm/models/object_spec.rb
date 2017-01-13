@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Hydra::PCDM::Object do
   describe '#object_ids' do
+    subject      { object.ordered_object_ids }
     let(:child1) { described_class.new(id: '1') }
     let(:child2) { described_class.new(id: '2') }
     let(:object) { described_class.new }
@@ -9,8 +10,6 @@ describe Hydra::PCDM::Object do
       object.ordered_members << child1
       object.ordered_members << child2
     end
-
-    subject { object.ordered_object_ids }
 
     it { is_expected.to eq %w(1 2) }
   end
@@ -147,8 +146,8 @@ describe Hydra::PCDM::Object do
   end
 
   describe 'in_objects' do
+    subject      { object.in_objects }
     let(:object) { described_class.create }
-    subject { object.in_objects }
     let(:collection) { Hydra::PCDM::Collection.new }
     let(:parent_object) { described_class.new }
     context 'using ordered_members' do
@@ -317,15 +316,15 @@ describe Hydra::PCDM::Object do
           expect { @af_base_object.related_objects << @object101 }.to raise_error(NoMethodError)
         end
 
-        it 'NOT accept Hydra::PCDM::Files as parent object' do
+        it 'NOT access Hydra::PCDM::Files as parent object' do
           expect { @file101.related_objects }.to raise_error(NoMethodError)
         end
 
-        it 'NOT accept non-PCDM objects as parent object' do
+        it 'NOT access non-PCDM objects as parent object' do
           expect { @non_pcdm_object.related_objects }.to raise_error(NoMethodError)
         end
 
-        it 'NOT accept AF::Base objects as parent object' do
+        it 'NOT access AF::Base objects as parent object' do
           expect { @af_base_object.related_objects }.to raise_error(NoMethodError)
         end
       end
@@ -518,15 +517,15 @@ describe Hydra::PCDM::Object do
   end
 
   describe 'membership in collections' do
-    let(:collection1) { Hydra::PCDM::Collection.create }
-    let(:collection2) { Hydra::PCDM::Collection.create }
-
     subject do
       object = described_class.new
       object.member_of_collections = [collection1, collection2]
       object.save
       object
     end
+
+    let(:collection1) { Hydra::PCDM::Collection.create }
+    let(:collection2) { Hydra::PCDM::Collection.create }
 
     describe '#member_of_collections' do
       it 'contains collections the object is a member of' do
