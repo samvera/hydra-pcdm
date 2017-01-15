@@ -6,6 +6,7 @@ describe Hydra::PCDM::Object do
     let(:child1) { described_class.new(id: '1') }
     let(:child2) { described_class.new(id: '2') }
     let(:object) { described_class.new }
+
     before do
       object.ordered_members << child1
       object.ordered_members << child2
@@ -62,9 +63,7 @@ describe Hydra::PCDM::Object do
           end
         end
 
-        before do
-          object1.ordered_members = [object2]
-        end
+        before { object1.ordered_members = [object2] }
 
         it 'raises an error' do
           expect { object2.ordered_members += [object1] }.to raise_error(error_type, error_message)
@@ -73,9 +72,7 @@ describe Hydra::PCDM::Object do
         end
 
         context 'with more ancestors' do
-          before do
-            object2.ordered_members = [object3]
-          end
+          before { object2.ordered_members = [object3] }
 
           it 'raises an error' do
             expect { object3.ordered_members << [object1] }.to raise_error(error_type, error_message)
@@ -84,9 +81,7 @@ describe Hydra::PCDM::Object do
           end
 
           context 'with a more complicated example' do
-            before do
-              object3.ordered_members = [object4, object5]
-            end
+            before { object3.ordered_members = [object4, object5] }
 
             it 'raises errors' do
               expect { object4.ordered_members = [object1] }.to raise_error(error_type, error_message)
@@ -146,10 +141,11 @@ describe Hydra::PCDM::Object do
   end
 
   describe 'in_objects' do
-    subject      { object.in_objects }
-    let(:object) { described_class.create }
-    let(:collection) { Hydra::PCDM::Collection.new }
+    subject             { object.in_objects }
+    let(:object)        { described_class.create }
+    let(:collection)    { Hydra::PCDM::Collection.new }
     let(:parent_object) { described_class.new }
+
     context 'using ordered_members' do
       before do
         collection.ordered_members = [object]
@@ -177,11 +173,12 @@ describe Hydra::PCDM::Object do
   end
 
   describe 'in_collections' do
-    subject { object.in_collections }
-    let(:object) { described_class.create }
-    let(:collection1) { Hydra::PCDM::Collection.new }
-    let(:collection2) { Hydra::PCDM::Collection.new }
+    subject             { object.in_collections }
+    let(:object)        { described_class.create }
+    let(:collection1)   { Hydra::PCDM::Collection.new }
+    let(:collection2)   { Hydra::PCDM::Collection.new }
     let(:parent_object) { described_class.new }
+
     context 'using ordered_members' do
       before do
         collection1.ordered_members = [object]
@@ -218,9 +215,10 @@ describe Hydra::PCDM::Object do
     subject { object.member_of }
 
     context 'when it is aggregated by other objects' do
-      let(:object) { described_class.create }
-      let(:collection) { Hydra::PCDM::Collection.new }
+      let(:object)        { described_class.create }
+      let(:collection)    { Hydra::PCDM::Collection.new }
       let(:parent_object) { described_class.new }
+
       before do
         collection.ordered_members = [object]
         parent_object.ordered_members = [object]
@@ -283,6 +281,7 @@ describe Hydra::PCDM::Object do
         @non_pcdm_object = "I'm not a PCDM object"
         @af_base_object  = ActiveFedora::Base.new
       end
+
       context 'with unacceptable related objects' do
         let(:error_message) { 'child_related_object must be a pcdm object' }
 
@@ -414,6 +413,7 @@ describe Hydra::PCDM::Object do
 
   describe '#files' do
     subject { described_class.new }
+
     it 'have a files relation' do
       reflection = subject.reflections[:files]
       expect(reflection.macro).to eq :directly_contains
@@ -424,6 +424,7 @@ describe Hydra::PCDM::Object do
 
   describe 'filtering files' do
     let(:object) { described_class.create }
+
     let(:thumbnail) do
       file = object.files.build
       Hydra::PCDM::AddTypeToFile.call(file, pcdm_thumbnail_uri)
@@ -432,15 +433,12 @@ describe Hydra::PCDM::Object do
     let(:file)                { object.files.build }
     let(:pcdm_thumbnail_uri)  { ::RDF::URI('http://pcdm.org/ThumbnailImage') }
 
-    before do
-      file
-    end
+    before { file }
 
     describe 'filter_files_by_type' do
       context 'when the object has files with that type' do
-        before do
-          thumbnail
-        end
+        before { thumbnail }
+
         it 'allows you to filter the contained files by type URI' do
           expect(object.filter_files_by_type(pcdm_thumbnail_uri)).to eq [thumbnail]
         end
@@ -448,6 +446,7 @@ describe Hydra::PCDM::Object do
           expect(object.files).to match_array [file, thumbnail]
         end
       end
+
       context 'when the object does NOT have any files with that type' do
         it 'returns an empty array' do
           expect(object.filter_files_by_type(pcdm_thumbnail_uri)).to eq []
@@ -457,13 +456,13 @@ describe Hydra::PCDM::Object do
 
     describe 'file_of_type' do
       context 'when the object has files with that type' do
-        before do
-          thumbnail
-        end
+        before { thumbnail }
+
         it 'returns the first file with the requested type' do
           expect(object.file_of_type(pcdm_thumbnail_uri)).to eq thumbnail
         end
       end
+
       context 'when the object does NOT have any files with that type' do
         it 'initializes a contained file with the requested type' do
           returned_file =  object.file_of_type(pcdm_thumbnail_uri)
@@ -476,22 +475,23 @@ describe Hydra::PCDM::Object do
   end
 
   describe '.indexer' do
-    after do
-      Object.send(:remove_const, :Foo)
-    end
+    after { Object.send(:remove_const, :Foo) }
 
     context 'without overriding' do
+      subject { Foo.indexer }
+
       before do
         class Foo < ActiveFedora::Base
           include Hydra::PCDM::ObjectBehavior
         end
       end
 
-      subject { Foo.indexer }
       it { is_expected.to eq Hydra::PCDM::ObjectIndexer }
     end
 
     context 'when overridden with AS::Concern' do
+      subject { Foo.indexer }
+
       before do
         module IndexingStuff
           extend ActiveSupport::Concern
@@ -511,7 +511,6 @@ describe Hydra::PCDM::Object do
         end
       end
 
-      subject { Foo.indexer }
       it { is_expected.to eq IndexingStuff::AltIndexer }
     end
   end
