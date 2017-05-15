@@ -20,5 +20,20 @@ describe Hydra::PCDM::ObjectIndexer do
       expect(subject[Hydra::PCDM::Config.indexing_object_ids_key]).to eq %w(123 456)
       expect(subject[Hydra::PCDM::Config.indexing_member_of_collection_ids_key]).to eq %w(abc def)
     end
+
+    context 'when a block is passed' do
+      subject do
+        indexer.generate_solr_document do |solr_doc|
+          inner.foo(solr_doc)
+        end
+      end
+
+      let(:inner) { double }
+
+      it 'yields the block' do
+        expect(inner).to receive(:foo).with(hash_including(Hydra::PCDM::Config.indexing_object_ids_key))
+        subject
+      end
+    end
   end
 end
