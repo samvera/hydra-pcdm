@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Hydra::PCDM::CollectionIndexer do
   let(:collection) { Hydra::PCDM::Collection.new }
   let(:collection_ids) { %w(123 456) }
@@ -22,17 +20,33 @@ describe Hydra::PCDM::CollectionIndexer do
       expect(subject[Hydra::PCDM::Config.indexing_member_ids_key]).to eq %w(123 456 789)
     end
 
-    context 'when a block is passed' do
-      subject do
-        indexer.generate_solr_document do |solr_doc|
-          inner.foo(solr_doc)
+    context 'with block passed' do
+      it 'returns the same document' do
+        expect(indexer.generate_solr_document { |_doc| }).to eq subject
+      end
+      it 'yields the same document that it otherwise returns' do
+        expect { |b| indexer.generate_solr_document(&b) }.to yield_with_args(subject)
+      end
+    end
+
+    context 'when extended in the conventional way' do
+      let(:indexer) { extender.new(collection) }
+      let(:extender) do
+        Class.new(described_class) do
+          def generate_solr_document
+            super.tap { |doc| doc['my_special_field'] = 66 }
+          end
         end
       end
-      let(:inner) { double }
 
-      it 'yields the block' do
-        expect(inner).to receive(:foo).with(hash_including(Hydra::PCDM::Config.indexing_collection_ids_key))
-        subject
+      context 'with block passed' do
+        it 'returns the same document' do
+          expect(indexer.generate_solr_document { |_doc| }).to eq indexer.generate_solr_document
+        end
+        it 'yields the same document that it otherwise returns' do
+          expect { |b| indexer.generate_solr_document(&b) }.to yield_with_args(a_hash_including('my_special_field' => 66))
+          expect { |b| indexer.generate_solr_document(&b) }.to yield_with_args(indexer.generate_solr_document)
+        end
       end
     end
   end
