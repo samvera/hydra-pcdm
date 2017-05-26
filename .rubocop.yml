@@ -22,9 +22,6 @@ Style/ClassAndModuleChildren:
 Style/Documentation:
   Enabled: false
 
-RSpec/MessageSpies:
-  Enabled: false
-
 RSpec/ExampleWording:
   CustomTransform:
     be: is
