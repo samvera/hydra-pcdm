@@ -49,18 +49,6 @@ module Hydra::PCDM
       #     @return [ActiveFedora::Associations::ContainerProxy]
       directly_contains :files, has_member_relation: Vocab::PCDMTerms.hasFile,
                                 class_name: 'Hydra::PCDM::File'
-
-      ##
-      # @macro [new] indirectly_contains
-      #   @!method $1
-      #     @return [ActiveFedora::Associations::ContainerProxy]
-      indirectly_contains :member_of_collections,
-                          has_member_relation: Vocab::PCDMTerms.memberOf,
-                          inserted_content_relation: RDF::Vocab::ORE.proxyFor,
-                          class_name: 'ActiveFedora::Base',
-                          through: 'ActiveFedora::Aggregation::Proxy',
-                          foreign_key: :target,
-                          type_validator: Validators::PCDMCollectionValidator
     end
 
     ##
@@ -95,12 +83,6 @@ module Hydra::PCDM
     # @return [Enumerable<Hydra::PCDM::ObjectBehavior>]
     def in_objects
       member_of.select(&:pcdm_object?).to_a
-    end
-
-    ##
-    # @return [Enumerable<String>]
-    def member_of_collection_ids
-      member_of_collections.map(&:id)
     end
 
     ##

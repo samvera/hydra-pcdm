@@ -8,6 +8,9 @@ AllCops:
 Metrics/LineLength:
   Enabled: false
 
+Metrics/AbcSize:
+  Max: 17
+
 Style/CollectionMethods:
   PreferredMethods:
     collect: 'map'
@@ -43,7 +46,7 @@ RSpec/NamedSubject:
 RSpec/MultipleExpectations:
   Exclude:
     - spec/hydra/pcdm/collection_indexer_spec.rb
-    - spec/hydra/pcdm/object_indexer_spec.rb
+    - spec/hydra/pcdm/pcdm_indexer_spec.rb
     - spec/hydra/pcdm/models/*
 
 RSpec/ExampleLength:
