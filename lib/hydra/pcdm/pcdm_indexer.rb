@@ -6,6 +6,7 @@ module Hydra::PCDM
         solr_doc[Config.indexing_member_ids_key] += object.member_ids
         solr_doc[Config.indexing_member_ids_key].uniq!
         solr_doc[Config.indexing_object_ids_key] = object.ordered_object_ids
+        solr_doc[Config.indexing_member_of_collection_ids_key] = object.member_of_collection_ids
       end
     end
   end

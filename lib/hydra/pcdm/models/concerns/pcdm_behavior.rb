@@ -42,6 +42,18 @@ module Hydra::PCDM
                                             inserted_content_relation: RDF::Vocab::ORE.proxyFor, class_name: 'ActiveFedora::Base',
                                             through: 'ActiveFedora::Aggregation::Proxy', foreign_key: :target,
                                             type_validator: Validators::PCDMObjectValidator
+
+      ##
+      # @macro [new] indirectly_contains
+      #   @!method $1
+      #     @return [ActiveFedora::Associations::ContainerProxy]
+      indirectly_contains :member_of_collections,
+                          has_member_relation: Vocab::PCDMTerms.memberOf,
+                          inserted_content_relation: RDF::Vocab::ORE.proxyFor,
+                          class_name: 'ActiveFedora::Base',
+                          through: 'ActiveFedora::Aggregation::Proxy',
+                          foreign_key: :target,
+                          type_validator: Validators::PCDMCollectionValidator
     end
 
     ##
@@ -111,6 +123,12 @@ module Hydra::PCDM
     # @return [Enumerable<String>] ids for collections the object is a member of
     def in_collection_ids
       in_collections.map(&:id)
+    end
+
+    ##
+    # @return [Enumerable<String>]
+    def member_of_collection_ids
+      member_of_collections.map(&:id)
     end
 
     ##
