@@ -1,14 +1,14 @@
 # Hydra::PCDM
 
 [![Version](https://badge.fury.io/rb/hydra-pcdm.png)](http://badge.fury.io/rb/hydra-pcdm)
-[![Build Status](https://travis-ci.org/projecthydra/hydra-pcdm.svg?branch=master)](https://travis-ci.org/projecthydra/hydra-pcdm)
-[![Coverage Status](https://coveralls.io/repos/projecthydra/hydra-pcdm/badge.svg?branch=master)](https://coveralls.io/r/projecthydra/hydra-pcdm?branch=master)
+[![Build Status](https://travis-ci.org/samvera/hydra-pcdm.svg?branch=master)](https://travis-ci.org/samvera/hydra-pcdm)
+[![Coverage Status](https://coveralls.io/repos/samvera/hydra-pcdm/badge.svg?branch=master)](https://coveralls.io/r/samvera/hydra-pcdm?branch=master)
 [![Code Climate](https://codeclimate.com/github/projecthydra/hydra-pcdm/badges/gpa.svg)](https://codeclimate.com/github/projecthydra/hydra-pcdm)
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./CONTRIBUTING.md)
 [![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/hydra-pcdm)
 
-Hydra implementation of the Portland Common Data Model (PCDM)
+Samvera implementation of the Portland Common Data Model (PCDM)
 
 ## Installation
 
@@ -29,7 +29,7 @@ Or install it yourself:
 
 ## Access Controls
 
-We are using [Web ACL](http://www.w3.org/wiki/WebAccessControl) as implemented in [hydra-access-controls](https://github.com/projecthydra/hydra-head/tree/master/hydra-access-controls).
+We are using [Web ACL](http://www.w3.org/wiki/WebAccessControl) as implemented in [hydra-access-controls](https://github.com/samvera/hydra-head/tree/master/hydra-access-controls).
 
 ## Portland Common Data Model
 
