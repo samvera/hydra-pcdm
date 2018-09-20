@@ -1,57 +1,14 @@
-require: rubocop-rspec
+inherit_gem:
+  bixby: bixby_default.yml
 
-AllCops:
-  DisplayCopNames: true
-  Include:
-    - '**/Rakefile'
+inherit_from: .rubocop_todo.yml
 
-Metrics/LineLength:
-  Enabled: false
-
-Metrics/AbcSize:
-  Max: 17
-
-Style/CollectionMethods:
-  PreferredMethods:
-    collect: 'map'
-    collect!: 'map!'
-    inject: 'reduce'
-    detect: 'find'
-    find_all: 'select'
-
-Style/ClassAndModuleChildren:
-  Enabled: false
-
-Style/Documentation:
-  Enabled: false
-
-RSpec/ExampleWording:
-  CustomTransform:
-    be: is
-    have: has
-    not: does not
-    NOT: does NOT
-  IgnoredWords:
-    - only
-
-RSpec/FilePath:
-  Enabled: false
-
-RSpec/InstanceVariable:
-  Enabled: false
-
-RSpec/NamedSubject:
-  Enabled: false
-
-RSpec/MultipleExpectations:
+Naming/FileName:
   Exclude:
-    - spec/hydra/pcdm/collection_indexer_spec.rb
-    - spec/hydra/pcdm/pcdm_indexer_spec.rb
-    - spec/hydra/pcdm/models/*
+    - '**/Gemfile'
+    - '**/*.rake'
+    - 'hydra-pcdm.gemspec'
 
-RSpec/ExampleLength:
+Metrics/BlockLength:
   Exclude:
-    - spec/hydra/pcdm/models/*
-
-RSpec/NestedGroups:
-  Enabled: false
+    - 'spec/**/*.rb'

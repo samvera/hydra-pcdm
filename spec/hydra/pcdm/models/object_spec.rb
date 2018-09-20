@@ -12,7 +12,7 @@ describe Hydra::PCDM::Object do
       object.ordered_members << child2
     end
 
-    it { is_expected.to eq %w(1 2) }
+    it { is_expected.to eq %w[1 2] }
   end
 
   describe '#ordered_member_ids' do
@@ -79,19 +79,22 @@ describe Hydra::PCDM::Object do
             expect { object3.ordered_members = [object1] }.to raise_error(error_type, error_message)
             expect { object3.ordered_members += [object1] }.to raise_error(error_type, error_message)
           end
+        end
 
-          context 'with a more complicated example' do
-            before { object3.ordered_members = [object4, object5] }
+        context 'with a more complicated example' do
+          before do
+            object2.ordered_members = [object3]
+            object3.ordered_members = [object4, object5]
+          end
 
-            it 'raises errors' do
-              expect { object4.ordered_members = [object1] }.to raise_error(error_type, error_message)
-              expect { object4.ordered_members += [object1] }.to raise_error(error_type, error_message)
-              expect { object4.ordered_members << [object1] }.to raise_error(error_type, error_message)
+          it 'raises errors' do
+            expect { object4.ordered_members = [object1] }.to raise_error(error_type, error_message)
+            expect { object4.ordered_members += [object1] }.to raise_error(error_type, error_message)
+            expect { object4.ordered_members << [object1] }.to raise_error(error_type, error_message)
 
-              expect { object4.ordered_members = [object2] }.to raise_error(error_type, error_message)
-              expect { object4.ordered_members += [object2] }.to raise_error(error_type, error_message)
-              expect { object4.ordered_members << [object2] }.to raise_error(error_type, error_message)
-            end
+            expect { object4.ordered_members = [object2] }.to raise_error(error_type, error_message)
+            expect { object4.ordered_members += [object2] }.to raise_error(error_type, error_message)
+            expect { object4.ordered_members << [object2] }.to raise_error(error_type, error_message)
           end
         end
       end
