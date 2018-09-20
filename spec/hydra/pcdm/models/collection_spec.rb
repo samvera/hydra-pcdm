@@ -502,7 +502,7 @@ describe Hydra::PCDM::Collection do
 
     before { object.ordered_members = [child1, child2] }
 
-    it { is_expected.to eq %w(1 2) }
+    it { is_expected.to eq %w[1 2] }
   end
 
   describe 'collections and objects' do
