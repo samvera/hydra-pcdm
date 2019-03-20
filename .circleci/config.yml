@@ -1,0 +1,49 @@
+version: 2.1
+orbs:
+  samvera: samvera/circleci-orb@0
+jobs:
+  bundle_lint_test:
+    parameters:
+      ruby_version:
+        type: string
+        default: 2.5.5
+      project:
+        type: string
+      bundler_version:
+        type: string
+        default: '2.0.1'
+    executor:
+      name: 'samvera/ruby_fcrepo_solr'
+      ruby_version: << parameters.ruby_version >>
+    steps:
+      - samvera/cached_checkout
+
+      - samvera/bundle_for_gem:
+          ruby_version: << parameters.ruby_version >>
+          bundler_version: << parameters.bundler_version >>
+          project: << parameters.project >>
+
+      - samvera/install_solr_core
+
+      - samvera/rubocop
+
+      - samvera/parallel_rspec
+
+workflows:
+  ci:
+    jobs:
+      - bundle_lint_test:
+          ruby_version: "2.4.5"
+          name: "ruby2-4-5"
+          project: 'hydra-pcdm'
+          bundler_version: '1.17.3'
+      - bundle_lint_test:
+          ruby_version: "2.5.5"
+          name: "ruby2-5-5"
+          project: 'hydra-pcdm'
+          bundler_version: '1.17.3'
+      - bundle_lint_test:
+          ruby_version: "2.6.2"
+          name: "ruby2-6-2"
+          project: 'hydra-pcdm'
+          bundler_version: '1.17.3'
