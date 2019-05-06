@@ -2,7 +2,7 @@
 
 Code:
 [![Version](https://badge.fury.io/rb/hydra-pcdm.png)](http://badge.fury.io/rb/hydra-pcdm)
-[![Build Status](https://travis-ci.org/samvera/hydra-pcdm.svg?branch=master)](https://travis-ci.org/samvera/hydra-pcdm)
+[![Build Status](https://circleci.com/gh/samvera/hydra-pcdm.svg?style=svg)](https://circleci.com/gh/samvera/hydra-pcdm)
 [![Coverage Status](https://coveralls.io/repos/samvera/hydra-pcdm/badge.svg?branch=master)](https://coveralls.io/r/samvera/hydra-pcdm?branch=master)
 [![Code Climate](https://codeclimate.com/github/projecthydra/hydra-pcdm/badges/gpa.svg)](https://codeclimate.com/github/projecthydra/hydra-pcdm)
 
