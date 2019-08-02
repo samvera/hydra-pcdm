@@ -7,6 +7,7 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
    Coveralls::SimpleCov::Formatter]
 )
 
+SimpleCov.minimum_coverage 100
 SimpleCov.start { add_filter '/spec' }
 
 require 'bundler/setup'
