@@ -29,4 +29,16 @@ task ci: :rubocop do
   Rake::Task['spec_with_app_load'].invoke
 end
 
+desc 'Start up test server'
+task :test_server do
+  ENV["RAILS_ENV"] = "test"
+  with_test_server do
+    puts "Solr: http://localhost:#{ENV['SOLR_TEST_PORT']}/solr"
+    puts "Fedora: http://localhost:#{ENV['FCREPO_TEST_PORT']}/rest"
+    loop do
+      sleep(1)
+    end
+  end
+end
+
 task default: :ci
