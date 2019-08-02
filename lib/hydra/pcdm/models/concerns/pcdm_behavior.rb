@@ -78,12 +78,6 @@ module Hydra::PCDM
     end
 
     ##
-    # @return [Enumerable<String>] an ordered list of member ids
-    def ordered_member_ids
-      ordered_member_proxies.map(&:target_id)
-    end
-
-    ##
     # Gives the subset of #members that are PCDM objects
     #
     # @return [Enumerable<PCDM::ObjectBehavior>] an enumerable over the members
@@ -123,12 +117,6 @@ module Hydra::PCDM
     # @return [Enumerable<String>] ids for collections the object is a member of
     def in_collection_ids
       in_collections.map(&:id)
-    end
-
-    ##
-    # @return [Enumerable<String>]
-    def member_of_collection_ids
-      member_of_collections.map(&:id)
     end
 
     ##
