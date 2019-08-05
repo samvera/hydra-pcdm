@@ -13,7 +13,7 @@ jobs:
         default: hyrda-pcdm
       bundler_version:
         type: string
-        default: 2.0.1
+        default: 1.17.3
     executor:
       name: 'samvera/ruby_fcrepo_solr'
       ruby_version: << parameters.ruby_version >>
