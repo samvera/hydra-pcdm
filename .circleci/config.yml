@@ -10,7 +10,7 @@ jobs:
         type: string
       project:
         type: string
-        default: hyrda-pcdm
+        default: hydra-pcdm
       bundler_version:
         type: string
         default: 1.17.3
@@ -27,7 +27,7 @@ jobs:
           bundler_version: << parameters.bundler_version >>
           project: << parameters.project >>
 
-      - samvera/install_solr_core
+      - samvera/install_solr_active_fedora_core
 
       - samvera/rubocop
 
