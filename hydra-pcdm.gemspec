@@ -21,11 +21,12 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'active-fedora', '>= 10', '< 14'
   spec.add_dependency 'mime-types', '>= 1'
+  spec.add_dependency 'rdf-vocab', '<=3.1.4'
 
   spec.add_development_dependency 'bundler', '~> 1.6'
-  spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
-  spec.add_development_dependency 'solr_wrapper', '~> 0.4'
-  spec.add_development_dependency 'rake'
   spec.add_development_dependency 'coveralls'
+  spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
+  spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'solr_wrapper', '~> 0.4'
 end
