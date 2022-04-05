@@ -15,7 +15,7 @@ jobs:
         type: string
         default: 2.3.10
     executor:
-      name: 'samvera/ruby_fcrepo_solr'
+      name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
     environment:
       RAILS_VERSION: << parameters.rails_version >>
@@ -27,18 +27,16 @@ jobs:
           bundler_version: << parameters.bundler_version >>
           project: << parameters.project >>
 
-      - samvera/install_solr_active_fedora_core
+      - samvera/install_solr_core
 
       - samvera/rubocop
 
       - samvera/parallel_rspec
 
-      - deploy:
-          command: curl -k https://coveralls.io/webhook?repo_token=${COVERALLS_REPO_TOKEN} -d "payload[build_num]=${CIRCLE_BUILD_NUM}&payload[status]=done"
-
 workflows:
   ci:
     jobs:
+      # Ruby 2.7
       - bundle_lint_test:
           name: ruby2-7_rails6-0
           ruby_version: 2.7.5
@@ -51,6 +49,7 @@ workflows:
           name: ruby2-7_rails5-1
           ruby_version: 2.7.5
           rails_version: 5.1.7
+      # Ruby 2.6
       - bundle_lint_test:
           name: ruby2-6_rails6-0
           ruby_version: 2.6.9
@@ -63,6 +62,7 @@ workflows:
           name: ruby2-6_rails5-1
           ruby_version: 2.6.9
           rails_version: 5.1.7
+      # Ruby 2.5
       - bundle_lint_test:
           name: ruby2-5_rails6-0
           ruby_version: 2.5.9
