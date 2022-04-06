@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['elr37@cornell.edu']
   spec.summary       = 'Portland Common Data Model (PCDM)'
   spec.description   = 'Portland Common Data Model (PCDM)'
-  spec.homepage      = 'https://github.com/projecthydra-labs/hydra-pcdm'
+  spec.homepage      = 'https://github.com/samvera/hydra-pcdm'
   spec.license       = 'APACHE2'
   spec.required_ruby_version = '>= 1.9.3'
 
@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mime-types', '>= 1'
   spec.add_dependency 'rdf-vocab', '<=3.1.4'
 
-  spec.add_development_dependency 'coveralls'
+  spec.add_development_dependency 'coveralls_reborn', '~> 0.24'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec'
