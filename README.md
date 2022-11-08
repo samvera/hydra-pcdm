@@ -1,16 +1,16 @@
 # Hydra::PCDM
 
 Code:
-[![Version](https://badge.fury.io/rb/hydra-pcdm.png)](http://badge.fury.io/rb/hydra-pcdm)
+[![Gem Version](https://badge.fury.io/rb/hydra-pcdm.png)](http://badge.fury.io/rb/hydra-pcdm)
 [![Build Status](https://circleci.com/gh/samvera/hydra-pcdm.svg?style=svg)](https://circleci.com/gh/samvera/hydra-pcdm)
-[![Coverage Status](https://coveralls.io/repos/samvera/hydra-pcdm/badge.svg?branch=master)](https://coveralls.io/r/samvera/hydra-pcdm?branch=master)
+[![Coverage Status](https://coveralls.io/repos/samvera/hydra-pcdm/badge.svg?branch=main)](https://coveralls.io/r/samvera/hydra-pcdm?branch=main)
 
 Docs:
-[![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./CONTRIBUTING.md)
+[![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 [![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/hydra-pcdm)
 
-Jump In: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samvera.org/)
+Community Support: [![Samvera Community Slack](https://img.shields.io/badge/samvera-slack-blueviolet)](http://slack.samvera.org/)
 
 # What is hydra-pcdm?
 
@@ -18,13 +18,13 @@ Samvera implementation of the Portland Common Data Model (PCDM)
 
 ## Product Owner & Maintenance
 
-**hydra-pcdm** is a Core Component of the Samvera community. The documentation for
-what this means can be found
-[here](http://samvera.github.io/core_components.html#requirements-for-a-core-component).
+`hydra-pcdm` was a Core Component of the Samvera Community. Given a decline in available labor required for maintenance, this project no longer has a dedicated Product Owner. The documentation for what this means can be found [here](http://samvera.github.io/core_components.html#requirements-for-a-core-component).
 
 ### Product Owner
 
-[mark-dce](https://github.com/mark-dce)
+**Vacant**
+
+_Until a Product Owner has been identified, we ask that you please direct all requests for support, bug reports, and general questions to the [`#dev` Channel on the Samvera Slack](https://samvera.slack.com/app_redirect?channel=dev)._
 
 # Help
 
@@ -49,7 +49,7 @@ Or install it yourself:
 
 ## Access Controls
 
-We are using [Web ACL](http://www.w3.org/wiki/WebAccessControl) as implemented in [hydra-access-controls](https://github.com/samvera/hydra-head/tree/master/hydra-access-controls).
+We are using [Web ACL](http://www.w3.org/wiki/WebAccessControl) as implemented in [hydra-access-controls](https://github.com/samvera/hydra-head/tree/main/hydra-access-controls).
 
 ## Portland Common Data Model
 
