@@ -23,9 +23,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mime-types', '>= 1'
   spec.add_dependency 'rdf-vocab', '<=3.1.4'
 
+  spec.add_development_dependency 'bixby', '>= 5.0.2'
   spec.add_development_dependency 'coveralls_reborn', '~> 0.24'
-  spec.add_development_dependency 'fcrepo_wrapper', '~> 0.1'
+  spec.add_development_dependency 'fcrepo_wrapper'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec'
-  spec.add_development_dependency 'solr_wrapper', '~> 0.4'
+  spec.add_development_dependency 'solr_wrapper'
 end
