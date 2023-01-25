@@ -8,7 +8,7 @@ describe Hydra::PCDM::File do
     it 'sets an RDF type' do
       file.content = 'stuff'
       expect(file.save).to be true
-      expect(reloaded.metadata_node.query(predicate: RDF.type, object: Hydra::PCDM::Vocab::PCDMTerms.File).map(&:object)).to eq [Hydra::PCDM::Vocab::PCDMTerms.File]
+      expect(reloaded.metadata_node.query([nil, RDF.type, Hydra::PCDM::Vocab::PCDMTerms.File]).map(&:object)).to eq [Hydra::PCDM::Vocab::PCDMTerms.File]
     end
   end
 
