@@ -12,6 +12,7 @@ Gem::Specification.new do |spec|
   spec.description   = 'Portland Common Data Model (PCDM)'
   spec.homepage      = 'https://github.com/samvera/hydra-pcdm'
   spec.license       = 'APACHE2'
+  spec.metadata      = { "rubygems_mfa_required" => "true" }
   spec.required_ruby_version = '>= 1.9.3'
 
   spec.files         = `git ls-files -z`.split("\x0")
