@@ -12,3 +12,9 @@ Naming/FileName:
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*.rb'
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Rails/RakeEnvironment:
+  Enabled: false
