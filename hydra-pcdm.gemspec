@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'active-fedora', '>= 10', '< 15'
   spec.add_dependency 'mime-types', '>= 1'
-  spec.add_dependency 'rdf-vocab', '<=3.1.4'
+  spec.add_dependency 'rdf-vocab'
 
   spec.add_development_dependency 'bixby', '>= 5.0.2'
   spec.add_development_dependency 'coveralls_reborn', '~> 0.24'
